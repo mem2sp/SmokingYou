@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Kotlin-100%25-blue.svg?logo=kotlin" alt="Kotlin">
   <img src="https://img.shields.io/badge/Jetpack_Compose-Modern_UI-4285F4?logo=android" alt="Jetpack Compose">
-  <img src="https://img.shields.io/badge/API-24%2B-brightgreen.svg?style=flat" alt="API">
+  <img src="https://img.shields.io/badge/API-36%2B-brightgreen.svg?style=flat" alt="API">
   <a href="https://github.com/ВАШ_НИК/SmokingYou/releases">
     <img src="https://img.shields.io/github/v/release/ВАШ_НИК/SmokingYou?label=Release" alt="Release">
   </a>
