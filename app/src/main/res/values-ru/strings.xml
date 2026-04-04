@@ -1,0 +1,101 @@
+<resources>
+    <string name="app_name">SmokingYou</string>
+    <string name="registration_title">Добро пожаловать в SmokingYou</string>
+    <string name="registration_subtitle">Пожалуйста, настройте ваш профиль</string>
+    <string name="registration_name_hint">Ваше Имя</string>
+    <string name="registration_experience_hint">Стаж курения (лет)</string>
+    <string name="registration_button">Начать Отслеживание</string>
+    <string name="home_title">SmokingYou</string>
+    <string name="add_entry">Добавить</string>
+    <string name="time_calculating">Вычисление...</string>
+    <string name="invalid_future_entry">Неверное время</string>
+    <string name="start_tracking">Начать отслеживание</string>
+    <string name="time_past_label">Прошло с последней сигареты</string>
+    <string name="stat_daily">За день</string>
+    <string name="stat_weekly">За неделю</string>
+    <string name="stat_monthly">За месяц</string>
+    <string name="previous_day">Предыдущий день</string>
+    <string name="next_day">Следующий день</string>
+    <string name="delete_entry">Удалить запись</string>
+    <string name="edit_entry">Изменить запись</string>
+    <string name="dialog_ok">ОК</string>
+    <string name="dialog_cancel">Отмена</string>
+    <string name="nav_home">Главная</string>
+    <string name="nav_graph">Графики</string>
+    <string name="nav_profile">Профиль</string>
+    <string name="analytics_title">Аналитика</string>
+    <string name="daily_overview">За день</string>
+    <string name="weekly_overview">За неделю</string>
+    <string name="monthly_overview">За месяц</string>
+    <string name="yearly_overview">За год</string>
+    <string name="profile_title">Профиль</string>
+    <string name="profile_years_smoking">Стаж курения: %1$s лет</string>
+    <string name="tab_settings">Настройки</string>
+    <string name="tab_achievements">Достижения</string>
+    <string name="settings_appearance">Внешний вид</string>
+    <string name="settings_theme">Тема</string>
+    <string name="theme_system">Системная</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Тёмная</string>
+    <string name="settings_general">Общие</string>
+    <string name="settings_language">Язык</string>
+    <string name="language_value">Русский</string>
+    <string name="settings_notifications">Уведомления</string>
+    <string name="notifications_desc">Управление оповещениями</string>
+    <string name="settings_data">Данные</string>
+    <string name="settings_backup">Резервное копирование</string>
+    <string name="backup_desc">Сохранить данные на устройство</string>
+    <string name="settings_restore">Восстановить</string>
+    <string name="restore_desc">Восстановить данные с устройства</string>
+
+    <string name="my_achievements">Мои Достижения</string>
+
+    <string name="ach_category_login">Логин</string>
+    <string name="ach_category_nosmoke">Дни без сигарет</string>
+
+    <string name="ach_curiosity_title">Любопытство</string>
+    <string name="ach_curiosity_desc">Первый вход в приложение</string>
+    <string name="ach_interest_title">Интерес</string>
+    <string name="ach_interest_desc">3 дня подряд входа в приложение</string>
+    <string name="ach_exploration_title">Разведка</string>
+    <string name="ach_exploration_desc">Неделя подряд входа в приложение</string>
+    <string name="ach_discipline_title">Дисциплина</string>
+    <string name="ach_discipline_desc">Месяц подряд входа в приложение</string>
+    <string name="ach_statistics_title">Статистика</string>
+    <string name="ach_statistics_desc">Год подряд входа в приложение</string>
+
+    <string name="ach_nosmoke_1d_title">Первый шаг</string>
+    <string name="ach_nosmoke_1d_desc">День без сигарет</string>
+    <string name="ach_nosmoke_3d_title">Сила воли</string>
+    <string name="ach_nosmoke_3d_desc">Три дня без сигарет</string>
+    <string name="ach_nosmoke_1w_title">Очищение</string>
+    <string name="ach_nosmoke_1w_desc">Неделя без сигарет</string>
+    <string name="ach_nosmoke_1m_title">Путь</string>
+    <string name="ach_nosmoke_1m_desc">Месяц без сигарет</string>
+    <string name="ach_nosmoke_1y_title">Чистота</string>
+    <string name="ach_nosmoke_1y_desc">Год без сигарет</string>
+
+    <string name="notification_title">Разблокировано достижение: %1$s</string>
+    <string name="backup_success">Резервное копирование успешно завершено!</string>
+    <string name="backup_error">Ошибка сохранения резервной копии</string>
+    <string name="restore_success">Данные успешно восстановлены!</string>
+    <string name="restore_error">Ошибка восстановления данных</string>
+    <string name="language_dialog_title">Выберите язык</string>
+    <string name="settings_daily_limit">Дневной лимит сигарет</string>
+
+    <string name="daily_limit_desc">Предупреждать при превышении лимита</string>
+    <string name="limit_warning_title">Лимит превышен</string>
+    <string name="limit_warning_message">Вы достигли дневного лимита сигарет. Все равно хотите добавить эту запись?</string>
+    <string name="add_anyway">Добавить</string>
+    <string name="set_limit_title">Установить лимит</string>
+    <string name="no_limit">0 (Без лимита)</string>
+
+    <string name="settings_info">Информация</string>
+    <string name="about_app">О приложении</string>
+    <string name="about_app_desc">Версия, разработчик и ссылки</string>
+    <string name="app_version">Версия приложения: %1$s</string>
+    <string name="made_with_love">Сделано с ❤ от Bodyaant</string>
+    <string name="link_github">GitHub</string>
+    <string name="link_telegram">Telegram</string>
+    <string name="link_support">Финансовая поддержка</string>
+</resources>
