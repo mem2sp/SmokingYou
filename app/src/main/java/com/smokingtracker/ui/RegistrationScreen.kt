@@ -9,6 +9,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialShapes
+import androidx.compose.material3.toShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,18 +30,17 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun RegistrationScreen(viewModel: MainViewModel, navController: NavHostController) {
     RegistrationScreenContent(
-        onRegister = { name, expYears ->
-            viewModel.registerUser(name, expYears)
+        onRegister = {
+            viewModel.registerUser()
         }
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun RegistrationScreenContent(onRegister: (String, Int) -> Unit) {
-    var name by remember { mutableStateOf("") }
-    var experience by remember { mutableStateOf("") }
-
+fun RegistrationScreenContent(onRegister: () -> Unit) {
+    val cookieShape = MaterialShapes.Cookie12Sided.toShape()
+    
     val infiniteTransition = rememberInfiniteTransition(label = "rotation")
     val rotation by infiniteTransition.animateFloat(
         initialValue = 0f,
@@ -59,7 +61,7 @@ fun RegistrationScreenContent(onRegister: (String, Int) -> Unit) {
                 .offset(x = (-100).dp, y = (-200).dp)
                 .size(250.dp)
                 .graphicsLayer { rotationZ = rotation }
-                .clip(SmoothSunShape(bumps = 10, bumpDepth = 0.15f))
+                .clip(cookieShape)
                 .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.6f))
         )
         
@@ -68,7 +70,7 @@ fun RegistrationScreenContent(onRegister: (String, Int) -> Unit) {
                 .offset(x = 150.dp, y = 300.dp)
                 .size(300.dp)
                 .graphicsLayer { rotationZ = -rotation * 1.5f }
-                .clip(SmoothSunShape(bumps = 14, bumpDepth = 0.1f))
+                .clip(cookieShape)
                 .background(MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.5f))
         )
 
@@ -108,40 +110,7 @@ fun RegistrationScreenContent(onRegister: (String, Int) -> Unit) {
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
-                Spacer(modifier = Modifier.height(32.dp))
-
-                OutlinedTextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    label = { Text(stringResource(R.string.registration_name_hint), fontWeight = FontWeight.Bold) },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(20.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
-                        focusedContainerColor = MaterialTheme.colorScheme.surface,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surface
-                    )
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                OutlinedTextField(
-                    value = experience,
-                    onValueChange = { experience = it },
-                    label = { Text(stringResource(R.string.registration_experience_hint), fontWeight = FontWeight.Bold) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(20.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
-                        focusedContainerColor = MaterialTheme.colorScheme.surface,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surface
-                    )
-                )
-
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(48.dp))
 
                 val interactionSource = remember { MutableInteractionSource() }
                 val isPressed by interactionSource.collectIsPressedAsState()
@@ -154,18 +123,12 @@ fun RegistrationScreenContent(onRegister: (String, Int) -> Unit) {
                     label = "button_scale"
                 )
                 
-                val isFormValid = name.isNotBlank() && experience.isNotBlank()
-
                 Button(
-                    onClick = {
-                        val expYears = experience.toIntOrNull() ?: 0
-                        onRegister(name, expYears)
-                    },
+                    onClick = onRegister,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp)
                         .scale(scale),
-                    enabled = isFormValid,
                     interactionSource = interactionSource,
                     shape = RoundedCornerShape(20.dp),
                     colors = ButtonDefaults.buttonColors(
@@ -187,6 +150,6 @@ fun RegistrationScreenContent(onRegister: (String, Int) -> Unit) {
 @Composable
 fun RegistrationScreenPreview() {
     MaterialTheme {
-        RegistrationScreenContent(onRegister = { _, _ -> })
+        RegistrationScreenContent(onRegister = { })
     }
 }

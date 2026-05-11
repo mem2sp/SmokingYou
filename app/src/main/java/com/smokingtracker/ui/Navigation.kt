@@ -13,6 +13,9 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialShapes
+import androidx.compose.material3.toShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,7 +38,7 @@ sealed class Screen(val route: String, val titleResId: Int, val icon: ImageVecto
     object Registration : Screen("registration", R.string.registration_title, Icons.Filled.Home)
     object Home : Screen("home", R.string.nav_home, Icons.Filled.Home)
     object Graph : Screen("graph", R.string.nav_graph, Icons.Filled.BarChart)
-    object Profile : Screen("profile", R.string.nav_profile, Icons.Filled.Settings)
+    object Personal : Screen("personal", R.string.nav_personal, Icons.Filled.Settings)
     object About : Screen("about", R.string.about_app, Icons.Filled.Info)
 }
 
@@ -45,7 +48,8 @@ fun LoadingWrapper(content: @Composable () -> Unit) {
     var isLoading by remember { mutableStateOf(true) }
     
     LaunchedEffect(Unit) {
-        delay(1000)
+        val randomDelay = (100..300).random().toLong()
+        delay(randomDelay)
         isLoading = false
     }
     
@@ -117,9 +121,9 @@ fun MainApp(viewModel: MainViewModel) {
                 composable(Screen.Graph.route) { 
                     LoadingWrapper { GraphScreen(viewModel) } 
                 }
-                composable(Screen.Profile.route) { 
+                composable(Screen.Personal.route) { 
                     LoadingWrapper {
-                        ProfileScreen(viewModel, onNavigateToAbout = { navController.navigate(Screen.About.route) }) 
+                        PersonalScreen(viewModel, onNavigateToAbout = { navController.navigate(Screen.About.route) }) 
                     }
                 }
                 composable(Screen.About.route) { 
@@ -151,9 +155,10 @@ fun MainApp(viewModel: MainViewModel) {
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
-    val items = listOf(Screen.Home, Screen.Graph, Screen.Profile)
+    val items = listOf(Screen.Home, Screen.Graph, Screen.Personal)
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 

@@ -11,7 +11,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,19 +20,18 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialShapes
+import androidx.compose.material3.WavyProgressIndicatorDefaults
+import androidx.compose.material3.toShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Outline
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.smokingtracker.MainViewModel
 import com.smokingtracker.R
@@ -41,52 +39,17 @@ import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.math.cos
-import kotlin.math.min
-import kotlin.math.sin
-
-class SmoothSunShape(private val bumps: Int = 12, private val bumpDepth: Float = 0.15f) : Shape {
-    override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
-        val path = Path()
-        val cx = size.width / 2f
-        val cy = size.height / 2f
-        val rOut = min(cx, cy)
-        val rIn = rOut * (1f - bumpDepth)
-
-        val step = (2 * Math.PI) / bumps
-        var angle = -Math.PI / 2.0
-
-        for (i in 0 until bumps) {
-            val a1 = angle + step * i
-            val a2 = angle + step * (i + 0.5f)
-            val a3 = angle + step * (i + 1f)
-
-            val p1x = cx + rOut * cos(a1).toFloat()
-            val p1y = cy + rOut * sin(a1).toFloat()
-
-            val p2x = cx + rIn * cos(a2).toFloat()
-            val p2y = cy + rIn * sin(a2).toFloat()
-
-            val p3x = cx + rOut * cos(a3).toFloat()
-            val p3y = cy + rOut * sin(a3).toFloat()
-
-            if (i == 0) {
-                path.moveTo(p1x, p1y)
-            }
-
-            path.quadraticBezierTo(p2x, p2y, p3x, p3y)
-        }
-        path.close()
-        return Outline.Generic(path)
-    }
-}
 
 @Preview(showBackground = true)
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun HomeScreen(viewModel: MainViewModel? = null) {
+    val cookieShape = MaterialShapes.Cookie12Sided.toShape()
     val entries by (viewModel?.smokingEntries ?: kotlinx.coroutines.flow.MutableStateFlow(emptyList())).collectAsState()
-    val dailyLimit by (viewModel?.dailyLimit ?: kotlinx.coroutines.flow.MutableStateFlow(0)).collectAsState()
+    
+    val initialDailyLimit = if (LocalInspectionMode.current) 10 else 0
+    val dailyLimit by (viewModel?.dailyLimit ?: kotlinx.coroutines.flow.MutableStateFlow(initialDailyLimit)).collectAsState()
+
     var currentDate by remember { mutableStateOf(Calendar.getInstance()) }
 
     var timePassedText by remember { mutableStateOf("") }
@@ -232,6 +195,23 @@ fun HomeScreen(viewModel: MainViewModel? = null) {
                     }
                 }
 
+                if (dailyLimit > 0) {
+                    val progress = (selectedDateEntries.size.toFloat() / dailyLimit.toFloat()).coerceIn(0f, 1f)
+                    
+                    Spacer(modifier = Modifier.height(16.dp))
+                    
+                    LinearWavyProgressIndicator(
+                        progress = { progress },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                        color = if (progress >= 1f) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                        stroke = WavyProgressIndicatorDefaults.linearIndicatorStroke,
+                        trackStroke = WavyProgressIndicatorDefaults.linearTrackStroke
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Row(
@@ -257,7 +237,7 @@ fun HomeScreen(viewModel: MainViewModel? = null) {
                             newDate.add(Calendar.DAY_OF_YEAR, -1)
                             currentDate = newDate
                         },
-                        shape = SmoothSunShape(bumps = 12, bumpDepth = 0.2f),
+                        shape = cookieShape,
                         color = MaterialTheme.colorScheme.secondaryContainer,
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
                         modifier = Modifier.size(56.dp)
@@ -286,7 +266,7 @@ fun HomeScreen(viewModel: MainViewModel? = null) {
                             currentDate = newDate
                         },
                         enabled = !isToday,
-                        shape = SmoothSunShape(bumps = 12, bumpDepth = 0.2f),
+                        shape = cookieShape,
                         color = if (!isToday) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceVariant,
                         contentColor = if (!isToday) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                         modifier = Modifier.size(56.dp)
@@ -419,11 +399,20 @@ fun StatItem(label: String, value: String, modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
+fun HomeScreenPreview() {
+    MaterialTheme {
+        // Mock data logic or just a simplified version
+        HomeScreen()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
 fun EntryItemPreview() {
     EntryItem()
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun EntryItem(
     entryTime: Long = System.currentTimeMillis(),
@@ -431,6 +420,7 @@ fun EntryItem(
     onDelete: () -> Unit = {},
     onEdit: (Long) -> Unit = {}
 ) {
+    val cookieShape = MaterialShapes.Cookie9Sided.toShape()
     val timeStr = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(entryTime))
     var showTimePicker by remember { mutableStateOf(false) }
 
@@ -494,7 +484,7 @@ fun EntryItem(
             ) {
                 Surface(
                     onClick = { showTimePicker = true },
-                    shape = SmoothSunShape(bumps = 8, bumpDepth = 0.12f),
+                    shape = cookieShape,
                     color = pillBgColor.copy(alpha = 0.15f),
                     contentColor = pillBgColor,
                     modifier = Modifier.size(48.dp)
@@ -510,7 +500,7 @@ fun EntryItem(
 
                 Surface(
                     onClick = onDelete,
-                    shape = SmoothSunShape(bumps = 6, bumpDepth = 0.1f),
+                    shape = cookieShape,
                     color = colorScheme.errorContainer,
                     contentColor = colorScheme.onErrorContainer,
                     modifier = Modifier.size(48.dp)

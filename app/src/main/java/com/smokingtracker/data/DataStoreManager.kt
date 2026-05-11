@@ -20,8 +20,6 @@ class DataStoreManager(private val context: Context) {
 
     companion object {
         val IS_REGISTERED = booleanPreferencesKey("is_registered")
-        val USER_NAME = stringPreferencesKey("user_name")
-        val SMOKING_EXPERIENCE_YEARS = intPreferencesKey("smoking_experience_years")
         val SMOKING_ENTRIES = stringPreferencesKey("smoking_entries")
         val APP_THEME = stringPreferencesKey("app_theme")
         val UNLOCKED_ACHIEVEMENTS = stringPreferencesKey("unlocked_achievements")
@@ -31,14 +29,6 @@ class DataStoreManager(private val context: Context) {
 
     val isRegistered: Flow<Boolean> = context.dataStore.data.map { preferences ->
         preferences[IS_REGISTERED] ?: false
-    }
-
-    val userName: Flow<String> = context.dataStore.data.map { preferences ->
-        preferences[USER_NAME] ?: ""
-    }
-
-    val smokingExperienceYears: Flow<Int> = context.dataStore.data.map { preferences ->
-        preferences[SMOKING_EXPERIENCE_YEARS] ?: 0
     }
 
     val smokingEntries: Flow<List<Long>> = context.dataStore.data.map { preferences ->
@@ -72,10 +62,8 @@ class DataStoreManager(private val context: Context) {
         gson.fromJson(json, listType) ?: emptyList()
     }
 
-    suspend fun saveUserProfile(name: String, experienceYears: Int) {
+    suspend fun saveUserProfile() {
         context.dataStore.edit { preferences ->
-            preferences[USER_NAME] = name
-            preferences[SMOKING_EXPERIENCE_YEARS] = experienceYears
             preferences[IS_REGISTERED] = true
         }
     }
@@ -142,8 +130,6 @@ class DataStoreManager(private val context: Context) {
 
     suspend fun restoreFromBackup(
         isReg: Boolean,
-        name: String,
-        experience: Int,
         entries: List<Long>,
         theme: String,
         achievements: Set<String>,
@@ -151,8 +137,6 @@ class DataStoreManager(private val context: Context) {
     ) {
         context.dataStore.edit { preferences ->
             preferences[IS_REGISTERED] = isReg
-            preferences[USER_NAME] = name
-            preferences[SMOKING_EXPERIENCE_YEARS] = experience
             preferences[SMOKING_ENTRIES] = gson.toJson(entries)
             preferences[APP_THEME] = theme
             preferences[UNLOCKED_ACHIEVEMENTS] = gson.toJson(achievements)

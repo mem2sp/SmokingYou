@@ -11,6 +11,7 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -43,22 +44,19 @@ import com.smokingtracker.MainViewModel
 import com.smokingtracker.R
 import com.smokingtracker.data.ThemePreference
 import com.smokingtracker.AchievementsManager
+import com.smokingtracker.ui.theme.AppTheme
 import com.smokingtracker.AchievementCategory
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(viewModel: MainViewModel, onNavigateToAbout: () -> Unit) {
-    val userName by viewModel.userName.collectAsState()
-    val experience by viewModel.smokingExperienceYears.collectAsState()
+fun PersonalScreen(viewModel: MainViewModel, onNavigateToAbout: () -> Unit) {
     val themePreference by viewModel.themePreference.collectAsState()
     val entries by viewModel.smokingEntries.collectAsState()
     val unlockedAchievements by viewModel.unlockedAchievements.collectAsState()
     val dailyLimit by viewModel.dailyLimit.collectAsState()
 
-    ProfileScreenContent(
-        userName = userName,
-        experience = experience,
+    PersonalScreenContent(
         themePreference = themePreference,
         entries = entries,
         unlockedAchievements = unlockedAchievements,
@@ -73,9 +71,7 @@ fun ProfileScreen(viewModel: MainViewModel, onNavigateToAbout: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreenContent(
-    userName: String,
-    experience: Int,
+fun PersonalScreenContent(
     themePreference: ThemePreference,
     entries: List<Long>,
     unlockedAchievements: Set<String>,
@@ -99,7 +95,7 @@ fun ProfileScreenContent(
                         contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                     ) {
                         Text(
-                            text = stringResource(R.string.profile_title),
+                            text = stringResource(R.string.personal_title),
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Black),
                             modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)
                         )
@@ -117,79 +113,43 @@ fun ProfileScreenContent(
                 .padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = userName,
-                style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Black),
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(top = 16.dp)
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Surface(
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.secondaryContainer,
-                contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-            ) {
-                Text(
-                    text = stringResource(R.string.profile_years_smoking, experience.toString()),
-                    style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
-                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)
-                )
-            }
+            Spacer(modifier = Modifier.height(16.dp))
 
-            Spacer(modifier = Modifier.height(32.dp))
-
-            Row(
+            SingleChoiceSegmentedButtonRow(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(2.dp)
+                space = (-8).dp
             ) {
                 tabs.forEachIndexed { index, title ->
                     val isSelected = selectedTabIndex == index
-                    
-                    val topStartTarget = if (isSelected) 12.dp else if (index == 0) 28.dp else 4.dp
-                    val bottomStartTarget = if (isSelected) 12.dp else if (index == 0) 28.dp else 4.dp
-                    val topEndTarget = if (isSelected) 12.dp else if (index == tabs.size - 1) 28.dp else 4.dp
-                    val bottomEndTarget = if (isSelected) 12.dp else if (index == tabs.size - 1) 28.dp else 4.dp
-
-                    val topStart by animateDpAsState(topStartTarget, spring(dampingRatio = 0.6f, stiffness = Spring.StiffnessLow), label = "corner")
-                    val bottomStart by animateDpAsState(bottomStartTarget, spring(dampingRatio = 0.6f, stiffness = Spring.StiffnessLow), label = "corner")
-                    val topEnd by animateDpAsState(topEndTarget, spring(dampingRatio = 0.6f, stiffness = Spring.StiffnessLow), label = "corner")
-                    val bottomEnd by animateDpAsState(bottomEndTarget, spring(dampingRatio = 0.6f, stiffness = Spring.StiffnessLow), label = "corner")
-
-                    val bgColor by animateColorAsState(
-                        targetValue = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant,
-                        tween(300), label = "bgColor"
+                    val cornerRadius by animateDpAsState(
+                        targetValue = if (isSelected) 28.dp else 12.dp,
+                        animationSpec = spring(dampingRatio = 0.7f, stiffness = Spring.StiffnessLow),
+                        label = "tab_corner"
                     )
-                    
-                    val textColor by animateColorAsState(
-                        targetValue = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant,
-                        tween(300), label = "textColor"
+                    SegmentedButton(
+                        selected = isSelected,
+                        onClick = { selectedTabIndex = index },
+                        shape = RoundedCornerShape(cornerRadius),
+                        border = BorderStroke(0.dp, Color.Transparent),
+                        colors = SegmentedButtonDefaults.colors(
+                            activeContainerColor = MaterialTheme.colorScheme.primary,
+                            activeContentColor = MaterialTheme.colorScheme.onPrimary,
+                            inactiveContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                            inactiveContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            activeBorderColor = Color.Transparent,
+                            inactiveBorderColor = Color.Transparent
+                        ),
+                        label = {
+                            Text(
+                                text = title,
+                                style = MaterialTheme.typography.titleSmall.copy(
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                                )
+                            )
+                        }
                     )
-
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(48.dp)
-                            .clip(RoundedCornerShape(
-                                topStart = topStart, 
-                                topEnd = topEnd, 
-                                bottomEnd = bottomEnd, 
-                                bottomStart = bottomStart
-                            ))
-                            .background(bgColor)
-                            .clickable { selectedTabIndex = index },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = title,
-                            style = MaterialTheme.typography.titleSmall.copy(
-                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
-                            ),
-                            color = textColor
-                        )
-                    }
                 }
             }
 
@@ -308,7 +268,7 @@ fun SettingsTab(
                         onValueChange = { newLimit = it },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.fillMaxWidth(),
-                        label = { Text("Limit (0 for none)") },
+                        label = { Text (stringResource(R.string.no_limit) ) },
                         shape = RoundedCornerShape(16.dp)
                     )
                     Spacer(modifier = Modifier.height(24.dp))
@@ -373,7 +333,7 @@ fun SettingsTab(
                         )
                     }
 
-                    ExpressiveThemeSwitcher(
+                    ThemeSegmentedButton(
                         currentTheme = currentTheme,
                         onThemeChange = onThemeChange
                     )
@@ -450,67 +410,51 @@ fun SettingsTab(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpressiveThemeSwitcher(
+fun ThemeSegmentedButton(
     currentTheme: ThemePreference,
     onThemeChange: (ThemePreference) -> Unit
 ) {
     val options = listOf(
-        ThemePreference.SYSTEM to stringResource(R.string.theme_system),
         ThemePreference.LIGHT to stringResource(R.string.theme_light),
+        ThemePreference.SYSTEM to stringResource(R.string.theme_system),
         ThemePreference.DARK to stringResource(R.string.theme_dark)
     )
-    
-    Row(
+
+    SingleChoiceSegmentedButtonRow(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(2.dp) // The "connected" gap
+        space = (-8).dp
     ) {
         options.forEachIndexed { index, (theme, title) ->
             val isSelected = currentTheme == theme
-
-            val topStartTarget = if (isSelected) 12.dp else if (index == 0) 28.dp else 4.dp
-            val bottomStartTarget = if (isSelected) 12.dp else if (index == 0) 28.dp else 4.dp
-            
-            val topEndTarget = if (isSelected) 12.dp else if (index == options.size - 1) 28.dp else 4.dp
-            val bottomEndTarget = if (isSelected) 12.dp else if (index == options.size - 1) 28.dp else 4.dp
-
-            val topStart by animateDpAsState(topStartTarget, spring(dampingRatio = 0.6f, stiffness = Spring.StiffnessLow), label = "corner")
-            val bottomStart by animateDpAsState(bottomStartTarget, spring(dampingRatio = 0.6f, stiffness = Spring.StiffnessLow), label = "corner")
-            val topEnd by animateDpAsState(topEndTarget, spring(dampingRatio = 0.6f, stiffness = Spring.StiffnessLow), label = "corner")
-            val bottomEnd by animateDpAsState(bottomEndTarget, spring(dampingRatio = 0.6f, stiffness = Spring.StiffnessLow), label = "corner")
-
-            val bgColor by animateColorAsState(
-                targetValue = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp),
-                tween(300), label = "bgColor"
+            val cornerRadius by animateDpAsState(
+                targetValue = if (isSelected) 28.dp else 12.dp,
+                animationSpec = spring(dampingRatio = 0.7f, stiffness = Spring.StiffnessLow),
+                label = "corner"
             )
-            
-            val textColor by animateColorAsState(
-                targetValue = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant,
-                tween(300), label = "textColor"
+            SegmentedButton(
+                selected = isSelected,
+                onClick = { onThemeChange(theme) },
+                shape = RoundedCornerShape(cornerRadius),
+                border = BorderStroke(0.dp, Color.Transparent),
+                colors = SegmentedButtonDefaults.colors(
+                    activeContainerColor = MaterialTheme.colorScheme.primary,
+                    activeContentColor = MaterialTheme.colorScheme.onPrimary,
+                    inactiveContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.4f),
+                    inactiveContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    activeBorderColor = Color.Transparent,
+                    inactiveBorderColor = Color.Transparent
+                ),
+                label = {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
+                    )
+                }
             )
-
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(56.dp)
-                    .clip(RoundedCornerShape(
-                        topStart = topStart, 
-                        topEnd = topEnd, 
-                        bottomEnd = bottomEnd, 
-                        bottomStart = bottomStart
-                    ))
-                    .background(bgColor)
-                    .clickable { onThemeChange(theme) },
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
-                    color = textColor
-                )
-            }
         }
     }
 }
@@ -555,7 +499,6 @@ fun SettingItem(
             modifier = modifier,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Expressive Icon inside a Circle
             Surface(
                 shape = CircleShape,
                 color = MaterialTheme.colorScheme.secondaryContainer,
@@ -643,5 +586,23 @@ fun AchievementsTab(entries: List<Long>, unlockedAchievements: Set<String>) {
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PersonalScreenPreview() {
+    AppTheme {
+        PersonalScreenContent(
+            themePreference = ThemePreference.SYSTEM,
+            entries = emptyList(),
+            unlockedAchievements = setOf("first_smoke"),
+            dailyLimit = 10,
+            onThemeChange = {},
+            onSetDailyLimit = {},
+            onBackupData = { _, _, _ -> },
+            onRestoreData = { _, _, _ -> },
+            onNavigateToAbout = {}
+        )
     }
 }

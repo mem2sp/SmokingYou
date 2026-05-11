@@ -11,6 +11,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialShapes
+import androidx.compose.material3.toShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -139,6 +142,7 @@ fun GraphScreenContent(entries: List<Long>) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun GraphSection(
     title: String,
@@ -148,6 +152,7 @@ fun GraphSection(
     onPrevious: () -> Unit,
     onNext: () -> Unit
 ) {
+    val cookieShape = MaterialShapes.Cookie12Sided.toShape()
     ElevatedCard(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.elevatedCardColors(
@@ -197,7 +202,7 @@ fun GraphSection(
             ) {
                 Surface(
                     onClick = onPrevious,
-                    shape = SmoothSunShape(bumps = 12, bumpDepth = 0.2f),
+                    shape = cookieShape,
                     color = MaterialTheme.colorScheme.secondaryContainer,
                     contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
                     modifier = Modifier.size(48.dp)
@@ -221,7 +226,7 @@ fun GraphSection(
 
                 Surface(
                     onClick = onNext,
-                    shape = SmoothSunShape(bumps = 12, bumpDepth = 0.2f),
+                    shape = cookieShape,
                     color = MaterialTheme.colorScheme.secondaryContainer,
                     contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
                     modifier = Modifier.size(48.dp)

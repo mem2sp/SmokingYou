@@ -1,9 +1,7 @@
 <resources>
     <string name="app_name">SmokingYou</string>
     <string name="registration_title">Добро пожаловать в SmokingYou</string>
-    <string name="registration_subtitle">Пожалуйста, настройте ваш профиль</string>
-    <string name="registration_name_hint">Ваше Имя</string>
-    <string name="registration_experience_hint">Стаж курения (лет)</string>
+    <string name="registration_subtitle">Твой персональный трекер курения</string>
     <string name="registration_button">Начать Отслеживание</string>
     <string name="home_title">SmokingYou</string>
     <string name="add_entry">Добавить</string>
@@ -22,14 +20,13 @@
     <string name="dialog_cancel">Отмена</string>
     <string name="nav_home">Главная</string>
     <string name="nav_graph">Графики</string>
-    <string name="nav_profile">Профиль</string>
+    <string name="nav_personal">Моё</string>
     <string name="analytics_title">Аналитика</string>
     <string name="daily_overview">За день</string>
     <string name="weekly_overview">За неделю</string>
     <string name="monthly_overview">За месяц</string>
     <string name="yearly_overview">За год</string>
-    <string name="profile_title">Профиль</string>
-    <string name="profile_years_smoking">Стаж курения: %1$s лет</string>
+    <string name="personal_title">Моё</string>
     <string name="tab_settings">Настройки</string>
     <string name="tab_achievements">Достижения</string>
     <string name="settings_appearance">Внешний вид</string>

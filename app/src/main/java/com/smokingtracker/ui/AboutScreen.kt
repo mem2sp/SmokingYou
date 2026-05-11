@@ -15,6 +15,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialShapes
+import androidx.compose.material3.toShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,9 +35,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.smokingtracker.R
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun AboutScreen(navController: NavHostController) {
+    val cookieShape = MaterialShapes.Cookie12Sided.toShape()
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
 
@@ -93,7 +97,7 @@ fun AboutScreen(navController: NavHostController) {
                     .offset(x = (-80).dp, y = (-150).dp)
                     .size(200.dp)
                     .graphicsLayer { rotationZ = rotation }
-                    .clip(SmoothSunShape(bumps = 8, bumpDepth = 0.2f))
+                    .clip(cookieShape)
                     .background(MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.5f))
             )
             
@@ -102,7 +106,7 @@ fun AboutScreen(navController: NavHostController) {
                     .offset(x = 120.dp, y = 200.dp)
                     .size(250.dp)
                     .graphicsLayer { rotationZ = -rotation }
-                    .clip(SmoothSunShape(bumps = 14, bumpDepth = 0.1f))
+                    .clip(cookieShape)
                     .background(MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f))
             )
 
@@ -124,7 +128,7 @@ fun AboutScreen(navController: NavHostController) {
                 ) {
                     Surface(
                         modifier = Modifier.size(96.dp),
-                        shape = SmoothSunShape(bumps = 12, bumpDepth = 0.15f),
+                        shape = cookieShape,
                         color = MaterialTheme.colorScheme.primaryContainer,
                         shadowElevation = 4.dp
                     ) {
@@ -170,7 +174,7 @@ fun AboutScreen(navController: NavHostController) {
                     Spacer(modifier = Modifier.height(32.dp))
 
                     LinkPill(text = stringResource(R.string.link_github)) {
-                        // uriHandler.openUri("https://github.com/...")
+                        uriHandler.openUri("https://github.com/mem2sp/SmokingYou")
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                     LinkPill(text = stringResource(R.string.link_telegram)) {

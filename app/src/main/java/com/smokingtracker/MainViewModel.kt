@@ -27,18 +27,6 @@ class MainViewModel(private val dataStoreManager: DataStoreManager, private val 
         initialValue = null
     )
 
-    val userName: StateFlow<String> = dataStoreManager.userName.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = ""
-    )
-
-    val smokingExperienceYears: StateFlow<Int> = dataStoreManager.smokingExperienceYears.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = 0
-    )
-
     val smokingEntries: StateFlow<List<Long>> = dataStoreManager.smokingEntries.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -104,9 +92,9 @@ class MainViewModel(private val dataStoreManager: DataStoreManager, private val 
         dataStoreManager.setUnlockedAchievements(newUnlockedSet)
     }
 
-    fun registerUser(name: String, experienceYears: Int) {
+    fun registerUser() {
         viewModelScope.launch {
-            dataStoreManager.saveUserProfile(name, experienceYears)
+            dataStoreManager.saveUserProfile()
         }
     }
 
@@ -140,8 +128,6 @@ class MainViewModel(private val dataStoreManager: DataStoreManager, private val 
     
     data class BackupData(
         val isRegistered: Boolean,
-        val userName: String,
-        val smokingExperienceYears: Int,
         val smokingEntries: List<Long>,
         val appTheme: String,
         val unlockedAchievements: Set<String>,
@@ -153,8 +139,6 @@ class MainViewModel(private val dataStoreManager: DataStoreManager, private val 
             try {
                 val data = BackupData(
                     isRegistered = dataStoreManager.isRegistered.first() ?: false,
-                    userName = dataStoreManager.userName.first(),
-                    smokingExperienceYears = dataStoreManager.smokingExperienceYears.first(),
                     smokingEntries = dataStoreManager.smokingEntries.first(),
                     appTheme = dataStoreManager.appTheme.first().name,
                     unlockedAchievements = dataStoreManager.unlockedAchievements.first(),
@@ -182,8 +166,6 @@ class MainViewModel(private val dataStoreManager: DataStoreManager, private val 
                         if (data != null) {
                             dataStoreManager.restoreFromBackup(
                                 isReg = data.isRegistered,
-                                name = data.userName,
-                                experience = data.smokingExperienceYears,
                                 entries = data.smokingEntries,
                                 theme = data.appTheme,
                                 achievements = data.unlockedAchievements,
