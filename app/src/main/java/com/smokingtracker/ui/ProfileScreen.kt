@@ -141,6 +141,7 @@ fun PersonalScreenContent(
                             activeBorderColor = Color.Transparent,
                             inactiveBorderColor = Color.Transparent
                         ),
+                        icon = {},
                         label = {
                             Text(
                                 text = title,
@@ -448,6 +449,7 @@ fun ThemeSegmentedButton(
                     activeBorderColor = Color.Transparent,
                     inactiveBorderColor = Color.Transparent
                 ),
+                icon = {},
                 label = {
                     Text(
                         text = title,

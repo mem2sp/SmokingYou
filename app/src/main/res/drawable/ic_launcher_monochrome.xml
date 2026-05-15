@@ -6,13 +6,13 @@
 
     <path
         android:fillColor="#000000"
-        android:pathData="M30,44 h16 v20 h-16 c-2.2,0 -4,-1.8 -4,-4 v-12 c0,-2.2 1.8,-4 4,-4 z"/>
+        android:pathData="M28,44 h16 v20 h-16 c-2.2,0 -4,-1.8 -4,-4 v-12 c0,-2.2 1.8,-4 4,-4 z"/>
 
     <path
         android:fillColor="#000000"
-        android:pathData="M48,44 h30 v20 h-30 z"/>
+        android:pathData="M46,44 h30 v20 h-30 z"/>
 
     <path
         android:fillColor="#000000"
-        android:pathData="M80,44 h2 c2.2,0 4,1.8 4,4 v12 c0,2.2 -1.8,4 -4,4 h-2 z"/>
+        android:pathData="M78,44 h2 c2.2,0 4,1.8 4,4 v12 c0,2.2 -1.8,4 -4,4 h-2 z"/>
 </vector>

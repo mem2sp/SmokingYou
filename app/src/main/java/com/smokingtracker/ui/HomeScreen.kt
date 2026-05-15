@@ -57,6 +57,10 @@ fun HomeScreen(viewModel: MainViewModel? = null) {
     val invalidEntryText = stringResource(R.string.invalid_future_entry)
     val startTrackingText = stringResource(R.string.start_tracking)
     
+    val formatHm = stringResource(R.string.duration_hm)
+    val formatHms = stringResource(R.string.duration_hms)
+    val formatMs = stringResource(R.string.duration_ms)
+    
     var showLimitWarning by remember { mutableStateOf(false) }
 
     val launcher = rememberLauncherForActivityResult(
@@ -69,7 +73,7 @@ fun HomeScreen(viewModel: MainViewModel? = null) {
         }
     }
 
-    LaunchedEffect(entries) {
+    LaunchedEffect(entries, formatHm, formatHms, formatMs) {
         if (timePassedText.isEmpty()) timePassedText = calculatingText
         while (true) {
             val lastEntry = entries.maxOrNull()
@@ -84,10 +88,10 @@ fun HomeScreen(viewModel: MainViewModel? = null) {
                     val minutes = TimeUnit.MILLISECONDS.toMinutes(diff) % 60
                     val seconds = TimeUnit.MILLISECONDS.toSeconds(diff) % 60
                     
-                    if (hours > 0) {
-                         timePassedText = String.format("%02dh %02dm %02ds", hours, minutes, seconds)
-                    } else {
-                         timePassedText = String.format("%02dm %02ds", minutes, seconds)
+                    timePassedText = when {
+                        hours >= 24 -> String.format(Locale.getDefault(), formatHm, hours, minutes)
+                        hours > 0 -> String.format(Locale.getDefault(), formatHms, hours, minutes, seconds)
+                        else -> String.format(Locale.getDefault(), formatMs, minutes, seconds)
                     }
                 }
             } else {
