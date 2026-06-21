@@ -6,12 +6,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material3.*
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialShapes
@@ -20,8 +23,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -40,6 +45,8 @@ sealed class Screen(val route: String, val titleResId: Int, val icon: ImageVecto
     object Graph : Screen("graph", R.string.nav_graph, Icons.Filled.BarChart)
     object Personal : Screen("personal", R.string.nav_personal, Icons.Filled.Settings)
     object About : Screen("about", R.string.about_app, Icons.Filled.Info)
+    object Achievements : Screen("achievements", R.string.settings_achievements, Icons.Filled.EmojiEvents)
+    object Statistics : Screen("statistics", R.string.settings_statistics, Icons.Filled.BarChart)
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -81,7 +88,10 @@ fun MainApp(viewModel: MainViewModel) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    val showBottomBar = currentRoute != Screen.Registration.route && currentRoute != Screen.About.route
+    val showBottomBar = currentRoute != Screen.Registration.route && 
+                       currentRoute != Screen.About.route &&
+                       currentRoute != Screen.Achievements.route &&
+                       currentRoute != Screen.Statistics.route
 
     if (isRegistered == null) {
         Box(modifier = Modifier.fillMaxSize())
@@ -123,11 +133,22 @@ fun MainApp(viewModel: MainViewModel) {
                 }
                 composable(Screen.Personal.route) { 
                     LoadingWrapper {
-                        PersonalScreen(viewModel, onNavigateToAbout = { navController.navigate(Screen.About.route) }) 
+                        PersonalScreen(
+                            viewModel = viewModel, 
+                            onNavigateToAbout = { navController.navigate(Screen.About.route) },
+                            onNavigateToAchievements = { navController.navigate(Screen.Achievements.route) },
+                            onNavigateToStatistics = { navController.navigate(Screen.Statistics.route) }
+                        ) 
                     }
                 }
                 composable(Screen.About.route) { 
                     LoadingWrapper { AboutScreen(navController) } 
+                }
+                composable(Screen.Achievements.route) {
+                    LoadingWrapper { AchievementsScreen(viewModel, onBack = { navController.popBackStack() }) }
+                }
+                composable(Screen.Statistics.route) {
+                    LoadingWrapper { StatisticsScreen(viewModel, onBack = { navController.popBackStack() }) }
                 }
             }
         }

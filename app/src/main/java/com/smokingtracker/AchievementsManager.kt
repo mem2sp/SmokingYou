@@ -124,8 +124,14 @@ object AchievementsManager {
         val title = context.getString(achievement.titleResId)
         val desc = context.getString(achievement.descResId)
 
+        val icon = if (achievement.category == AchievementCategory.NO_SMOKE) {
+            R.drawable.ic_crosscigarette
+        } else {
+            R.drawable.ic_cigarettebase
+        }
+
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_cigarette) // Use app icon as notification icon
+            .setSmallIcon(icon)
             .setContentTitle(context.getString(R.string.notification_title, title))
             .setContentText(desc)
             .setPriority(NotificationCompat.PRIORITY_HIGH)

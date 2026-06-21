@@ -10,9 +10,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,12 +18,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Brightness4
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Backup
 import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -44,28 +45,34 @@ import com.smokingtracker.MainViewModel
 import com.smokingtracker.R
 import com.smokingtracker.data.ThemePreference
 import com.smokingtracker.AchievementsManager
+import com.smokingtracker.StatisticsManager
+import com.smokingtracker.StatisticsData
 import com.smokingtracker.ui.theme.AppTheme
-import com.smokingtracker.AchievementCategory
 import java.util.Locale
+import java.util.Date
+import java.text.SimpleDateFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PersonalScreen(viewModel: MainViewModel, onNavigateToAbout: () -> Unit) {
+fun PersonalScreen(
+    viewModel: MainViewModel, 
+    onNavigateToAbout: () -> Unit,
+    onNavigateToAchievements: () -> Unit,
+    onNavigateToStatistics: () -> Unit
+) {
     val themePreference by viewModel.themePreference.collectAsState()
-    val entries by viewModel.smokingEntries.collectAsState()
-    val unlockedAchievements by viewModel.unlockedAchievements.collectAsState()
     val dailyLimit by viewModel.dailyLimit.collectAsState()
 
     PersonalScreenContent(
         themePreference = themePreference,
-        entries = entries,
-        unlockedAchievements = unlockedAchievements,
         dailyLimit = dailyLimit,
         onThemeChange = viewModel::updateThemePreference,
         onSetDailyLimit = viewModel::setDailyLimit,
         onBackupData = { uri, onSuccess, onError -> viewModel.backupData(uri, onSuccess, onError) },
         onRestoreData = { uri, onSuccess, onError -> viewModel.restoreData(uri, onSuccess, onError) },
-        onNavigateToAbout = onNavigateToAbout
+        onNavigateToAbout = onNavigateToAbout,
+        onNavigateToAchievements = onNavigateToAchievements,
+        onNavigateToStatistics = onNavigateToStatistics
     )
 }
 
@@ -73,18 +80,15 @@ fun PersonalScreen(viewModel: MainViewModel, onNavigateToAbout: () -> Unit) {
 @Composable
 fun PersonalScreenContent(
     themePreference: ThemePreference,
-    entries: List<Long>,
-    unlockedAchievements: Set<String>,
     dailyLimit: Int,
     onThemeChange: (ThemePreference) -> Unit,
     onSetDailyLimit: (Int) -> Unit,
     onBackupData: (android.net.Uri, () -> Unit, () -> Unit) -> Unit,
     onRestoreData: (android.net.Uri, () -> Unit, () -> Unit) -> Unit,
-    onNavigateToAbout: () -> Unit = {}
+    onNavigateToAbout: () -> Unit = {},
+    onNavigateToAchievements: () -> Unit = {},
+    onNavigateToStatistics: () -> Unit = {}
 ) {
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
-    val tabs = listOf(stringResource(R.string.tab_settings), stringResource(R.string.tab_achievements))
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -107,81 +111,34 @@ fun PersonalScreenContent(
             )
         }
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(16.dp))
-
-            SingleChoiceSegmentedButtonRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp, vertical = 8.dp),
-                space = (-8).dp
-            ) {
-                tabs.forEachIndexed { index, title ->
-                    val isSelected = selectedTabIndex == index
-                    val cornerRadius by animateDpAsState(
-                        targetValue = if (isSelected) 28.dp else 12.dp,
-                        animationSpec = spring(dampingRatio = 0.7f, stiffness = Spring.StiffnessLow),
-                        label = "tab_corner"
-                    )
-                    SegmentedButton(
-                        selected = isSelected,
-                        onClick = { selectedTabIndex = index },
-                        shape = RoundedCornerShape(cornerRadius),
-                        border = BorderStroke(0.dp, Color.Transparent),
-                        colors = SegmentedButtonDefaults.colors(
-                            activeContainerColor = MaterialTheme.colorScheme.primary,
-                            activeContentColor = MaterialTheme.colorScheme.onPrimary,
-                            inactiveContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                            inactiveContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            activeBorderColor = Color.Transparent,
-                            inactiveBorderColor = Color.Transparent
-                        ),
-                        icon = {},
-                        label = {
-                            Text(
-                                text = title,
-                                style = MaterialTheme.typography.titleSmall.copy(
-                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
-                                )
-                            )
-                        }
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            when (selectedTabIndex) {
-                0 -> SettingsTab(
-                    currentTheme = themePreference,
-                    dailyLimit = dailyLimit,
-                    onThemeChange = onThemeChange,
-                    onSetDailyLimit = onSetDailyLimit,
-                    onBackupData = onBackupData,
-                    onRestoreData = onRestoreData,
-                    onNavigateToAbout = onNavigateToAbout
-                )
-                1 -> AchievementsTab(entries = entries, unlockedAchievements = unlockedAchievements)
-            }
-        }
+        SettingsTab(
+            modifier = Modifier.padding(paddingValues),
+            currentTheme = themePreference,
+            dailyLimit = dailyLimit,
+            onThemeChange = onThemeChange,
+            onSetDailyLimit = onSetDailyLimit,
+            onBackupData = onBackupData,
+            onRestoreData = onRestoreData,
+            onNavigateToAbout = onNavigateToAbout,
+            onNavigateToAchievements = onNavigateToAchievements,
+            onNavigateToStatistics = onNavigateToStatistics
+        )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsTab(
+    modifier: Modifier = Modifier,
     currentTheme: ThemePreference,
     dailyLimit: Int,
     onThemeChange: (ThemePreference) -> Unit,
     onSetDailyLimit: (Int) -> Unit,
     onBackupData: (android.net.Uri, () -> Unit, () -> Unit) -> Unit,
     onRestoreData: (android.net.Uri, () -> Unit, () -> Unit) -> Unit,
-    onNavigateToAbout: () -> Unit
+    onNavigateToAbout: () -> Unit,
+    onNavigateToAchievements: () -> Unit,
+    onNavigateToStatistics: () -> Unit
 ) {
     var showLanguageDialog by remember { mutableStateOf(false) }
     var showLimitDialog by remember { mutableStateOf(false) }
@@ -291,7 +248,7 @@ fun SettingsTab(
     }
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 120.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
@@ -357,6 +314,20 @@ fun SettingsTab(
                     subtitle = if (currentLocale == "ru") "Русский" else "English",
                     shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp, bottomStart = 4.dp, bottomEnd = 4.dp),
                     onClick = { showLanguageDialog = true }
+                )
+                SettingItem(
+                    icon = Icons.Filled.BarChart,
+                    title = stringResource(R.string.settings_statistics),
+                    subtitle = stringResource(R.string.statistics_desc),
+                    shape = RoundedCornerShape(4.dp),
+                    onClick = onNavigateToStatistics
+                )
+                SettingItem(
+                    icon = Icons.Filled.EmojiEvents,
+                    title = stringResource(R.string.settings_achievements),
+                    subtitle = stringResource(R.string.achievements_desc),
+                    shape = RoundedCornerShape(4.dp),
+                    onClick = onNavigateToAchievements
                 )
                 SettingItem(
                     icon = Icons.Filled.Warning, 
@@ -520,10 +491,197 @@ fun SettingItem(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AchievementsTab(entries: List<Long>, unlockedAchievements: Set<String>) {
+fun StatisticsScreen(viewModel: MainViewModel, onBack: () -> Unit) {
+    val entries by viewModel.smokingEntries.collectAsState()
+    val stats = remember(entries) { StatisticsManager.calculateStats(entries) }
+
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Surface(
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    ) {
+                        Text(
+                            text = stringResource(R.string.settings_statistics),
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Black),
+                            modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)
+                        )
+                    }
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color.Transparent
+                ),
+            )
+        }
+    ) { paddingValues ->
+        if (entries.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize().padding(paddingValues), contentAlignment = Alignment.Center) {
+                Text(stringResource(R.string.stats_no_data), style = MaterialTheme.typography.titleMedium)
+            }
+        } else {
+            StatisticsList(modifier = Modifier.padding(paddingValues), stats = stats)
+        }
+    }
+}
+
+@Composable
+fun StatisticsList(modifier: Modifier = Modifier, stats: StatisticsData) {
+    val dateFormat = SimpleDateFormat("d MMMM yyyy, HH:mm", Locale.getDefault())
+    val trackingSinceStr = stats.trackingSince?.let { dateFormat.format(Date(it)) } ?: stringResource(R.string.stats_no_data)
+
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 120.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        item {
+            StatCard(
+                title = stringResource(R.string.stats_total_count),
+                value = stats.totalCount.toString(),
+                icon = Icons.Filled.BarChart,
+                color = MaterialTheme.colorScheme.primaryContainer
+            )
+        }
+        item {
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                StatCard(
+                    modifier = Modifier.weight(1f),
+                    title = stringResource(R.string.stats_max_per_day),
+                    value = stats.maxPerDay.toString(),
+                    icon = Icons.Filled.Warning,
+                    color = MaterialTheme.colorScheme.errorContainer
+                )
+                StatCard(
+                    modifier = Modifier.weight(1f),
+                    title = stringResource(R.string.stats_min_per_day),
+                    value = stats.minPerDay.toString(),
+                    icon = Icons.Filled.Language, // Just a placeholder icon
+                    color = MaterialTheme.colorScheme.secondaryContainer
+                )
+            }
+        }
+        item {
+            StatCard(
+                title = stringResource(R.string.stats_avg_per_day),
+                value = stats.avgPerDay.toString(),
+                icon = Icons.Filled.BarChart,
+                color = MaterialTheme.colorScheme.tertiaryContainer
+            )
+        }
+        item {
+            StatCard(
+                title = stringResource(R.string.stats_max_smoke_free_streak),
+                value = stringResource(R.string.stats_days_unit, stats.longestStreakDays),
+                icon = Icons.Filled.EmojiEvents,
+                color = MaterialTheme.colorScheme.primaryContainer
+            )
+        }
+        item {
+            StatCard(
+                title = stringResource(R.string.stats_tracking_since),
+                value = trackingSinceStr,
+                icon = Icons.Filled.Info,
+                color = MaterialTheme.colorScheme.surfaceVariant
+            )
+        }
+    }
+}
+
+@Composable
+fun StatCard(
+    modifier: Modifier = Modifier,
+    title: String,
+    value: String,
+    icon: ImageVector,
+    color: Color
+) {
+    ElevatedCard(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.elevatedCardColors(containerColor = color.copy(alpha = 0.5f)),
+        elevation = CardDefaults.elevatedCardElevation(0.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(20.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Surface(
+                shape = CircleShape,
+                color = color,
+                modifier = Modifier.size(40.dp)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(icon, contentDescription = null, modifier = Modifier.size(24.dp))
+                }
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Column {
+                Text(title, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(value, style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold))
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AchievementsScreen(viewModel: MainViewModel, onBack: () -> Unit) {
+    val entries by viewModel.smokingEntries.collectAsState()
+    val unlockedAchievements by viewModel.unlockedAchievements.collectAsState()
+
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Surface(
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    ) {
+                        Text(
+                            text = stringResource(R.string.my_achievements),
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Black),
+                            modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)
+                        )
+                    }
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color.Transparent
+                ),
+            )
+        }
+    ) { paddingValues ->
+        AchievementsTab(
+            modifier = Modifier.padding(paddingValues),
+            entries = entries, 
+            unlockedAchievements = unlockedAchievements
+        )
+    }
+}
+
+@Composable
+fun AchievementsTab(
+    modifier: Modifier = Modifier,
+    entries: List<Long>, 
+    unlockedAchievements: Set<String>
+) {
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 120.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
@@ -597,14 +755,14 @@ fun PersonalScreenPreview() {
     AppTheme {
         PersonalScreenContent(
             themePreference = ThemePreference.SYSTEM,
-            entries = emptyList(),
-            unlockedAchievements = setOf("first_smoke"),
             dailyLimit = 10,
             onThemeChange = {},
             onSetDailyLimit = {},
             onBackupData = { _, _, _ -> },
             onRestoreData = { _, _, _ -> },
-            onNavigateToAbout = {}
+            onNavigateToAbout = {},
+            onNavigateToAchievements = {},
+            onNavigateToStatistics = {}
         )
     }
 }

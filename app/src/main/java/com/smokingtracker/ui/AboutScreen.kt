@@ -180,10 +180,6 @@ fun AboutScreen(navController: NavHostController) {
                     LinkPill(text = stringResource(R.string.link_telegram)) {
                         uriHandler.openUri("https://t.me/SmokingYouApp")
                     }
-                    Spacer(modifier = Modifier.height(12.dp))
-                    LinkPill(text = stringResource(R.string.link_support)) {
-                        // uriHandler.openUri("https://...")
-                    }
                 }
             }
         }

@@ -5,7 +5,7 @@
     <string name="registration_button">Start Tracking</string>
     <string name="home_title">SmokingYou</string>
     <string name="add_entry">Add Entry</string>
-    <string name="time_calculating">Calculating...</string>
+    <string name="time_calculating">Calculating…</string>
     <string name="invalid_future_entry">Invalid future entry</string>
     <string name="start_tracking">Start tracking</string>
     <string name="time_past_label">Time past after last cigarette</string>
@@ -40,6 +40,10 @@
     <string name="settings_general">General</string>
     <string name="settings_language">Language</string>
     <string name="language_value">English</string>
+    <string name="settings_statistics">Statistics</string>
+    <string name="statistics_desc">View your smoking statistics</string>
+    <string name="settings_achievements">Achievements</string>
+    <string name="achievements_desc">View your progress and rewards</string>
     <string name="settings_notifications">Notifications</string>
     <string name="notifications_desc">Manage alerts</string>
     <string name="settings_data">Data</string>
@@ -47,6 +51,15 @@
     <string name="backup_desc">Backup data to device</string>
     <string name="settings_restore">Restore</string>
     <string name="restore_desc">Restore data from device</string>
+
+    <string name="stats_max_per_day">Max per day</string>
+    <string name="stats_min_per_day">Min per day</string>
+    <string name="stats_avg_per_day">Average per day</string>
+    <string name="stats_total_count">Total cigarettes</string>
+    <string name="stats_tracking_since">Tracking since</string>
+    <string name="stats_max_smoke_free_streak">Longest smoke-free streak</string>
+    <string name="stats_days_unit">%d days</string>
+    <string name="stats_no_data">No data available</string>
 
     <string name="my_achievements">My Achievements</string>
 
@@ -97,5 +110,4 @@
     <string name="made_with_love">Made with ❤ by Bodyaant</string>
     <string name="link_github">GitHub</string>
     <string name="link_telegram">Telegram</string>
-    <string name="link_support">Financial Support</string>
 </resources>

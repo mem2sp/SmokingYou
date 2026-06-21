@@ -5,7 +5,7 @@
     <string name="registration_button">Начать Отслеживание</string>
     <string name="home_title">SmokingYou</string>
     <string name="add_entry">Добавить</string>
-    <string name="time_calculating">Вычисление...</string>
+    <string name="time_calculating">Вычисление…</string>
     <string name="invalid_future_entry">Неверное время</string>
     <string name="start_tracking">Начать отслеживание</string>
     <string name="time_past_label">Прошло с последней сигареты</string>
@@ -40,6 +40,10 @@
     <string name="settings_general">Общие</string>
     <string name="settings_language">Язык</string>
     <string name="language_value">Русский</string>
+    <string name="settings_statistics">Статистика</string>
+    <string name="statistics_desc">Просмотр вашей статистики курения</string>
+    <string name="settings_achievements">Достижения</string>
+    <string name="achievements_desc">Просмотр вашего прогресса и наград</string>
     <string name="settings_notifications">Уведомления</string>
     <string name="notifications_desc">Управление оповещениями</string>
     <string name="settings_data">Данные</string>
@@ -47,6 +51,15 @@
     <string name="backup_desc">Сохранить данные на устройство</string>
     <string name="settings_restore">Восстановить</string>
     <string name="restore_desc">Восстановить данные с устройства</string>
+
+    <string name="stats_max_per_day">Максимум за день</string>
+    <string name="stats_min_per_day">Минимум за день</string>
+    <string name="stats_avg_per_day">В среднем за день</string>
+    <string name="stats_total_count">Всего выкурено</string>
+    <string name="stats_tracking_since">Отслеживание с</string>
+    <string name="stats_max_smoke_free_streak">Макс. дней без курения</string>
+    <string name="stats_days_unit">%d дн.</string>
+    <string name="stats_no_data">Нет данных</string>
 
     <string name="my_achievements">Мои Достижения</string>
 
@@ -97,5 +110,4 @@
     <string name="made_with_love">Сделано с ❤ от Bodyaant</string>
     <string name="link_github">GitHub</string>
     <string name="link_telegram">Telegram</string>
-    <string name="link_support">Финансовая поддержка</string>
 </resources>

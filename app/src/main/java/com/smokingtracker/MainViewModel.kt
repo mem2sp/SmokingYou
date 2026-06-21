@@ -52,6 +52,8 @@ class MainViewModel(private val dataStoreManager: DataStoreManager, private val 
     )
 
     init {
+        //generateTestStatistics()
+
         viewModelScope.launch {
             val now = System.currentTimeMillis()
             val launches = dataStoreManager.appLaunchDates.first()
@@ -123,8 +125,6 @@ class MainViewModel(private val dataStoreManager: DataStoreManager, private val 
             dataStoreManager.setDailyLimit(limit)
         }
     }
-
-    // Backup & Restore
     
     data class BackupData(
         val isRegistered: Boolean,
@@ -182,4 +182,44 @@ class MainViewModel(private val dataStoreManager: DataStoreManager, private val 
             }
         }
     }
+
+//    fun generateTestStatistics() {
+//        viewModelScope.launch {
+//            val calendar = java.util.Calendar.getInstance()
+//            calendar.set(2023, java.util.Calendar.JANUARY, 1, 0, 0, 0)
+//            calendar.set(java.util.Calendar.MILLISECOND, 0)
+//
+//            val endDate = java.util.Calendar.getInstance()
+//            endDate.set(2026, java.util.Calendar.MAY, 31, 23, 59, 59)
+//
+//            val allEntries = mutableListOf<Long>()
+//            val random = java.util.Random()
+//
+//            while (calendar.before(endDate)) {
+//                val chance = random.nextFloat()
+//                val count = when {
+//                    chance < 0.05f -> 0
+//                    chance < 0.15f -> random.nextInt(2) + 6
+//                    else -> random.nextInt(4) + 2
+//                }
+//
+//                val currentDayStart = calendar.timeInMillis
+//                repeat(count) {
+//                    val randomTimeOffset = (random.nextFloat() * 24 * 60 * 60 * 1000L).toLong()
+//                    allEntries.add(currentDayStart + randomTimeOffset)
+//                }
+//                calendar.add(java.util.Calendar.DAY_OF_YEAR, 1)
+//            }
+//
+//            allEntries.sort()
+//
+//            dataStoreManager.restoreFromBackup(
+//                isReg = true,
+//                entries = allEntries,
+//                theme = com.smokingtracker.data.ThemePreference.SYSTEM.name,
+//                achievements = emptySet(),
+//                limit = 10
+//            )
+//        }
+//    }
 }
