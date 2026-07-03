@@ -10,6 +10,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.*
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialShapes
@@ -18,6 +20,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
@@ -35,37 +39,84 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GraphScreen(viewModel: MainViewModel) {
+fun GraphScreen(viewModel: MainViewModel, onNavigateToStatistics: () -> Unit) {
     val entries by viewModel.smokingEntries.collectAsState()
-    GraphScreenContent(entries = entries)
+    GraphScreenContent(entries = entries, onNavigateToStatistics = onNavigateToStatistics)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GraphScreenContent(entries: List<Long>) {
+fun GraphScreenContent(entries: List<Long>, onNavigateToStatistics: () -> Unit = {}) {
     var dailyDate by remember { mutableStateOf(Calendar.getInstance()) }
     var weeklyDate by remember { mutableStateOf(Calendar.getInstance()) }
     var monthlyDate by remember { mutableStateOf(Calendar.getInstance()) }
     var yearlyDate by remember { mutableStateOf(Calendar.getInstance()) }
 
+    val dailyData = remember(entries, dailyDate) { generateDailyData(entries, dailyDate) }
+    val weeklyData = remember(entries, weeklyDate) { generateWeeklyData(entries, weeklyDate) }
+    val monthlyData = remember(entries, monthlyDate) { generateMonthlyData(entries, monthlyDate) }
+    val yearlyData = remember(entries, yearlyDate) { generateYearlyData(entries, yearlyDate) }
+
+    var activeDatePickerTarget by remember { mutableStateOf<String?>(null) }
+
+    activeDatePickerTarget?.let { target ->
+        val targetCalendar = when (target) {
+            "daily" -> dailyDate
+            "weekly" -> weeklyDate
+            "monthly" -> monthlyDate
+            else -> yearlyDate
+        }
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = targetCalendar.timeInMillis,
+            selectableDates = object : SelectableDates {
+                override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                    return utcTimeMillis <= System.currentTimeMillis()
+                }
+            }
+        )
+
+        DatePickerDialog(
+            onDismissRequest = { activeDatePickerTarget = null },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        datePickerState.selectedDateMillis?.let { millis ->
+                            val newDate = Calendar.getInstance().apply { timeInMillis = millis }
+                            when (target) {
+                                "daily" -> dailyDate = newDate
+                                "weekly" -> weeklyDate = newDate
+                                "monthly" -> monthlyDate = newDate
+                                "yearly" -> yearlyDate = newDate
+                            }
+                        }
+                        activeDatePickerTarget = null
+                    }
+                ) {
+                    Text(stringResource(R.string.dialog_ok), fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { activeDatePickerTarget = null }) {
+                    Text(stringResource(R.string.dialog_cancel), fontWeight = FontWeight.Bold)
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Surface(
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    ) {
-                        Text(
-                            text = stringResource(R.string.analytics_title),
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Black),
-                            modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)
-                        )
-                    }
+                    Text(
+                        text = stringResource(R.string.analytics_title),
+                        style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.ExtraBold),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = androidx.compose.ui.graphics.Color.Transparent
+                    containerColor = Color.Transparent
                 ),
             )
         }
@@ -81,61 +132,110 @@ fun GraphScreenContent(entries: List<Long>) {
             val dateFormat = SimpleDateFormat("d MMMM yyyy", Locale.getDefault())
 
             item {
-                val dailyStr = dateFormat.format(dailyDate.time)
-                val dailyData = generateDailyData(entries, dailyDate)
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(24.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.25f)),
+                    onClick = onNavigateToStatistics,
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.25f))
+                ) {
+                    Row(
+                        modifier = Modifier.padding(20.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Surface(
+                            shape = CircleShape,
+                            color = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier.size(44.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(Icons.Filled.BarChart, contentDescription = null, modifier = Modifier.size(24.dp))
+                            }
+                        }
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = stringResource(R.string.settings_statistics),
+                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                            Text(
+                                text = stringResource(R.string.statistics_desc),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
+                            )
+                        }
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.6f)
+                        )
+                    }
+                }
+            }
+
+            item {
+                val dailyStr = remember(dailyDate) { dateFormat.format(dailyDate.time) }
                 GraphSection(
                     title = stringResource(R.string.daily_overview),
                     totalCount = dailyData.sum(),
                     dateLabel = dailyStr,
                     dataPoints = dailyData,
                     onPrevious = { dailyDate = dailyDate.clone().apply { (this as Calendar).add(Calendar.DAY_OF_YEAR, -1) } as Calendar },
-                    onNext = { dailyDate = dailyDate.clone().apply { (this as Calendar).add(Calendar.DAY_OF_YEAR, 1) } as Calendar }
+                    onNext = { dailyDate = dailyDate.clone().apply { (this as Calendar).add(Calendar.DAY_OF_YEAR, 1) } as Calendar },
+                    onDateClick = { activeDatePickerTarget = "daily" }
                 )
             }
 
             item {
-                val weekStart = weeklyDate.clone() as Calendar
-                weekStart.set(Calendar.DAY_OF_WEEK, weekStart.firstDayOfWeek)
-                val weekEnd = weekStart.clone() as Calendar
-                weekEnd.add(Calendar.DAY_OF_YEAR, 6)
-                
-                val shortFormat = SimpleDateFormat("d MMM", Locale.getDefault())
-                val weeklyStr = "${shortFormat.format(weekStart.time)} - ${shortFormat.format(weekEnd.time)}"
-                
-                val weeklyData = generateWeeklyData(entries, weeklyDate)
+                val weeklyStr = remember(weeklyDate) {
+                    val weekStart = weeklyDate.clone() as Calendar
+                    weekStart.set(Calendar.DAY_OF_WEEK, weekStart.firstDayOfWeek)
+                    val weekEnd = weekStart.clone() as Calendar
+                    weekEnd.add(Calendar.DAY_OF_YEAR, 6)
+                    
+                    val shortFormat = SimpleDateFormat("d MMM", Locale.getDefault())
+                    "${shortFormat.format(weekStart.time)} - ${shortFormat.format(weekEnd.time)}"
+                }
                 GraphSection(
                     title = stringResource(R.string.weekly_overview),
                     totalCount = weeklyData.sum(),
                     dateLabel = weeklyStr,
                     dataPoints = weeklyData,
                     onPrevious = { weeklyDate = weeklyDate.clone().apply { (this as Calendar).add(Calendar.WEEK_OF_YEAR, -1) } as Calendar },
-                    onNext = { weeklyDate = weeklyDate.clone().apply { (this as Calendar).add(Calendar.WEEK_OF_YEAR, 1) } as Calendar }
+                    onNext = { weeklyDate = weeklyDate.clone().apply { (this as Calendar).add(Calendar.WEEK_OF_YEAR, 1) } as Calendar },
+                    onDateClick = { activeDatePickerTarget = "weekly" }
                 )
             }
 
             item {
-                val monthlyStr = SimpleDateFormat("MMMM yyyy", Locale.getDefault()).format(monthlyDate.time)
-                val monthlyData = generateMonthlyData(entries, monthlyDate)
+                val monthlyStr = remember(monthlyDate) {
+                    SimpleDateFormat("MMMM yyyy", Locale.getDefault()).format(monthlyDate.time)
+                }
                 GraphSection(
                     title = stringResource(R.string.monthly_overview),
                     totalCount = monthlyData.sum(),
                     dateLabel = monthlyStr,
                     dataPoints = monthlyData,
                     onPrevious = { monthlyDate = monthlyDate.clone().apply { (this as Calendar).add(Calendar.MONTH, -1) } as Calendar },
-                    onNext = { monthlyDate = monthlyDate.clone().apply { (this as Calendar).add(Calendar.MONTH, 1) } as Calendar }
+                    onNext = { monthlyDate = monthlyDate.clone().apply { (this as Calendar).add(Calendar.MONTH, 1) } as Calendar },
+                    onDateClick = { activeDatePickerTarget = "monthly" }
                 )
             }
 
             item {
-                val yearlyStr = SimpleDateFormat("yyyy", Locale.getDefault()).format(yearlyDate.time)
-                val yearlyData = generateYearlyData(entries, yearlyDate)
+                val yearlyStr = remember(yearlyDate) {
+                    SimpleDateFormat("yyyy", Locale.getDefault()).format(yearlyDate.time)
+                }
                 GraphSection(
                     title = stringResource(R.string.yearly_overview),
                     totalCount = yearlyData.sum(),
                     dateLabel = yearlyStr,
                     dataPoints = yearlyData,
                     onPrevious = { yearlyDate = yearlyDate.clone().apply { (this as Calendar).add(Calendar.YEAR, -1) } as Calendar },
-                    onNext = { yearlyDate = yearlyDate.clone().apply { (this as Calendar).add(Calendar.YEAR, 1) } as Calendar }
+                    onNext = { yearlyDate = yearlyDate.clone().apply { (this as Calendar).add(Calendar.YEAR, 1) } as Calendar },
+                    onDateClick = { activeDatePickerTarget = "yearly" }
                 )
             }
         }
@@ -150,16 +250,17 @@ fun GraphSection(
     dateLabel: String,
     dataPoints: List<Int>,
     onPrevious: () -> Unit,
-    onNext: () -> Unit
+    onNext: () -> Unit,
+    onDateClick: (() -> Unit)? = null
 ) {
     val cookieShape = MaterialShapes.Cookie12Sided.toShape()
-    ElevatedCard(
+    Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer
         ),
-        shape = RoundedCornerShape(28.dp), // Expressive larger corners
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
+        shape = RoundedCornerShape(32.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
     ) {
         Column(
             modifier = Modifier.padding(20.dp),
@@ -213,15 +314,30 @@ fun GraphSection(
                 }
 
                 Surface(
-                    shape = CircleShape,
-                    color = MaterialTheme.colorScheme.tertiaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                    onClick = { onDateClick?.invoke() },
+                    enabled = onDateClick != null,
+                    shape = RoundedCornerShape(24.dp),
+                    color = if (onDateClick != null) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.25f) else MaterialTheme.colorScheme.surfaceContainer,
+                    contentColor = if (onDateClick != null) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
+                    border = BorderStroke(1.dp, if (onDateClick != null) MaterialTheme.colorScheme.primary.copy(alpha = 0.25f) else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
                 ) {
-                    Text(
-                        text = dateLabel,
-                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
-                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp)
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        if (onDateClick != null) {
+                            Icon(
+                                imageVector = Icons.Filled.DateRange,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp)
+                            )
+                        }
+                        Text(
+                            text = dateLabel,
+                            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
+                        )
+                    }
                 }
 
                 Surface(
@@ -243,14 +359,14 @@ fun GraphSection(
 @Composable
 fun LineGraph(dataPoints: List<Int>, modifier: Modifier = Modifier) {
     val primaryColor = MaterialTheme.colorScheme.primary
-    val surfaceVariant = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
+    val surfaceVariant = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.15f)
 
     val progress = remember(dataPoints) { Animatable(0f) }
 
     LaunchedEffect(progress) {
         progress.animateTo(
             targetValue = 1f,
-            animationSpec = tween(durationMillis = 600)
+            animationSpec = tween(durationMillis = 800)
         )
     }
 
@@ -273,19 +389,46 @@ fun LineGraph(dataPoints: List<Int>, modifier: Modifier = Modifier) {
         if (dataPoints.isEmpty()) return@Canvas
 
         val path = Path()
+        var prevX = 0f
+        var prevY = size.height - (dataPoints[0] * yFactor)
+        path.moveTo(prevX, prevY)
 
-        dataPoints.forEachIndexed { index, value ->
+        for (index in 1 until dataPoints.size) {
             val x = index * xFactor
-            val y = size.height - (value * yFactor)
+            val y = size.height - (dataPoints[index] * yFactor)
+            
+            // Generate clean cubic S-curves between points
+            val controlX1 = (prevX + x) / 2f
+            val controlY1 = prevY
+            val controlX2 = (prevX + x) / 2f
+            val controlY2 = y
+            
+            path.cubicTo(controlX1, controlY1, controlX2, controlY2, x, y)
+            
+            prevX = x
+            prevY = y
+        }
 
-            if (index == 0) {
-                path.moveTo(x, y)
-            } else {
-                path.lineTo(x, y)
-            }
+        val fillPath = Path().apply {
+            addPath(path)
+            lineTo((dataPoints.size - 1) * xFactor, size.height)
+            lineTo(0f, size.height)
+            close()
         }
 
         clipRect(right = size.width * progress.value) {
+            // Draw gradient area under the curve
+            drawPath(
+                path = fillPath,
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        primaryColor.copy(alpha = 0.3f),
+                        primaryColor.copy(alpha = 0.0f)
+                    )
+                )
+            )
+
+            // Draw line
             drawPath(
                 path = path,
                 color = primaryColor,
@@ -296,18 +439,27 @@ fun LineGraph(dataPoints: List<Int>, modifier: Modifier = Modifier) {
                 )
             )
 
+            // Draw data point circles
             dataPoints.forEachIndexed { index, value ->
                 val x = index * xFactor
                 val y = size.height - (value * yFactor)
 
+                // Glowing outer aura
                 drawCircle(
-                    color = Color.White.copy(alpha = 0.5f),
-                    radius = 6.dp.toPx(),
+                    color = primaryColor.copy(alpha = 0.15f),
+                    radius = 9.dp.toPx(),
                     center = Offset(x, y)
                 )
+                // Outer circle border
                 drawCircle(
                     color = primaryColor,
-                    radius = 4.dp.toPx(),
+                    radius = 5.dp.toPx(),
+                    center = Offset(x, y)
+                )
+                // Solid center white core
+                drawCircle(
+                    color = Color.White,
+                    radius = 2.5.dp.toPx(),
                     center = Offset(x, y)
                 )
             }
@@ -322,16 +474,22 @@ fun generateDailyData(entries: List<Long>, date: Calendar): List<Int> {
     dayStart.set(Calendar.MINUTE, 0)
     dayStart.set(Calendar.SECOND, 0)
     dayStart.set(Calendar.MILLISECOND, 0)
+    val dayStartMillis = dayStart.timeInMillis
 
     val dayEnd = dayStart.clone() as Calendar
     dayEnd.add(Calendar.DAY_OF_YEAR, 1)
+    val dayEndMillis = dayEnd.timeInMillis
 
-    val dayEntries = entries.filter { it >= dayStart.timeInMillis && it < dayEnd.timeInMillis }
+    val dayEntries = entries.filter { it >= dayStartMillis && it < dayEndMillis }
     val hourlyCounts = IntArray(24) { 0 }
     
+    val cal = Calendar.getInstance()
     dayEntries.forEach { time ->
-        val c = Calendar.getInstance().apply { timeInMillis = time }
-        hourlyCounts[c.get(Calendar.HOUR_OF_DAY)]++
+        cal.timeInMillis = time
+        val hour = cal.get(Calendar.HOUR_OF_DAY)
+        if (hour in 0..23) {
+            hourlyCounts[hour]++
+        }
     }
     return hourlyCounts.toList()
 }
@@ -343,15 +501,19 @@ fun generateWeeklyData(entries: List<Long>, date: Calendar): List<Int> {
     weekStart.set(Calendar.MINUTE, 0)
     weekStart.set(Calendar.SECOND, 0)
     weekStart.set(Calendar.MILLISECOND, 0)
+    val weekStartMillis = weekStart.timeInMillis
 
+    val weekEnd = weekStart.clone() as Calendar
+    weekEnd.add(Calendar.DAY_OF_YEAR, 7)
+    val weekEndMillis = weekEnd.timeInMillis
+
+    val weekEntries = entries.filter { it >= weekStartMillis && it < weekEndMillis }
     val dailyCounts = IntArray(7) { 0 }
-    for (i in 0 until 7) {
-        val currentDayStart = weekStart.clone() as Calendar
-        currentDayStart.add(Calendar.DAY_OF_YEAR, i)
-        val currentDayEnd = currentDayStart.clone() as Calendar
-        currentDayEnd.add(Calendar.DAY_OF_YEAR, 1)
-        
-        dailyCounts[i] = entries.count { it >= currentDayStart.timeInMillis && it < currentDayEnd.timeInMillis }
+    
+    val cal = Calendar.getInstance()
+    weekEntries.forEach { time ->
+        val diffDays = ((time - weekStartMillis) / (24 * 60 * 60 * 1000L)).toInt().coerceIn(0, 6)
+        dailyCounts[diffDays]++
     }
     return dailyCounts.toList()
 }
@@ -363,17 +525,23 @@ fun generateMonthlyData(entries: List<Long>, date: Calendar): List<Int> {
     monthStart.set(Calendar.MINUTE, 0)
     monthStart.set(Calendar.SECOND, 0)
     monthStart.set(Calendar.MILLISECOND, 0)
+    val monthStartMillis = monthStart.timeInMillis
     
+    val monthEnd = monthStart.clone() as Calendar
+    monthEnd.add(Calendar.MONTH, 1)
+    val monthEndMillis = monthEnd.timeInMillis
+
+    val monthEntries = entries.filter { it >= monthStartMillis && it < monthEndMillis }
     val daysInMonth = monthStart.getActualMaximum(Calendar.DAY_OF_MONTH)
     val dailyCounts = IntArray(daysInMonth) { 0 }
     
-    for (i in 0 until daysInMonth) {
-         val currentDayStart = monthStart.clone() as Calendar
-         currentDayStart.add(Calendar.DAY_OF_MONTH, i)
-         val currentDayEnd = currentDayStart.clone() as Calendar
-         currentDayEnd.add(Calendar.DAY_OF_MONTH, 1)
-         
-         dailyCounts[i] = entries.count { it >= currentDayStart.timeInMillis && it < currentDayEnd.timeInMillis }
+    val cal = Calendar.getInstance()
+    monthEntries.forEach { time ->
+        cal.timeInMillis = time
+        val dayIndex = cal.get(Calendar.DAY_OF_MONTH) - 1
+        if (dayIndex in 0 until daysInMonth) {
+            dailyCounts[dayIndex]++
+        }
     }
 
     val chunkSize = Math.ceil(daysInMonth / 4.0).toInt()
@@ -396,15 +564,22 @@ fun generateYearlyData(entries: List<Long>, date: Calendar): List<Int> {
     yearStart.set(Calendar.MINUTE, 0)
     yearStart.set(Calendar.SECOND, 0)
     yearStart.set(Calendar.MILLISECOND, 0)
+    val yearStartMillis = yearStart.timeInMillis
 
+    val yearEnd = yearStart.clone() as Calendar
+    yearEnd.add(Calendar.YEAR, 1)
+    val yearEndMillis = yearEnd.timeInMillis
+
+    val yearEntries = entries.filter { it >= yearStartMillis && it < yearEndMillis }
     val monthlyCounts = IntArray(12) { 0 }
-    for (i in 0 until 12) {
-        val currentMonthStart = yearStart.clone() as Calendar
-        currentMonthStart.set(Calendar.MONTH, i)
-        val currentMonthEnd = currentMonthStart.clone() as Calendar
-        currentMonthEnd.add(Calendar.MONTH, 1)
-        
-        monthlyCounts[i] = entries.count { it >= currentMonthStart.timeInMillis && it < currentMonthEnd.timeInMillis }
+    
+    val cal = Calendar.getInstance()
+    yearEntries.forEach { time ->
+        cal.timeInMillis = time
+        val monthIndex = cal.get(Calendar.MONTH)
+        if (monthIndex in 0..11) {
+            monthlyCounts[monthIndex]++
+        }
     }
     return monthlyCounts.toList()
 }

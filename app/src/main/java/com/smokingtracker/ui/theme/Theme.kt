@@ -80,15 +80,55 @@ private val DarkColors = darkColorScheme(
 fun AppTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = true,
+    fontPreset: String = "WIDE",
+    amoledThemeEnabled: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
-    val colors = when {
+    val baseColors = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             if (useDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
         useDarkTheme -> DarkColors
         else -> LightColors
+    }
+
+    // Expressive M3 card-on-card container refinements
+    val colors = if (useDarkTheme) {
+        if (amoledThemeEnabled) {
+            baseColors.copy(
+                background = Color.Black,
+                surface = Color.Black,
+                surfaceVariant = Color(0xFF121212),
+                surfaceContainer = Color(0xFF1C1C1C),
+                surfaceContainerLow = Color(0xFF0C0C0C),
+                surfaceContainerHigh = Color(0xFF2C2C2C),
+                surfaceContainerHighest = Color(0xFF3C3C3C),
+                surfaceContainerLowest = Color.Black
+            )
+        } else {
+            baseColors.copy(
+                background = baseColors.surfaceContainerLow,
+                surface = baseColors.surfaceContainerLow,
+                surfaceVariant = baseColors.surfaceContainer,
+                surfaceContainer = baseColors.surfaceContainerHigh,
+                surfaceContainerLow = baseColors.surfaceContainerHigh,
+                surfaceContainerHigh = baseColors.surfaceContainerHigh,
+                surfaceContainerHighest = baseColors.surfaceContainerHigh,
+                surfaceContainerLowest = baseColors.surfaceContainerHigh
+            )
+        }
+    } else {
+        baseColors.copy(
+            background = baseColors.surfaceContainerLow,
+            surface = baseColors.surfaceContainerLow,
+            surfaceVariant = baseColors.surfaceContainer,
+            surfaceContainer = Color.White,
+            surfaceContainerLow = Color.White,
+            surfaceContainerHigh = Color.White,
+            surfaceContainerHighest = Color.White,
+            surfaceContainerLowest = Color.White
+        )
     }
 
     val view = LocalView.current
@@ -102,8 +142,15 @@ fun AppTheme(
         }
     }
 
+    val typography = when (fontPreset) {
+        "OUTFIT" -> AppTypography
+        "SYSTEM" -> androidx.compose.material3.Typography()
+        else -> VariableFontFactory.createTypography(fontPreset)
+    }
+
     MaterialTheme(
         colorScheme = colors,
+        typography = typography,
         content = content
     )
 }

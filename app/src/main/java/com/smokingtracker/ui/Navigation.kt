@@ -15,10 +15,12 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.Brightness4
 import androidx.compose.material3.*
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.toShape
+import androidx.compose.material3.NavigationItemIconPosition
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,6 +49,7 @@ sealed class Screen(val route: String, val titleResId: Int, val icon: ImageVecto
     object About : Screen("about", R.string.about_app, Icons.Filled.Info)
     object Achievements : Screen("achievements", R.string.settings_achievements, Icons.Filled.EmojiEvents)
     object Statistics : Screen("statistics", R.string.settings_statistics, Icons.Filled.BarChart)
+    object AppearanceSettings : Screen("appearance_settings", R.string.settings_appearance, Icons.Filled.Brightness4)
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -91,7 +94,8 @@ fun MainApp(viewModel: MainViewModel) {
     val showBottomBar = currentRoute != Screen.Registration.route && 
                        currentRoute != Screen.About.route &&
                        currentRoute != Screen.Achievements.route &&
-                       currentRoute != Screen.Statistics.route
+                       currentRoute != Screen.Statistics.route &&
+                       currentRoute != Screen.AppearanceSettings.route
 
     if (isRegistered == null) {
         Box(modifier = Modifier.fillMaxSize())
@@ -129,7 +133,12 @@ fun MainApp(viewModel: MainViewModel) {
                     LoadingWrapper { HomeScreen(viewModel) } 
                 }
                 composable(Screen.Graph.route) { 
-                    LoadingWrapper { GraphScreen(viewModel) } 
+                    LoadingWrapper { 
+                        GraphScreen(
+                            viewModel = viewModel,
+                            onNavigateToStatistics = { navController.navigate(Screen.Statistics.route) }
+                        ) 
+                    } 
                 }
                 composable(Screen.Personal.route) { 
                     LoadingWrapper {
@@ -137,7 +146,8 @@ fun MainApp(viewModel: MainViewModel) {
                             viewModel = viewModel, 
                             onNavigateToAbout = { navController.navigate(Screen.About.route) },
                             onNavigateToAchievements = { navController.navigate(Screen.Achievements.route) },
-                            onNavigateToStatistics = { navController.navigate(Screen.Statistics.route) }
+                            onNavigateToStatistics = { navController.navigate(Screen.Statistics.route) },
+                            onNavigateToAppearance = { navController.navigate(Screen.AppearanceSettings.route) }
                         ) 
                     }
                 }
@@ -150,6 +160,9 @@ fun MainApp(viewModel: MainViewModel) {
                 composable(Screen.Statistics.route) {
                     LoadingWrapper { StatisticsScreen(viewModel, onBack = { navController.popBackStack() }) }
                 }
+                composable(Screen.AppearanceSettings.route) {
+                    LoadingWrapper { AppearanceSettingsScreen(viewModel, onBack = { navController.popBackStack() }) }
+                }
             }
         }
 
@@ -157,7 +170,8 @@ fun MainApp(viewModel: MainViewModel) {
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(WindowInsets.navigationBars.asPaddingValues())
-                .padding(bottom = 24.dp, start = 48.dp, end = 48.dp)
+                .padding(bottom = 24.dp),
+            contentAlignment = Alignment.Center
         ) {
             AnimatedVisibility(
                 visible = showBottomBar,
@@ -183,129 +197,85 @@ fun BottomNavigationBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    val containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(12.dp)
-
-    Surface(
-        color = containerColor,
-        shape = RoundedCornerShape(32.dp),
-        shadowElevation = 8.dp,
+    HorizontalFloatingToolbar(
+        expanded = true,
         modifier = Modifier
-            .fillMaxWidth()
-            .height(72.dp)
+            .animateContentSize()
+            .height(68.dp),
+        shape = RoundedCornerShape(100),
+        contentPadding = PaddingValues(horizontal = 4.dp, vertical = 8.dp),
+        colors = FloatingToolbarDefaults.standardFloatingToolbarColors(
+            toolbarContainerColor = MaterialTheme.colorScheme.primaryContainer
+        )
     ) {
-        BoxWithConstraints(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            val itemWidth = maxWidth / items.size
-            val selectedIndex = items.indexOfFirst { it.route == currentRoute }.takeIf { it >= 0 } ?: 0
-            val targetOffset = itemWidth * selectedIndex
-
-            val indicatorOffset by animateDpAsState(
-                targetValue = targetOffset,
-                animationSpec = spring(
-                    dampingRatio = 0.7f,
-                    stiffness = Spring.StiffnessLow
-                ),
-                label = "indicatorOffset"
-            )
-
-            val distanceToTarget = kotlin.math.abs(indicatorOffset.value - targetOffset.value)
-            val isMoving = distanceToTarget > 20f
-
-            val pillHeight by animateDpAsState(
-                targetValue = if (isMoving) 32.dp else 56.dp,
-                animationSpec = spring(dampingRatio = 0.6f, stiffness = Spring.StiffnessMedium),
-                label = "pillHeight"
-            )
-
-            val pillWidth by animateDpAsState(
-                targetValue = if (isMoving) 64.dp else 80.dp,
-                animationSpec = spring(dampingRatio = 0.6f, stiffness = Spring.StiffnessMedium),
-                label = "pillWidth"
-            )
-
-            val pillCorner by animateDpAsState(
-                targetValue = if (isMoving) 16.dp else 28.dp,
-                animationSpec = spring(dampingRatio = 0.6f, stiffness = Spring.StiffnessMedium),
-                label = "pillCorner"
-            )
-
-            Box(
-                modifier = Modifier
-                    .offset { IntOffset(indicatorOffset.roundToPx(), 0) }
-                    .width(itemWidth)
-                    .fillMaxHeight(),
-                contentAlignment = Alignment.Center
-            ) {
-                Box(
-                    modifier = Modifier
-                        .width(pillWidth)
-                        .height(pillHeight)
-                        .clip(RoundedCornerShape(pillCorner))
-                        .background(MaterialTheme.colorScheme.primaryContainer)
-                )
-            }
-
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                items.forEachIndexed { index, screen ->
-                    val isSelected = index == selectedIndex
-                    
-                    val iconColor by animateColorAsState(
-                        targetValue = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant,
-                        animationSpec = tween(300),
-                        label = "iconColor"
-                    )
-                    
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight()
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null,
-                                onClick = {
-                                    if (currentRoute != screen.route) {
-                                        navController.navigate(screen.route) {
-                                            popUpTo(Screen.Home.route) { saveState = true }
-                                            launchSingleTop = true
-                                            restoreState = true
-                                        }
-                                    }
-                                }
-                            ),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Box(
-                            modifier = Modifier.height(32.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = screen.icon,
-                                contentDescription = stringResource(screen.titleResId),
-                                tint = iconColor
-                            )
-                        }
-
-                        AnimatedVisibility(
-                            visible = isSelected,
-                            enter = fadeIn(tween(250, delayMillis = 100)) + expandVertically(tween(250, delayMillis = 100)),
-                            exit = fadeOut(tween(200)) + shrinkVertically(tween(200))
-                        ) {
-                            Text(
-                                text = stringResource(screen.titleResId),
-                                style = MaterialTheme.typography.labelSmall,
-                                color = iconColor,
-                                modifier = Modifier.padding(top = 2.dp)
-                            )
+        items.forEach { screen ->
+            val selected = currentRoute == screen.route
+            ShortNavigationBarItem(
+                selected = selected,
+                onClick = {
+                    if (currentRoute != screen.route) {
+                        navController.navigate(screen.route) {
+                            popUpTo(Screen.Home.route) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
                         }
                     }
-                }
-            }
+                },
+                icon = {
+                    val extraHeight by animateDpAsState(
+                        targetValue = if (selected) 16.dp else 0.dp,
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioLowBouncy,
+                            stiffness = Spring.StiffnessLow
+                        ),
+                        label = "indicatorHeight"
+                    )
+                    Box(
+                        modifier = Modifier.height(26.dp + extraHeight),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = screen.icon,
+                            contentDescription = stringResource(screen.titleResId),
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                },
+                label = {
+                    AnimatedVisibility(
+                        visible = selected,
+                        enter = fadeIn() + slideInHorizontally(
+                            initialOffsetX = { -15 },
+                            animationSpec = spring(
+                                dampingRatio = Spring.DampingRatioLowBouncy,
+                                stiffness = Spring.StiffnessLow
+                            )
+                        ) + expandHorizontally(expandFrom = Alignment.Start),
+                        exit = fadeOut() + slideOutHorizontally(
+                            targetOffsetX = { -15 }
+                        ) + shrinkHorizontally(shrinkTowards = Alignment.Start)
+                    ) {
+                        Text(
+                            text = stringResource(screen.titleResId),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.ExtraBold,
+                            maxLines = 1,
+                            modifier = Modifier.padding(start = 2.dp, end = 4.dp)
+                        )
+                    }
+                },
+                iconPosition = NavigationItemIconPosition.Start,
+                colors = ShortNavigationBarItemDefaults.colors(
+                    selectedIconColor = MaterialTheme.colorScheme.onPrimary,
+                    selectedTextColor = MaterialTheme.colorScheme.onPrimary,
+                    selectedIndicatorColor = MaterialTheme.colorScheme.primary,
+                    unselectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    unselectedTextColor = Color.Transparent
+                ),
+                modifier = Modifier
+                    .padding(horizontal = 4.dp)
+                    .fillMaxHeight()
+            )
         }
     }
 }
