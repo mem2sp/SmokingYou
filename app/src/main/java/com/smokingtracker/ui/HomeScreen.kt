@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import com.smokingtracker.MainViewModel
 import com.smokingtracker.R
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -68,6 +69,10 @@ fun HomeScreen(viewModel: MainViewModel? = null) {
     
     var showLimitWarning by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
+
+    val scope = rememberCoroutineScope()
+    val rotationAngle = remember { Animatable(0f) }
+    var isAnimating by remember { mutableStateOf(false) }
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -270,12 +275,10 @@ fun HomeScreen(viewModel: MainViewModel? = null) {
                     
                     Spacer(modifier = Modifier.height(24.dp))
                     
-                    LinearProgressIndicator(
+                    LinearWavyProgressIndicator(
                         progress = { progress },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(8.dp)
-                            .clip(CircleShape)
                             .padding(horizontal = 8.dp),
                         color = if (progress >= 1f) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
                         trackColor = MaterialTheme.colorScheme.surfaceVariant
@@ -390,8 +393,32 @@ fun HomeScreen(viewModel: MainViewModel? = null) {
             FloatingActionButton(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(bottom = 110.dp, end = 24.dp),
+                    .padding(bottom = 110.dp, end = 24.dp)
+                    .graphicsLayer {
+                        rotationZ = rotationAngle.value
+                    },
                 onClick = {
+                    if (isAnimating) return@FloatingActionButton
+
+                    scope.launch {
+                        isAnimating = true
+                        rotationAngle.animateTo(
+                            targetValue = 90f,
+                            animationSpec = spring(
+                                dampingRatio = Spring.DampingRatioMediumBouncy,
+                                stiffness = Spring.StiffnessMediumLow
+                            )
+                        )
+                        rotationAngle.animateTo(
+                            targetValue = 0f,
+                            animationSpec = spring(
+                                dampingRatio = Spring.DampingRatioMediumBouncy,
+                                stiffness = Spring.StiffnessMediumLow
+                            )
+                        )
+                        isAnimating = false
+                    }
+
                     if (dailyLimit in 1..selectedDateEntries.size) {
                         showLimitWarning = true
                     } else {
@@ -414,7 +441,11 @@ fun HomeScreen(viewModel: MainViewModel? = null) {
                 Icon(
                     imageVector = Icons.Filled.Add,
                     contentDescription = stringResource(R.string.add_entry),
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier
+                        .size(24.dp)
+                        .graphicsLayer {
+                            rotationZ = -rotationAngle.value
+                        }
                 )
             }
         }
