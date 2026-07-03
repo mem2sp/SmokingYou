@@ -18,14 +18,33 @@ import com.smokingtracker.data.DataStoreManager
 import com.smokingtracker.data.ThemePreference
 import com.smokingtracker.ui.MainApp
 import com.smokingtracker.ui.theme.AppTheme
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.flow.first
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        val dataStoreManager = DataStoreManager(applicationContext)
+        val themePreference = runBlocking { dataStoreManager.appTheme.first() }
+        
+        val isSystemDark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) == android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val isDark = when (themePreference) {
+            ThemePreference.LIGHT -> false
+            ThemePreference.DARK -> true
+            ThemePreference.SYSTEM -> isSystemDark
+        }
+        
+        if (isDark) {
+            setTheme(R.style.Theme_App_Starting_Dark)
+        } else {
+            setTheme(R.style.Theme_App_Starting_Light)
+        }
+        
+        installSplashScreen()
+        
         super.onCreate(savedInstanceState)
         
         enableEdgeToEdge()
-        
-        val dataStoreManager = DataStoreManager(applicationContext)
 
         setContent {
             val viewModel: MainViewModel = viewModel(

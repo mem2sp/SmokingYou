@@ -70,6 +70,7 @@ dependencies {
 
     implementation(libs.gson)
     implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.core.splashscreen)
 }
 
 fun getGitCommitCount(): Int {
