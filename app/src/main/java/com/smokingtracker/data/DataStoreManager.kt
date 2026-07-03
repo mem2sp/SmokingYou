@@ -25,6 +25,8 @@ class DataStoreManager(private val context: Context) {
         val UNLOCKED_ACHIEVEMENTS = stringPreferencesKey("unlocked_achievements")
         val DAILY_LIMIT = intPreferencesKey("daily_limit")
         val APP_LAUNCH_DATES = stringPreferencesKey("app_launch_dates")
+        val FONT_PRESET = stringPreferencesKey("font_preset")
+        val AMOLED_THEME = booleanPreferencesKey("amoled_theme")
     }
 
     val isRegistered: Flow<Boolean> = context.dataStore.data.map { preferences ->
@@ -60,6 +62,26 @@ class DataStoreManager(private val context: Context) {
         val json = preferences[APP_LAUNCH_DATES] ?: "[]"
         val listType = object : TypeToken<List<Long>>() {}.type
         gson.fromJson(json, listType) ?: emptyList()
+    }
+
+    val fontPreset: Flow<String> = context.dataStore.data.map { preferences ->
+        preferences[FONT_PRESET] ?: "WIDE"
+    }
+
+    val amoledTheme: Flow<Boolean> = context.dataStore.data.map { preferences ->
+        preferences[AMOLED_THEME] ?: false
+    }
+
+    suspend fun saveAmoledTheme(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[AMOLED_THEME] = enabled
+        }
+    }
+
+    suspend fun saveFontPreset(preset: String) {
+        context.dataStore.edit { preferences ->
+            preferences[FONT_PRESET] = preset
+        }
     }
 
     suspend fun saveUserProfile() {

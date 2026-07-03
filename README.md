@@ -1,19 +1,42 @@
 <div align="center">
-  <img src="preview.png" alt="SmokingYou Showcase" width="100%">
+  <img src="images/preview.png" alt="SmokingYou Showcase" width="100%">
 
   # SmokingYou
 
   Minimalist, data-oriented smoking tracker for Android based on Material 3 Expressive.
 
-  <p>
-    <a href="https://kotlinlang.org/">
-      <img src="https://img.shields.io/badge/Kotlin-100%25-blue?logo=kotlin&labelColor=1a1a1a" alt="Kotlin">
+  <p align="center">
+    <a href="https://github.com/mem2sp/SmokingYou/releases/latest">
+      <img src="https://img.shields.io/github/v/release/mem2sp/SmokingYou?logo=github&labelColor=1a1a1a&color=6750A4&style=flat-square" alt="Latest Release">
     </a>
-    <a href="https://developer.android.com/jetpack/compose">
-      <img src="https://img.shields.io/badge/Jetpack_Compose-Modern_UI-4285F4?logo=android&labelColor=1a1a1a" alt="Jetpack Compose">
+    <a href="https://github.com/mem2sp/SmokingYou/releases">
+      <img src="https://img.shields.io/github/downloads/mem2sp/SmokingYou/total?logo=github&labelColor=1a1a1a&color=625B71&style=flat-square" alt="Total Downloads">
     </a>
-    <a href="https://m3.material.io/">
-      <img src="https://img.shields.io/badge/Material_3-Expressive-7B1FA2?logo=materialdesign&labelColor=1a1a1a" alt="Material 3">
+    <a href="https://github.com/mem2sp/SmokingYou/stargazers">
+      <img src="https://img.shields.io/github/stars/mem2sp/SmokingYou?logo=github&labelColor=1a1a1a&color=E0B6FF&style=flat-square" alt="Stars">
+    </a>
+    <a href="https://github.com/mem2sp/SmokingYou/network/members">
+      <img src="https://img.shields.io/github/forks/mem2sp/SmokingYou?logo=github&labelColor=1a1a1a&color=4F378B&style=flat-square" alt="Forks">
+    </a>
+    <a href="https://github.com/mem2sp/SmokingYou/issues">
+      <img src="https://img.shields.io/github/issues/mem2sp/SmokingYou?logo=github&labelColor=1a1a1a&color=B3261E&style=flat-square" alt="Issues">
+    </a>
+    <a href="LICENSE">
+      <img src="https://img.shields.io/github/license/mem2sp/SmokingYou?logo=apache&labelColor=1a1a1a&color=blue&style=flat-square" alt="License">
+    </a>
+  </p>
+
+  <p align="center">
+    <img src="https://img.shields.io/badge/Kotlin-100%25-7F52FF?logo=kotlin&logoColor=white&labelColor=1a1a1a&style=flat-square" alt="Kotlin">
+    <img src="https://img.shields.io/badge/Jetpack_Compose-Modern_UI-4285F4?logo=jetpackcompose&logoColor=white&labelColor=1a1a1a&style=flat-square" alt="Jetpack Compose">
+    <img src="https://img.shields.io/badge/Material_Design-3_Expressive-7B1FA2?logo=materialdesign&logoColor=white&labelColor=1a1a1a&style=flat-square" alt="Material 3">
+    <img src="https://img.shields.io/badge/Android-8.0%2B_(API_26%2B)-3DDC84?logo=android&logoColor=white&labelColor=1a1a1a&style=flat-square" alt="Android">
+    <img src="https://img.shields.io/badge/Android_Studio-Ladybug%2B-3DDC84?logo=androidstudio&logoColor=white&labelColor=1a1a1a&style=flat-square" alt="Android Studio">
+  </p>
+
+  <p align="center">
+    <a href="https://github.com/mem2sp/SmokingYou/releases/latest">
+      <img src="https://img.shields.io/github/v/release/mem2sp/SmokingYou?label=Download%20SmokingYou&style=for-the-badge&color=6750A4&logo=android&logoColor=white" alt="Download SmokingYou">
     </a>
   </p>
 </div>
@@ -21,6 +44,12 @@
 ---
 
 SmokingYou is designed to help you track and manage your smoking habits. By offering clear statistics, dynamic charts, and motivational achievements, the app provides the insights needed to cut down or quit entirely.
+
+## Screenshots
+
+<p align="center" width="100%">
+<img src="images/1.png" width="25%"><img src="images/2.png" width="25%"><img src="images/3.png" width="25%"><img src="images/4.png" width="25%">
+</p>
 
 ## Features
 
@@ -47,10 +76,16 @@ Currently supported languages:
 
 ## Installation
 
-1. Download the latest APK from the [Releases](../../releases/latest) page.
+1. Download the latest APK from the [Releases](https://github.com/mem2sp/SmokingYou/releases/latest) page.
 2. Ensure installation from unknown sources is allowed in your Android settings.
 3. Install the APK on your device.
+
+## Special Thanks
+
+Special thanks to the following projects for design ideas and inspiration:
+- **[Tomato](https://github.com/nsh07/Tomato)** and **[Zenith](https://github.com/1372Slash/Zenith)** - For beautiful interface concepts and inspiration, Material 3 Expressive guidelines implementation ideas and design inspiration.
 
 ## Contributing
 
 Contributions are welcome. If you find a bug or have a feature suggestion, please open an issue or submit a pull request.
+

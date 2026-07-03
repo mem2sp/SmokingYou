@@ -96,8 +96,6 @@ object AchievementsManager {
         val now = System.currentTimeMillis()
         val timeWithoutSmoking = if (lastEntry != null) {
             now - lastEntry
-        } else if (launches.isNotEmpty()) {
-            now - launches.minOrNull()!!
         } else {
             0L
         }

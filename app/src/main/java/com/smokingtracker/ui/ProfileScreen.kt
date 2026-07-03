@@ -14,12 +14,14 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Brightness4
+import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Backup
 import androidx.compose.material.icons.filled.Restore
@@ -27,6 +29,8 @@ import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -58,21 +62,26 @@ fun PersonalScreen(
     viewModel: MainViewModel, 
     onNavigateToAbout: () -> Unit,
     onNavigateToAchievements: () -> Unit,
-    onNavigateToStatistics: () -> Unit
+    onNavigateToStatistics: () -> Unit,
+    onNavigateToAppearance: () -> Unit
 ) {
     val themePreference by viewModel.themePreference.collectAsState()
     val dailyLimit by viewModel.dailyLimit.collectAsState()
+    val fontPreset by viewModel.fontPreset.collectAsState()
 
     PersonalScreenContent(
         themePreference = themePreference,
         dailyLimit = dailyLimit,
+        fontPreset = fontPreset,
         onThemeChange = viewModel::updateThemePreference,
         onSetDailyLimit = viewModel::setDailyLimit,
+        onFontPresetChange = viewModel::updateFontPreset,
         onBackupData = { uri, onSuccess, onError -> viewModel.backupData(uri, onSuccess, onError) },
         onRestoreData = { uri, onSuccess, onError -> viewModel.restoreData(uri, onSuccess, onError) },
         onNavigateToAbout = onNavigateToAbout,
         onNavigateToAchievements = onNavigateToAchievements,
-        onNavigateToStatistics = onNavigateToStatistics
+        onNavigateToStatistics = onNavigateToStatistics,
+        onNavigateToAppearance = onNavigateToAppearance
     )
 }
 
@@ -81,29 +90,26 @@ fun PersonalScreen(
 fun PersonalScreenContent(
     themePreference: ThemePreference,
     dailyLimit: Int,
+    fontPreset: String,
     onThemeChange: (ThemePreference) -> Unit,
     onSetDailyLimit: (Int) -> Unit,
+    onFontPresetChange: (String) -> Unit,
     onBackupData: (android.net.Uri, () -> Unit, () -> Unit) -> Unit,
     onRestoreData: (android.net.Uri, () -> Unit, () -> Unit) -> Unit,
     onNavigateToAbout: () -> Unit = {},
     onNavigateToAchievements: () -> Unit = {},
-    onNavigateToStatistics: () -> Unit = {}
+    onNavigateToStatistics: () -> Unit = {},
+    onNavigateToAppearance: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Surface(
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    ) {
-                        Text(
-                            text = stringResource(R.string.personal_title),
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Black),
-                            modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)
-                        )
-                    }
+                    Text(
+                        text = stringResource(R.string.personal_title),
+                        style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.ExtraBold),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = Color.Transparent
@@ -115,13 +121,16 @@ fun PersonalScreenContent(
             modifier = Modifier.padding(paddingValues),
             currentTheme = themePreference,
             dailyLimit = dailyLimit,
+            currentFontPreset = fontPreset,
             onThemeChange = onThemeChange,
             onSetDailyLimit = onSetDailyLimit,
+            onFontPresetChange = onFontPresetChange,
             onBackupData = onBackupData,
             onRestoreData = onRestoreData,
             onNavigateToAbout = onNavigateToAbout,
             onNavigateToAchievements = onNavigateToAchievements,
-            onNavigateToStatistics = onNavigateToStatistics
+            onNavigateToStatistics = onNavigateToStatistics,
+            onNavigateToAppearance = onNavigateToAppearance
         )
     }
 }
@@ -132,13 +141,16 @@ fun SettingsTab(
     modifier: Modifier = Modifier,
     currentTheme: ThemePreference,
     dailyLimit: Int,
+    currentFontPreset: String,
     onThemeChange: (ThemePreference) -> Unit,
     onSetDailyLimit: (Int) -> Unit,
+    onFontPresetChange: (String) -> Unit,
     onBackupData: (android.net.Uri, () -> Unit, () -> Unit) -> Unit,
     onRestoreData: (android.net.Uri, () -> Unit, () -> Unit) -> Unit,
     onNavigateToAbout: () -> Unit,
     onNavigateToAchievements: () -> Unit,
-    onNavigateToStatistics: () -> Unit
+    onNavigateToStatistics: () -> Unit,
+    onNavigateToAppearance: () -> Unit
 ) {
     var showLanguageDialog by remember { mutableStateOf(false) }
     var showLimitDialog by remember { mutableStateOf(false) }
@@ -177,34 +189,80 @@ fun SettingsTab(
     }
 
     if (showLanguageDialog) {
-        BasicAlertDialog(onDismissRequest = { showLanguageDialog = false }) {
-            Surface(shape = RoundedCornerShape(28.dp), color = MaterialTheme.colorScheme.surface) {
-                Column(modifier = Modifier.padding(24.dp)) {
-                    Text(
-                        stringResource(R.string.language_dialog_title), 
-                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    
-                    Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp))
-                        .clickable {
-                            changeLanguage(context, "en")
-                            showLanguageDialog = false
+        ModalBottomSheet(
+            onDismissRequest = { showLanguageDialog = false },
+            sheetState = rememberModalBottomSheetState(),
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 24.dp, end = 24.dp, bottom = 48.dp, top = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(R.string.language_dialog_title),
+                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                    modifier = Modifier.padding(bottom = 24.dp)
+                )
+
+                Surface(
+                    onClick = {
+                        changeLanguage(context, "en")
+                        showLanguageDialog = false
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 8.dp, bottomEnd = 8.dp),
+                    color = if (currentLocale == "en") MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "English",
+                            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
+                            modifier = Modifier.weight(1f),
+                            color = if (currentLocale == "en") MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
+                        )
+                        if (currentLocale == "en") {
+                            Icon(
+                                imageVector = Icons.Filled.CheckCircle,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
+                            )
                         }
-                        .padding(16.dp)) {
-                        Text("English", style = MaterialTheme.typography.bodyLarge)
                     }
-                    Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp))
-                        .clickable {
-                            changeLanguage(context, "ru")
-                            showLanguageDialog = false
+                }
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Surface(
+                    onClick = {
+                        changeLanguage(context, "ru")
+                        showLanguageDialog = false
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp, bottomStart = 24.dp, bottomEnd = 24.dp),
+                    color = if (currentLocale == "ru") MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Русский",
+                            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
+                            modifier = Modifier.weight(1f),
+                            color = if (currentLocale == "ru") MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
+                        )
+                        if (currentLocale == "ru") {
+                            Icon(
+                                imageVector = Icons.Filled.CheckCircle,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
+                            )
                         }
-                        .padding(16.dp)) {
-                        Text("Русский", style = MaterialTheme.typography.bodyLarge)
                     }
                 }
             }
@@ -250,93 +308,51 @@ fun SettingsTab(
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 120.dp),
-        verticalArrangement = Arrangement.spacedBy(20.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        item {
-            Text(
-                text = stringResource(R.string.settings_appearance),
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(bottom = 8.dp, start = 8.dp)
-            )
-            ElevatedCard(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(28.dp), // MD3E rounding
-                colors = CardDefaults.elevatedCardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                ),
-                elevation = CardDefaults.elevatedCardElevation(0.dp)
-            ) {
-                Column {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 20.dp, vertical = 20.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Surface(
-                            shape = CircleShape,
-                            color = MaterialTheme.colorScheme.secondaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                            modifier = Modifier.size(48.dp)
-                        ) {
-                            Box(contentAlignment = Alignment.Center) {
-                                Icon(Icons.Filled.Brightness4, contentDescription = null)
-                            }
-                        }
-                        Spacer(modifier = Modifier.width(16.dp))
-                        Text(
-                            stringResource(R.string.settings_theme), 
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-                        )
-                    }
-
-                    ThemeSegmentedButton(
-                        currentTheme = currentTheme,
-                        onThemeChange = onThemeChange
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-            }
-        }
-        
         item {
             Text(
                 text = stringResource(R.string.settings_general),
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(bottom = 8.dp, start = 8.dp)
+                modifier = Modifier.padding(top = 12.dp, bottom = 8.dp, start = 8.dp)
             )
-            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                SettingItem(
-                    icon = Icons.Filled.Language, 
-                    title = stringResource(R.string.settings_language), 
-                    subtitle = if (currentLocale == "ru") "Русский" else "English",
-                    shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp, bottomStart = 4.dp, bottomEnd = 4.dp),
-                    onClick = { showLanguageDialog = true }
-                )
-                SettingItem(
-                    icon = Icons.Filled.BarChart,
-                    title = stringResource(R.string.settings_statistics),
-                    subtitle = stringResource(R.string.statistics_desc),
-                    shape = RoundedCornerShape(4.dp),
-                    onClick = onNavigateToStatistics
-                )
-                SettingItem(
-                    icon = Icons.Filled.EmojiEvents,
-                    title = stringResource(R.string.settings_achievements),
-                    subtitle = stringResource(R.string.achievements_desc),
-                    shape = RoundedCornerShape(4.dp),
-                    onClick = onNavigateToAchievements
-                )
-                SettingItem(
-                    icon = Icons.Filled.Warning, 
-                    title = stringResource(R.string.settings_daily_limit), 
-                    subtitle = if (dailyLimit > 0) dailyLimit.toString() else stringResource(R.string.no_limit),
-                    shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 28.dp, bottomEnd = 28.dp),
-                    onClick = { showLimitDialog = true }
-                )
-            }
+        }
+        item {
+            SettingItem(
+                icon = Icons.Filled.Brightness4,
+                title = stringResource(R.string.settings_appearance),
+                subtitle = stringResource(R.string.settings_appearance_desc),
+                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 8.dp, bottomEnd = 8.dp),
+                onClick = onNavigateToAppearance
+            )
+        }
+        item {
+            SettingItem(
+                icon = Icons.Filled.Language, 
+                title = stringResource(R.string.settings_language), 
+                subtitle = if (currentLocale == "ru") "Русский" else "English",
+                shape = RoundedCornerShape(8.dp),
+                onClick = { showLanguageDialog = true }
+            )
+        }
+        item {
+            SettingItem(
+                icon = Icons.Filled.EmojiEvents,
+                title = stringResource(R.string.settings_achievements),
+                subtitle = stringResource(R.string.achievements_desc),
+                shape = RoundedCornerShape(8.dp),
+                onClick = onNavigateToAchievements
+            )
+        }
+        item {
+            SettingItem(
+                icon = Icons.Filled.Warning, 
+                title = stringResource(R.string.settings_daily_limit), 
+                subtitle = if (dailyLimit > 0) dailyLimit.toString() else stringResource(R.string.no_limit),
+                shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp, bottomStart = 24.dp, bottomEnd = 24.dp),
+                onClick = { showLimitDialog = true }
+            )
         }
 
         item {
@@ -344,24 +360,26 @@ fun SettingsTab(
                 text = stringResource(R.string.settings_data),
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(bottom = 8.dp, start = 8.dp)
+                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp, start = 8.dp)
             )
-            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                SettingItem(
-                    icon = Icons.Filled.Backup, 
-                    title = stringResource(R.string.settings_backup), 
-                    subtitle = stringResource(R.string.backup_desc),
-                    shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp, bottomStart = 4.dp, bottomEnd = 4.dp),
-                    onClick = { backupLauncher.launch("smoking_tracker_backup.json") }
-                )
-                SettingItem(
-                    icon = Icons.Filled.Restore, 
-                    title = stringResource(R.string.settings_restore), 
-                    subtitle = stringResource(R.string.restore_desc),
-                    shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 28.dp, bottomEnd = 28.dp),
-                    onClick = { restoreLauncher.launch(arrayOf("application/json")) }
-                )
-            }
+        }
+        item {
+            SettingItem(
+                icon = Icons.Filled.Backup, 
+                title = stringResource(R.string.settings_backup), 
+                subtitle = stringResource(R.string.backup_desc),
+                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 8.dp, bottomEnd = 8.dp),
+                onClick = { backupLauncher.launch("smoking_tracker_backup.json") }
+            )
+        }
+        item {
+            SettingItem(
+                icon = Icons.Filled.Restore, 
+                title = stringResource(R.string.settings_restore), 
+                subtitle = stringResource(R.string.restore_desc),
+                shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp, bottomStart = 24.dp, bottomEnd = 24.dp),
+                onClick = { restoreLauncher.launch(arrayOf("application/json")) }
+            )
         }
 
         item {
@@ -369,68 +387,21 @@ fun SettingsTab(
                 text = stringResource(R.string.settings_info),
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(bottom = 8.dp, start = 8.dp)
+                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp, start = 8.dp)
             )
+        }
+        item {
             SettingItem(
                 icon = Icons.Filled.Info, 
                 title = stringResource(R.string.about_app), 
                 subtitle = stringResource(R.string.about_app_desc),
-                shape = RoundedCornerShape(28.dp),
+                shape = RoundedCornerShape(24.dp),
                 onClick = onNavigateToAbout
             )
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ThemeSegmentedButton(
-    currentTheme: ThemePreference,
-    onThemeChange: (ThemePreference) -> Unit
-) {
-    val options = listOf(
-        ThemePreference.LIGHT to stringResource(R.string.theme_light),
-        ThemePreference.SYSTEM to stringResource(R.string.theme_system),
-        ThemePreference.DARK to stringResource(R.string.theme_dark)
-    )
-
-    SingleChoiceSegmentedButtonRow(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 8.dp),
-        space = (-8).dp
-    ) {
-        options.forEachIndexed { index, (theme, title) ->
-            val isSelected = currentTheme == theme
-            val cornerRadius by animateDpAsState(
-                targetValue = if (isSelected) 28.dp else 12.dp,
-                animationSpec = spring(dampingRatio = 0.7f, stiffness = Spring.StiffnessLow),
-                label = "corner"
-            )
-            SegmentedButton(
-                selected = isSelected,
-                onClick = { onThemeChange(theme) },
-                shape = RoundedCornerShape(cornerRadius),
-                border = BorderStroke(0.dp, Color.Transparent),
-                colors = SegmentedButtonDefaults.colors(
-                    activeContainerColor = MaterialTheme.colorScheme.primary,
-                    activeContentColor = MaterialTheme.colorScheme.onPrimary,
-                    inactiveContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.4f),
-                    inactiveContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    activeBorderColor = Color.Transparent,
-                    inactiveBorderColor = Color.Transparent
-                ),
-                icon = {},
-                label = {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
-                    )
-                }
-            )
-        }
-    }
-}
 
 fun changeLanguage(context: android.content.Context, languageTag: String) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -448,6 +419,48 @@ fun changeLanguage(context: android.content.Context, languageTag: String) {
 }
 
 @Composable
+fun SettingItemContent(
+    icon: ImageVector, 
+    title: String, 
+    subtitle: String, 
+    onClick: (() -> Unit)? = null
+) {
+    val modifier = Modifier
+        .fillMaxWidth()
+        .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
+        .padding(horizontal = 20.dp, vertical = 18.dp)
+
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Surface(
+            shape = CircleShape,
+            color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.35f),
+            contentColor = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(40.dp)
+        ) {
+            Box(contentAlignment = Alignment.Center) {
+                Icon(icon, contentDescription = null, modifier = Modifier.size(20.dp))
+            }
+        }
+        Spacer(modifier = Modifier.width(16.dp))
+        Column {
+            Text(
+                text = title, 
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold), 
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                text = subtitle, 
+                style = MaterialTheme.typography.bodyMedium, 
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
+            )
+        }
+    }
+}
+
+@Composable
 fun SettingItem(
     icon: ImageVector, 
     title: String, 
@@ -455,39 +468,15 @@ fun SettingItem(
     shape: androidx.compose.ui.graphics.Shape = RoundedCornerShape(28.dp),
     onClick: (() -> Unit)? = null
 ) {
-    ElevatedCard(
+    Card(
         modifier = Modifier.fillMaxWidth(),
         shape = shape,
-        colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer
         ),
-        elevation = CardDefaults.elevatedCardElevation(0.dp)
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
     ) {
-        val modifier = Modifier
-            .fillMaxWidth()
-            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
-            .padding(horizontal = 20.dp, vertical = 20.dp)
-
-        Row(
-            modifier = modifier,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Surface(
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.secondaryContainer,
-                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                modifier = Modifier.size(48.dp)
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Icon(icon, contentDescription = null)
-                }
-            }
-            Spacer(modifier = Modifier.width(16.dp))
-            Column {
-                Text(title, style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold), color = MaterialTheme.colorScheme.onSurface)
-                Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            }
-        }
+        SettingItemContent(icon = icon, title = title, subtitle = subtitle, onClick = onClick)
     }
 }
 
@@ -501,20 +490,20 @@ fun StatisticsScreen(viewModel: MainViewModel, onBack: () -> Unit) {
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Surface(
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    ) {
-                        Text(
-                            text = stringResource(R.string.settings_statistics),
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Black),
-                            modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)
-                        )
-                    }
+                    Text(
+                        text = stringResource(R.string.settings_statistics),
+                        style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.ExtraBold),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    FilledTonalIconButton(
+                        onClick = onBack,
+                        colors = IconButtonDefaults.filledTonalIconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f),
+                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
@@ -605,11 +594,11 @@ fun StatCard(
     icon: ImageVector,
     color: Color
 ) {
-    ElevatedCard(
+    Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.elevatedCardColors(containerColor = color.copy(alpha = 0.5f)),
-        elevation = CardDefaults.elevatedCardElevation(0.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
     ) {
         Row(
             modifier = Modifier.padding(20.dp),
@@ -617,8 +606,9 @@ fun StatCard(
         ) {
             Surface(
                 shape = CircleShape,
-                color = color,
-                modifier = Modifier.size(40.dp)
+                color = color.copy(alpha = 0.2f),
+                contentColor = color,
+                modifier = Modifier.size(44.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(icon, contentDescription = null, modifier = Modifier.size(24.dp))
@@ -626,8 +616,16 @@ fun StatCard(
             }
             Spacer(modifier = Modifier.width(16.dp))
             Column {
-                Text(title, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text(value, style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold))
+                Text(
+                    text = title, 
+                    style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold), 
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
+                )
+                Text(
+                    text = value, 
+                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.ExtraBold),
+                    color = MaterialTheme.colorScheme.onSurface
+                )
             }
         }
     }
@@ -643,20 +641,20 @@ fun AchievementsScreen(viewModel: MainViewModel, onBack: () -> Unit) {
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Surface(
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    ) {
-                        Text(
-                            text = stringResource(R.string.my_achievements),
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Black),
-                            modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)
-                        )
-                    }
+                    Text(
+                        text = stringResource(R.string.my_achievements),
+                        style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.ExtraBold),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    FilledTonalIconButton(
+                        onClick = onBack,
+                        colors = IconButtonDefaults.filledTonalIconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f),
+                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
@@ -683,7 +681,7 @@ fun AchievementsTab(
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 120.dp),
-        verticalArrangement = Arrangement.spacedBy(20.dp)
+        verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         val groupedAchievements = AchievementsManager.achievementsList.groupBy { it.category }
         
@@ -696,21 +694,22 @@ fun AchievementsTab(
                     modifier = Modifier.padding(bottom = 8.dp, start = 8.dp)
                 )
 
-                ElevatedCard(
+                Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(28.dp),
-                    colors = CardDefaults.elevatedCardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer
                     ),
-                    elevation = CardDefaults.elevatedCardElevation(0.dp)
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
                 ) {
                     Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         achievements.forEach { achievement ->
                             val isUnlocked = unlockedAchievements.contains(achievement.id)
 
                             Surface(
-                                shape = RoundedCornerShape(16.dp),
-                                color = if (isUnlocked) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
+                                shape = RoundedCornerShape(20.dp),
+                                color = if (isUnlocked) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f) else MaterialTheme.colorScheme.surfaceContainerLowest,
+                                border = if (isUnlocked) null else BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.15f)),
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Row(
@@ -719,10 +718,18 @@ fun AchievementsTab(
                                 ) {
                                     Surface(
                                         shape = CircleShape,
-                                        color = if (isUnlocked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f),
-                                        contentColor = MaterialTheme.colorScheme.onPrimary,
-                                        modifier = Modifier.size(12.dp)
-                                    ) {}
+                                        color = if (isUnlocked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline.copy(alpha = 0.2f),
+                                        contentColor = if (isUnlocked) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.outline,
+                                        modifier = Modifier.size(36.dp)
+                                    ) {
+                                        Box(contentAlignment = Alignment.Center) {
+                                            Icon(
+                                                imageVector = if (isUnlocked) Icons.Filled.CheckCircle else Icons.Filled.Lock,
+                                                contentDescription = null,
+                                                modifier = Modifier.size(20.dp)
+                                            )
+                                        }
+                                    }
                                     
                                     Spacer(modifier = Modifier.width(16.dp))
                                     
@@ -730,13 +737,13 @@ fun AchievementsTab(
                                         Text(
                                             text = stringResource(achievement.titleResId),
                                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                                            color = if(isUnlocked) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+                                            color = if (isUnlocked) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
                                         )
                                         Spacer(modifier = Modifier.height(2.dp))
                                         Text(
                                             text = stringResource(achievement.descResId),
                                             style = MaterialTheme.typography.bodyMedium,
-                                            color = if(isUnlocked) MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha=0.8f) else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha=0.7f)
+                                            color = if (isUnlocked) MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
                                         )
                                     }
                                 }
@@ -756,13 +763,16 @@ fun PersonalScreenPreview() {
         PersonalScreenContent(
             themePreference = ThemePreference.SYSTEM,
             dailyLimit = 10,
+            fontPreset = "WIDE",
             onThemeChange = {},
             onSetDailyLimit = {},
+            onFontPresetChange = {},
             onBackupData = { _, _, _ -> },
             onRestoreData = { _, _, _ -> },
             onNavigateToAbout = {},
             onNavigateToAchievements = {},
-            onNavigateToStatistics = {}
+            onNavigateToStatistics = {},
+            onNavigateToAppearance = {}
         )
     }
 }
