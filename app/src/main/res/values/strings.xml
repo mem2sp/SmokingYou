@@ -200,4 +200,16 @@
     <string name="update_checking">Checking for updates...</string>
     <string name="update_no_updates">You are using the latest version</string>
     <string name="update_error">Error checking for updates: %1$s</string>
+    
+    <!-- App Icon settings strings -->
+    <string name="settings_app_icon">App Icon</string>
+    <string name="settings_app_icon_desc">Choose your preferred home screen icon</string>
+    <string name="app_icon_classic">Classic</string>
+    <string name="app_icon_dark">Dark</string>
+    <string name="app_icon_sunset">Sunset</string>
+    <string name="app_icon_cream">Cream</string>
+    <string name="app_icon_neon">Neon</string>
+    <string name="app_icon_organic">Organic</string>
+    <string name="app_icon_midnight">Midnight</string>
+    <string name="app_icon_monochrome">Monochrome</string>
 </resources>

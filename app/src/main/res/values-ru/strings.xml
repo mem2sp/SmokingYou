@@ -197,4 +197,16 @@
     <string name="update_checking">Проверка обновлений...</string>
     <string name="update_no_updates">У вас установлена последняя версия</string>
     <string name="update_error">Ошибка проверки обновлений: %1$s</string>
+    
+    <!-- App Icon settings strings -->
+    <string name="settings_app_icon">Иконка приложения</string>
+    <string name="settings_app_icon_desc">Выберите оформление иконки на главном экране</string>
+    <string name="app_icon_classic">Оригинальная</string>
+    <string name="app_icon_dark">Тёмная</string>
+    <string name="app_icon_sunset">Закат</string>
+    <string name="app_icon_cream">Кремовая</string>
+    <string name="app_icon_neon">Неон</string>
+    <string name="app_icon_organic">Органик</string>
+    <string name="app_icon_midnight">Ночь</string>
+    <string name="app_icon_monochrome">Монохром</string>
 </resources>
