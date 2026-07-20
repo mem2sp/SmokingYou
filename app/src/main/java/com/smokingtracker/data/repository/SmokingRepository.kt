@@ -41,6 +41,10 @@ class SmokingRepository(
         smokingDao.updateEntryTimestamp(oldTimestamp, newTimestamp)
     }
 
+    suspend fun updateEntryTrigger(timestamp: Long, trigger: String?) {
+        smokingDao.updateEntryTrigger(timestamp, trigger)
+    }
+
     suspend fun clearAndInsertEntries(entities: List<SmokingEntryEntity>) {
         smokingDao.clearAllEntries()
         smokingDao.insertEntries(entities)
