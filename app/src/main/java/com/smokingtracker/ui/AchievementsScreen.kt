@@ -9,7 +9,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LinearWavyProgressIndicator
+import androidx.compose.material3.WavyProgressIndicatorDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import com.smokingtracker.AchievementsManager
 import com.smokingtracker.MainViewModel
 import com.smokingtracker.R
@@ -61,8 +68,6 @@ fun AchievementsScreen(viewModel: MainViewModel, onBack: () -> Unit) {
         )
     }
 }
-
-
 
 @Composable
 fun AchievementsTab(
@@ -167,8 +172,8 @@ fun AchievementsTab(
                                                 AchievementsManager.progressFraction(achievement.id, entries, launches)
                                             }
                                             Spacer(modifier = Modifier.height(8.dp))
-                                            LinearProgressIndicator(
-                                                progress = { progress },
+                                            AnimatedAchievementProgressBar(
+                                                targetProgress = progress,
                                                 modifier = Modifier.fillMaxWidth(),
                                                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f),
                                                 trackColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.15f)
@@ -187,5 +192,62 @@ fun AchievementsTab(
                 }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun AnimatedAchievementProgressBar(
+    targetProgress: Float,
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f),
+    trackColor: Color = MaterialTheme.colorScheme.outline.copy(alpha = 0.15f)
+) {
+    val animProgress = remember { Animatable(0f) }
+    val animWaveScale = remember { Animatable(1f) }
+
+    LaunchedEffect(targetProgress) {
+        if (targetProgress > 0f) {
+            animWaveScale.snapTo(1f)
+            launch {
+                animProgress.animateTo(
+                    targetValue = targetProgress,
+                    animationSpec = tween(durationMillis = 1200, easing = FastOutSlowInEasing)
+                )
+            }
+            launch {
+                animWaveScale.animateTo(
+                    targetValue = 0f,
+                    animationSpec = tween(durationMillis = 1200, easing = FastOutSlowInEasing)
+                )
+            }
+        } else {
+            animProgress.snapTo(0f)
+            animWaveScale.snapTo(0f)
+        }
+    }
+
+    val progressValue = animProgress.value
+    val waveScale = animWaveScale.value
+
+    if (waveScale > 0f) {
+        LinearWavyProgressIndicator(
+            progress = { progressValue },
+            modifier = modifier,
+            color = color,
+            trackColor = trackColor,
+            amplitude = { progressFraction ->
+                WavyProgressIndicatorDefaults.indicatorAmplitude(progressFraction) * waveScale
+            }
+        )
+    } else {
+        LinearWavyProgressIndicator(
+            progress = { progressValue },
+            modifier = modifier,
+            color = color,
+            trackColor = trackColor,
+            amplitude = { 0f },
+            waveSpeed = 0.dp
+        )
     }
 }
