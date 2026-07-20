@@ -128,6 +128,7 @@
     <string name="settings_appearance_desc">Theme, AMOLED mode, and font settings</string>
 
     <string name="trigger_dialog_title">What caused the craving?</string>
+    <string name="change_trigger_dialog_title">Change reason</string>
     <string name="trigger_skip">Skip</string>
     <string name="trigger_stress">Stress</string>
     <string name="trigger_boredom">Boredom</string>
