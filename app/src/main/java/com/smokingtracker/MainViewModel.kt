@@ -269,6 +269,12 @@ class MainViewModel(
         }
     }
 
+    fun updateSmokingEntryTrigger(timestamp: Long, trigger: String?) {
+        viewModelScope.launch {
+            repository.updateEntryTrigger(timestamp, trigger)
+        }
+    }
+
     fun updatePackDetails(price: Float, size: Int, curr: String) {
         viewModelScope.launch {
             dataStoreManager.savePackDetails(price, size, curr)
