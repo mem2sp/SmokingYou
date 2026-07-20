@@ -98,7 +98,8 @@
 
     <string name="daily_limit_desc">Предупреждать при превышении лимита</string>
     <string name="limit_warning_title">Лимит превышен</string>
-    <string name="limit_warning_message">Вы достигли дневного лимита сигарет. Все равно хотите добавить эту запись?</string>
+    <string name="limit_warning_message">Вы достигли дневного лимита сигарет. Все равно хотите
+        добавить эту запись?</string>
     <string name="add_anyway">Добавить</string>
     <string name="set_limit_title">Установить лимит</string>
     <string name="no_limit">0 (Без лимита)</string>
@@ -137,7 +138,8 @@
 
     <string name="tab_graphs">Графики</string>
     <string name="tab_triggers">Причины</string>
-    <string name="triggers_no_data">Добавляйте причины при записи курения, чтобы увидеть здесь аналитику.</string>
+    <string name="triggers_no_data">Добавляйте причины при записи курения, чтобы увидеть здесь
+        аналитику.</string>
     <string name="main_trigger">Главный триггер</string>
     <string name="triggers_title">Причины курения</string>
     <string name="trigger_count_pattern">%1$d раз (%2$d%%)</string>
@@ -154,9 +156,11 @@
     <string name="stats_life_saved">Сэкономлено жизни</string>
     <string name="stats_savings_lifetime">Экономия за всё время</string>
     <string name="stats_savings_current_streak">Экономия за текущий отказ</string>
-    <string name="stats_savings_setup_warning">Настройте лимит курения и параметры пачки в настройках, чтобы начать отслеживать сэкономленные деньги и время жизни.</string>
+    <string name="stats_savings_setup_warning">Настройте лимит курения и параметры пачки в
+        настройках, чтобы начать отслеживать сэкономленные деньги и время жизни.</string>
     <string name="stats_body_recovery_who">Восстановление организма (ВОЗ)</string>
-    <string name="stats_recovery_no_data">Добавьте запись о курении, чтобы увидеть прогресс восстановления здоровья.</string>
+    <string name="stats_recovery_no_data">Добавьте запись о курении, чтобы увидеть прогресс
+        восстановления здоровья.</string>
 
     <string name="who_bp_desc">Пульс и артериальное давление возвращаются в норму</string>
     <string name="who_bp_time">20 минут</string>
@@ -172,7 +176,8 @@
     <string name="minutes_format_hour">%1$dч </string>
     <string name="minutes_format_min">%1$dм</string>
 
-    <string name="notif_permission_rationale">Включите уведомления, чтобы получать оповещения о достижениях.</string>
+    <string name="notif_permission_rationale">Включите уведомления, чтобы получать оповещения о
+        достижениях.</string>
     <string name="undo_delete">Запись удалена</string>
     <string name="undo">Отмена</string>
     <string name="edit_future_time_error">Нельзя установить время в будущем</string>
@@ -186,20 +191,19 @@
     <string name="stats_current_streak_days">Текущая серия без курения</string>
     <string name="stats_days_unit_short">%d д.</string>
 
-    <!-- Update checker strings -->
     <string name="settings_check_updates_on_start">Проверять обновления при запуске</string>
     <string name="settings_check_updates_on_start_desc">Автоматически искать новые версии SmokingYou</string>
     <string name="settings_check_updates">Проверить обновления</string>
     <string name="settings_check_updates_desc">Вручную проверить наличие новых версий на GitHub</string>
     <string name="update_dialog_title">Доступно обновление</string>
-    <string name="update_dialog_message">Доступна новая версия SmokingYou (%1$s). Хотите скачать её сейчас?</string>
+    <string name="update_dialog_message">Доступна новая версия SmokingYou (%1$s). Хотите скачать её
+        сейчас?</string>
     <string name="update_dialog_download">Скачать</string>
     <string name="update_dialog_later">Позже</string>
     <string name="update_checking">Проверка обновлений...</string>
     <string name="update_no_updates">У вас установлена последняя версия</string>
     <string name="update_error">Ошибка проверки обновлений: %1$s</string>
-    
-    <!-- App Icon settings strings -->
+
     <string name="settings_app_icon">Иконка приложения</string>
     <string name="settings_app_icon_desc">Выберите оформление иконки на главном экране</string>
     <string name="app_icon_classic">Оригинальная</string>
@@ -210,4 +214,10 @@
     <string name="app_icon_organic">Органик</string>
     <string name="app_icon_midnight">Ночь</string>
     <string name="app_icon_monochrome">Монохром</string>
+
+    <string name="support_development">Поддержка разработки</string>
+    <string name="support_boosty">Поддержать на Boosty</string>
+    <string name="crypto_wallets">Криптокошельки (USDT)</string>
+    <string name="address_copied">Адрес скопирован в буфер обмена!</string>
+    <string name="copy_address">Скопировать адрес</string>
 </resources>

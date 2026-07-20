@@ -1,0 +1,224 @@
+<resources>
+    <string name="app_name">SmokingYou</string>
+    <string name="registration_title">Ласкаво просимо до SmokingYou</string>
+    <string name="registration_subtitle">Твій персональний трекер куріння</string>
+    <string name="registration_button">Почати відстеження</string>
+    <string name="home_title">SmokingYou</string>
+    <string name="add_entry">Додати</string>
+    <string name="time_calculating">Обчислення…</string>
+    <string name="invalid_future_entry">Недійсний час</string>
+    <string name="start_tracking">Почати відстеження</string>
+    <string name="time_past_label">Минуло з останньої сигарети</string>
+    <string name="stat_daily">Щоденно</string>
+    <string name="stat_weekly">Щотижня</string>
+    <string name="stat_monthly">Щомісяця</string>
+    <string name="previous_day">Попередній день</string>
+    <string name="next_day">Наступний день</string>
+    <string name="delete_entry">Видалити запис</string>
+    <string name="edit_entry">Змінити запис</string>
+    <string name="duration_hms">%1$02dг %2$02dхв %3$02дс</string>
+    <string name="duration_hm">%1$02dг %2$02dхв</string>
+    <string name="duration_ms">%1$02dхв %2$02дс</string>
+    <string name="dialog_ok">ОК</string>
+    <string name="dialog_cancel">Скасувати</string>
+    <string name="nav_home">Головна</string>
+    <string name="nav_graph">Графіки</string>
+    <string name="nav_personal">Налаштування</string>
+    <string name="analytics_title">Аналітика</string>
+    <string name="daily_overview">Щоденний огляд</string>
+    <string name="weekly_overview">Щотижневий огляд</string>
+    <string name="monthly_overview">Щомісячний огляд</string>
+    <string name="yearly_overview">Щорічний огляд</string>
+    <string name="personal_title">Налаштування</string>
+    <string name="tab_settings">Налаштування</string>
+    <string name="tab_achievements">Досягнення</string>
+    <string name="settings_appearance">Зовнішній вигляд</string>
+    <string name="settings_theme">Тема</string>
+    <string name="theme_system">Системна</string>
+    <string name="theme_light">Світла</string>
+    <string name="theme_dark">Темна</string>
+    <string name="settings_general">Загальні</string>
+    <string name="settings_language">Мова</string>
+    <string name="language_value">Українська</string>
+    <string name="settings_statistics">Статистика</string>
+    <string name="statistics_desc">Перегляд вашої статистики куріння</string>
+    <string name="settings_achievements">Досягнення</string>
+    <string name="achievements_desc">Перегляд вашого прогресу та нагород</string>
+    <string name="settings_notifications">Сповіщення</string>
+    <string name="notifications_desc">Керування сповіщеннями</string>
+    <string name="settings_data">Дані</string>
+    <string name="settings_backup">Резервне копіювання</string>
+    <string name="backup_desc">Зберегти резервну копію на пристрій</string>
+    <string name="settings_restore">Відновити</string>
+    <string name="restore_desc">Відновити дані з пристрою</string>
+
+    <string name="stats_max_per_day">Максимум за день</string>
+    <string name="stats_min_per_day">Мінімум за день</string>
+    <string name="stats_avg_per_day">Середнє за день</string>
+    <string name="stats_total_count">Всього викурено</string>
+    <string name="stats_tracking_since">Відстеження з</string>
+    <string name="stats_max_smoke_free_streak">Найдовша серія без куріння</string>
+    <string name="stats_days_unit">%d дн.</string>
+    <string name="stats_no_data">Немає даних</string>
+
+    <string name="my_achievements">Мої досягнення</string>
+
+    <string name="ach_category_login">Використання додатка</string>
+    <string name="ach_category_nosmoke">Дні без сигарет</string>
+
+    <string name="ach_curiosity_title">Допитливість</string>
+    <string name="ach_curiosity_desc">Перший вхід у додаток</string>
+    <string name="ach_interest_title">Інтерес</string>
+    <string name="ach_interest_desc">3 дні поспіль входу в додаток</string>
+    <string name="ach_exploration_title">Дослідження</string>
+    <string name="ach_exploration_desc">Тиждень поспіль входу в додаток</string>
+    <string name="ach_discipline_title">Дисципліна</string>
+    <string name="ach_discipline_desc">Місяць поспіль входу в додаток</string>
+    <string name="ach_statistics_title">Статистика</string>
+    <string name="ach_statistics_desc">Рік поспіль входу в додаток</string>
+
+    <string name="ach_nosmoke_1d_title">Перший крок</string>
+    <string name="ach_nosmoke_1d_desc">День без сигарет</string>
+    <string name="ach_nosmoke_3d_title">Сила волі</string>
+    <string name="ach_nosmoke_3d_desc">Три дні без сигарет</string>
+    <string name="ach_nosmoke_1w_title">Очищення</string>
+    <string name="ach_nosmoke_1w_desc">Тиждень без сигарет</string>
+    <string name="ach_nosmoke_1m_title">Шлях</string>
+    <string name="ach_nosmoke_1m_desc">Місяць без сигарет</string>
+    <string name="ach_nosmoke_1y_title">Чистота</string>
+    <string name="ach_nosmoke_1y_desc">Рік без сигарет</string>
+
+    <string name="notification_title">Розблокировано досягнення: %1$s</string>
+    <string name="backup_success">Резервне копіювання успішно завершено!</string>
+    <string name="backup_error">Помилка збереження резервної копії</string>
+    <string name="restore_success">Дані успішно відновлено!</string>
+    <string name="restore_error">Помилка відновлення даних</string>
+    <string name="language_dialog_title">Виберіть мову</string>
+    <string name="settings_daily_limit">Денний ліміт сигарет</string>
+
+    <string name="daily_limit_desc">Попереджати при перевищенні ліміту</string>
+    <string name="limit_warning_title">Ліміт перевищено</string>
+    <string name="limit_warning_message">Ви досягли денного ліміту сигарет. Все одно хочете додати
+        цей запис?</string>
+    <string name="add_anyway">Додати все одно</string>
+    <string name="set_limit_title">Встановити ліміт</string>
+    <string name="no_limit">0 (Без ліміту)</string>
+
+    <string name="settings_info">Інформація</string>
+    <string name="about_app">Про додаток</string>
+    <string name="about_app_desc">Версія, розробник та посилання</string>
+    <string name="app_version">Версія додатка: %1$s</string>
+    <string name="made_with_love">Зроблено з ❤ від Bodyaant</string>
+    <string name="link_github">GitHub</string>
+    <string name="link_telegram">Telegram</string>
+    <string name="settings_font">Шрифт інтерфейсу</string>
+    <string name="font_preset_wide">Широкий</string>
+    <string name="font_preset_thin">Тонкий</string>
+    <string name="font_preset_system">Системний</string>
+    <string name="settings_amoled_theme">AMOLED тема</string>
+    <string name="settings_amoled_theme_desc">Повністю чорний фон у темній темі</string>
+    <string name="settings_color_preset">Колірна схема</string>
+    <string name="color_preset_system">Системна</string>
+    <string name="color_preset_sage">Лісова шавлія</string>
+    <string name="color_preset_rose">Західна троянда</string>
+    <string name="color_preset_ocean">Глубокий океан</string>
+    <string name="time_over_limit_hm">+%1$02dг %2$02dхв</string>
+    <string name="time_over_limit_m">+%1$02dхв</string>
+    <string name="first_of_the_day">Перша за день</string>
+    <string name="settings_appearance_desc">Налаштування теми, AMOLED режиму та шрифтів</string>
+
+    <string name="trigger_dialog_title">Що викликало потяг?</string>
+    <string name="change_trigger_dialog_title">Змінити причину</string>
+    <string name="trigger_skip">Пропустити</string>
+    <string name="trigger_stress">Стрес</string>
+    <string name="trigger_boredom">Нудьга</string>
+    <string name="trigger_social">Компанія</string>
+    <string name="trigger_routine">Звичка</string>
+    <string name="trigger_food_coffee">Їжа / Кава</string>
+
+    <string name="tab_graphs">Графіки</string>
+    <string name="tab_triggers">Причини</string>
+    <string name="triggers_no_data">Додавайте причини при записі куріння, щоб побачити тут
+        аналітику.</string>
+    <string name="main_trigger">Головний тригер</string>
+    <string name="triggers_title">Причини куріння</string>
+    <string name="trigger_count_pattern">%1$d разів (%2$d%%)</string>
+
+    <string name="settings_cigarette_params">Параметри сигарет</string>
+    <string name="settings_pack_params">Параметри пачки</string>
+    <string name="settings_pack_price">Вартість пачки</string>
+    <string name="settings_pack_size">Сигарет у пачці</string>
+    <string name="settings_currency">Валюта</string>
+    <string name="settings_tap_configure">Натисніть для налаштування</string>
+    <string name="settings_pack_subtitle_pattern">%1$s %2$s (%3$d шт.)</string>
+
+    <string name="stats_money_saved">Заощаджено грошей</string>
+    <string name="stats_life_saved">Заощаджено життя</string>
+    <string name="stats_savings_lifetime">Економія за весь час</string>
+    <string name="stats_savings_current_streak">Економія за поточний відказ</string>
+    <string name="stats_savings_setup_warning">Налаштуйте ліміт куріння та параметри пачки в
+        налаштуваннях, щоб почати відстежувати заощаджені гроші та час життя.</string>
+    <string name="stats_body_recovery_who">Відновлення організму (ВООЗ)</string>
+    <string name="stats_recovery_no_data">Додайте запис про куріння, щоб побачити прогрес
+        відновлення здоров\'я.</string>
+
+    <string name="who_bp_desc">Пульс та артеріальний тиск повертаються до норми</string>
+    <string name="who_bp_time">20 хвилин</string>
+    <string name="who_oxygen_desc">Рівень кисню в крові приходить до норми</string>
+    <string name="who_oxygen_time">8 годин</string>
+    <string name="who_co_desc">Очищення організму від окису вуглецю</string>
+    <string name="who_co_time">12 годин</string>
+    <string name="who_lung_desc">Покращення роботи легень та кровообігу</string>
+    <string name="who_lung_time">2 тижні</string>
+
+    <string name="minutes_format_zero">0 хв</string>
+    <string name="minutes_format_day">%1$dд </string>
+    <string name="minutes_format_hour">%1$dг </string>
+    <string name="minutes_format_min">%1$dхв</string>
+
+    <string name="stats_go_to_settings">Перейти до налаштувань</string>
+    <string name="stats_days_saved">Днів життя заощаджено</string>
+    <string name="stats_current_streak_days">Поточна серія без куріння</string>
+    <string name="stats_days_unit_short">%d дн.</string>
+
+    <string name="notif_permission_rationale">Увімкніть сповіщення, щоб отримувати оповещення про
+        досягнення.</string>
+    <string name="undo_delete">Запис видалено</string>
+    <string name="undo">Скасувати</string>
+    <string name="edit_future_time_error">Не можна встановити час у майбутньому</string>
+    <string name="notification_channel_name">Досягнення</string>
+    <string name="notification_channel_desc">Сповіщення про розблоковані досягнення</string>
+    <string name="error_invalid_price">Введіть коректну ціну</string>
+    <string name="settings_saved">Збережено</string>
+    <string name="graph_no_data">Немає даних за цей період</string>
+
+    <string name="settings_check_updates_on_start">Перевіряти оновлення при запуске</string>
+    <string name="settings_check_updates_on_start_desc">Автоматично шукати нові версії SmokingYou</string>
+    <string name="settings_check_updates">Перевірити оновлення</string>
+    <string name="settings_check_updates_desc">Вручну перевірити наявність нових версій на GitHub</string>
+    <string name="update_dialog_title">Доступне оновлення</string>
+    <string name="update_dialog_message">Доступна нова версія SmokingYou (%1$s). Хочете завантажити
+        її зараз?</string>
+    <string name="update_dialog_download">Завантажити</string>
+    <string name="update_dialog_later">Пізніше</string>
+    <string name="update_checking">Перевірка оновлень...</string>
+    <string name="update_no_updates">У вас встановлено останню версію</string>
+    <string name="update_error">Помилка перевірки оновлень: %1$s</string>
+
+    <string name="settings_app_icon">Іконка додатка</string>
+    <string name="settings_app_icon_desc">Виберіть оформлення іконки на головному екрані</string>
+    <string name="app_icon_classic">Класична</string>
+    <string name="app_icon_dark">Темна</string>
+    <string name="app_icon_sunset">Захід сонця</string>
+    <string name="app_icon_cream">Кремова</string>
+    <string name="app_icon_neon">Неон</string>
+    <string name="app_icon_organic">Органік</string>
+    <string name="app_icon_midnight">Ніч</string>
+    <string name="app_icon_monochrome">Монохром</string>
+
+    <string name="support_development">Підтримка розробки</string>
+    <string name="support_boosty">Підтримати на Boosty</string>
+    <string name="crypto_wallets">Криптогаманці (USDT)</string>
+    <string name="address_copied">Адресу скопійовано в буфер обміну!</string>
+    <string name="copy_address">Скопіювати адресу</string>
+</resources>

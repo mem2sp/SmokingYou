@@ -189,20 +189,21 @@
     <string name="settings_saved">Saved</string>
     <string name="graph_no_data">No data for this period</string>
 
-    <!-- Update checker strings -->
     <string name="settings_check_updates_on_start">Check for updates on launch</string>
-    <string name="settings_check_updates_on_start_desc">Automatically look for new versions of SmokingYou</string>
+    <string name="settings_check_updates_on_start_desc">Automatically look for new versions of
+        SmokingYou</string>
     <string name="settings_check_updates">Check for Updates</string>
-    <string name="settings_check_updates_desc">Manually check if a newer version is available on GitHub</string>
+    <string name="settings_check_updates_desc">Manually check if a newer version is available on
+        GitHub</string>
     <string name="update_dialog_title">New Version Available</string>
-    <string name="update_dialog_message">A new version of SmokingYou (%1$s) is available. Would you like to download it now?</string>
+    <string name="update_dialog_message">A new version of SmokingYou (%1$s) is available. Would you
+        like to download it now?</string>
     <string name="update_dialog_download">Download</string>
     <string name="update_dialog_later">Later</string>
     <string name="update_checking">Checking for updates...</string>
     <string name="update_no_updates">You are using the latest version</string>
     <string name="update_error">Error checking for updates: %1$s</string>
-    
-    <!-- App Icon settings strings -->
+
     <string name="settings_app_icon">App Icon</string>
     <string name="settings_app_icon_desc">Choose your preferred home screen icon</string>
     <string name="app_icon_classic">Classic</string>
@@ -213,4 +214,10 @@
     <string name="app_icon_organic">Organic</string>
     <string name="app_icon_midnight">Midnight</string>
     <string name="app_icon_monochrome">Monochrome</string>
+
+    <string name="support_development">Support Development</string>
+    <string name="support_boosty">Support on Boosty</string>
+    <string name="crypto_wallets">Crypto Wallets (USDT)</string>
+    <string name="address_copied">Address copied to clipboard!</string>
+    <string name="copy_address">Copy address</string>
 </resources>

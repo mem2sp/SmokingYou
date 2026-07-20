@@ -1,0 +1,225 @@
+<resources>
+    <string name="app_name">SmokingYou</string>
+    <string name="registration_title">Bem-vindo ao SmokingYou</string>
+    <string name="registration_subtitle">O seu rastreador de tabaco pessoal</string>
+    <string name="registration_button">Iniciar monitoramento</string>
+    <string name="home_title">SmokingYou</string>
+    <string name="add_entry">Adicionar</string>
+    <string name="time_calculating">Calculando…</string>
+    <string name="invalid_future_entry">Entrada futura inválida</string>
+    <string name="start_tracking">Iniciar monitoramento</string>
+    <string name="time_past_label">Tempo decorrido desde o último cigarro</string>
+    <string name="stat_daily">Diário</string>
+    <string name="stat_weekly">Semanal</string>
+    <string name="stat_monthly">Mensal</string>
+    <string name="previous_day">Dia anterior</string>
+    <string name="next_day">Dia seguinte</string>
+    <string name="delete_entry">Excluir registro</string>
+    <string name="edit_entry">Editar registro</string>
+    <string name="duration_hms">%1$02dh %2$02dm %3$02ds</string>
+    <string name="duration_hm">%1$02dh %2$02dm</string>
+    <string name="duration_ms">%1$02dm %2$02ds</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancelar</string>
+    <string name="nav_home">Início</string>
+    <string name="nav_graph">Gráfico</string>
+    <string name="nav_personal">Configurações</string>
+    <string name="analytics_title">Estatísticas</string>
+    <string name="daily_overview">Visão geral diária</string>
+    <string name="weekly_overview">Visão geral semanal</string>
+    <string name="monthly_overview">Visão geral mensal</string>
+    <string name="yearly_overview">Visão geral anual</string>
+    <string name="personal_title">Configurações</string>
+    <string name="tab_settings">Configurações</string>
+    <string name="tab_achievements">Conquistas</string>
+    <string name="settings_appearance">Tema</string>
+    <string name="settings_theme">Tema</string>
+    <string name="theme_system">Sistema</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_dark">Escuro</string>
+    <string name="settings_general">Geral</string>
+    <string name="settings_language">Idioma</string>
+    <string name="language_value">Português</string>
+    <string name="settings_statistics">Estatísticas</string>
+    <string name="statistics_desc">Ver as suas estatísticas de tabagismo</string>
+    <string name="settings_achievements">Conquistas</string>
+    <string name="achievements_desc">Ver o seu progresso e recompensas</string>
+    <string name="settings_notifications">Notificações</string>
+    <string name="notifications_desc">Gerenciar alertas</string>
+    <string name="settings_data">Dados</string>
+    <string name="settings_backup">Backup</string>
+    <string name="backup_desc">Salvar backup no dispositivo</string>
+    <string name="settings_restore">Restaurar</string>
+    <string name="restore_desc">Restaurar dados do dispositivo</string>
+
+    <string name="stats_max_per_day">Máx. por dia</string>
+    <string name="stats_min_per_day">Mín. por dia</string>
+    <string name="stats_avg_per_day">Média por dia</string>
+    <string name="stats_total_count">Total de cigarros</string>
+    <string name="stats_tracking_since">Monitorando desde</string>
+    <string name="stats_max_smoke_free_streak">Maior período sem fumar</string>
+    <string name="stats_days_unit">%d dias</string>
+    <string name="stats_no_data">Nenhum dado disponível</string>
+
+    <string name="my_achievements">Minhas conquistas</string>
+
+    <string name="ach_category_login">Sequência de uso do app</string>
+    <string name="ach_category_nosmoke">Dias sem fumar</string>
+
+    <string name="ach_curiosity_title">Curiosidade</string>
+    <string name="ach_curiosity_desc">Registrou o seu primeiro cigarro</string>
+    <string name="ach_interest_title">Interesse</string>
+    <string name="ach_interest_desc">Registrou 3 dias consecutivos</string>
+    <string name="ach_exploration_title">Exploração</string>
+    <string name="ach_exploration_desc">Registrou 7 dias consecutivos</string>
+    <string name="ach_discipline_title">Disciplina</string>
+    <string name="ach_discipline_desc">Registrou 30 dias consecutivos</string>
+    <string name="ach_statistics_title">Estatísticas</string>
+    <string name="ach_statistics_desc">Registrou 365 dias consecutivos</string>
+
+    <string name="ach_nosmoke_1d_title">Primeiro passo</string>
+    <string name="ach_nosmoke_1d_desc">1 dia sem fumar</string>
+    <string name="ach_nosmoke_3d_title">Forza de vontade</string>
+    <string name="ach_nosmoke_3d_desc">3 dias sem fumar</string>
+    <string name="ach_nosmoke_1w_title">Purificação</string>
+    <string name="ach_nosmoke_1w_desc">1 semana sem fumar</string>
+    <string name="ach_nosmoke_1m_title">O Caminho</string>
+    <string name="ach_nosmoke_1m_desc">1 mês sem fumar</string>
+    <string name="ach_nosmoke_1y_title">Pureza</string>
+    <string name="ach_nosmoke_1y_desc">1 ano sem fumar</string>
+
+    <string name="notification_title">Conquista desbloqueada: %1$s</string>
+    <string name="backup_success">Backup concluído com sucesso!</string>
+    <string name="backup_error">Erro ao salvar backup</string>
+    <string name="restore_success">Dados restaurados com sucesso!</string>
+    <string name="restore_error">Erro ao restaurar dados</string>
+    <string name="language_dialog_title">Selecionar idioma</string>
+    <string name="settings_daily_limit">Limite diário de cigarros</string>
+
+    <string name="daily_limit_desc">Avisar se exceder este limite</string>
+    <string name="limit_warning_title">Limite excedido</string>
+    <string name="limit_warning_message">Atingiu o seu limite diário de cigarros. Ainda quer
+        adicionar este registro?</string>
+    <string name="add_anyway">Adicionar de qualquer forma</string>
+    <string name="set_limit_title">Definir limite diário</string>
+    <string name="no_limit">0 (Sem limite)</string>
+
+    <string name="settings_info">Informações</string>
+    <string name="about_app">Sobre o aplicativo</string>
+    <string name="about_app_desc">Versão, desenvolvedor e links</string>
+    <string name="app_version">Versão do app: %1$s</string>
+    <string name="made_with_love">Feito com ❤ por Bodyaant</string>
+    <string name="link_github">GitHub</string>
+    <string name="link_telegram">Telegram</string>
+    <string name="settings_font">Fonte da interface</string>
+    <string name="font_preset_wide">Larga</string>
+    <string name="font_preset_thin">Fina</string>
+    <string name="font_preset_system">Sistema</string>
+    <string name="settings_amoled_theme">Tema AMOLED</string>
+    <string name="settings_amoled_theme_desc">Fundo totalmente preto no modo escuro</string>
+    <string name="settings_color_preset">Esquema de cores</string>
+    <string name="color_preset_system">Sistema</string>
+    <string name="color_preset_sage">Salvia da floresta</string>
+    <string name="color_preset_rose">Rosa do pôr do sol</string>
+    <string name="color_preset_ocean">Oceano profundo</string>
+    <string name="time_over_limit_hm">+%1$02dh %2$02dm</string>
+    <string name="time_over_limit_m">+%1$02dm</string>
+    <string name="first_of_the_day">Primeiro do dia</string>
+    <string name="settings_appearance_desc">Tema, modo AMOLED e configurações de fonte</string>
+
+    <string name="trigger_dialog_title">O que causou o desejo?</string>
+    <string name="change_trigger_dialog_title">Alterar motivo</string>
+    <string name="trigger_skip">Ignorar</string>
+    <string name="trigger_stress">Estresse</string>
+    <string name="trigger_boredom">Tédio</string>
+    <string name="trigger_social">Social / Amigos</string>
+    <string name="trigger_routine">Rotina / Hábito</string>
+    <string name="trigger_food_coffee">Comida / Café</string>
+
+    <string name="tab_graphs">Gráficos</string>
+    <string name="tab_triggers">Gatilhos</string>
+    <string name="triggers_no_data">Adicione gatilhos ao registrar para ver as estatísticas aqui.</string>
+    <string name="main_trigger">Principal gatilho</string>
+    <string name="triggers_title">Gatilhos do tabagismo</string>
+    <string name="trigger_count_pattern">%1$d vezes (%2$d%%)</string>
+
+    <string name="settings_cigarette_params">Configurações de cigarro</string>
+    <string name="settings_pack_params">Configurações do maço</string>
+    <string name="settings_pack_price">Preço do maço</string>
+    <string name="settings_pack_size">Cigarros no maço</string>
+    <string name="settings_currency">Moeda</string>
+    <string name="settings_tap_configure">Toque para configurar</string>
+    <string name="settings_pack_subtitle_pattern">%1$s %2$s (%3$d unid)</string>
+
+    <string name="stats_money_saved">Dinero economizado</string>
+    <string name="stats_life_saved">Vida recuperada</string>
+    <string name="stats_savings_lifetime">Economia total</string>
+    <string name="stats_savings_current_streak">Economia do período atual</string>
+    <string name="stats_savings_setup_warning">Configure o limite diário e os detalhes do maço nas
+        Configurações para começar a rastrear o dinheiro e a vida economizados.</string>
+    <string name="stats_body_recovery_who">Recuperação do corpo (OMS)</string>
+    <string name="stats_recovery_no_data">Adicione um registro para ver o progresso da recuperação
+        da saúde.</string>
+
+    <string name="who_bp_desc">O pulso e a pressão arterial voltam ao normal</string>
+    <string name="who_bp_time">20 minutos</string>
+    <string name="who_oxygen_desc">O nível de oxigênio no sangue volta ao normal</string>
+    <string name="who_oxygen_time">8 horas</string>
+    <string name="who_co_desc">O monóxido de carbono é eliminado do corpo</string>
+    <string name="who_co_time">12 horas</string>
+    <string name="who_lung_desc">A função pulmonar e a circulação melhoram</string>
+    <string name="who_lung_time">2 semanas</string>
+
+    <string name="minutes_format_zero">0m</string>
+    <string name="minutes_format_day">%1$dd </string>
+    <string name="minutes_format_hour">%1$dh </string>
+    <string name="minutes_format_min">%1$dm</string>
+
+    <string name="stats_go_to_settings">Ir para Configurações</string>
+    <string name="stats_days_saved">Dias de vida economizados</string>
+    <string name="stats_current_streak_days">Período atual sem fumar</string>
+    <string name="stats_days_unit_short">%d d</string>
+
+    <string name="notif_permission_rationale">Ative as notificações para receber alertas de
+        conquistas.</string>
+    <string name="undo_delete">Registro excluído</string>
+    <string name="undo">Desfazer</string>
+    <string name="edit_future_time_error">Não é possível definir um horário no futuro</string>
+    <string name="notification_channel_name">Conquistas</string>
+    <string name="notification_channel_desc">Notificações de conquistas desbloqueadas</string>
+    <string name="error_invalid_price">Insira um preço válido</string>
+    <string name="settings_saved">Salvo</string>
+    <string name="graph_no_data">Sem dados para este período</string>
+
+    <string name="settings_check_updates_on_start">Verificar atualizações ao iniciar</string>
+    <string name="settings_check_updates_on_start_desc">Buscar automaticamente novas versões do
+        SmokingYou</string>
+    <string name="settings_check_updates">Verificar atualizações</string>
+    <string name="settings_check_updates_desc">Verificar manualmente se há uma versão mais recente
+        no GitHub</string>
+    <string name="update_dialog_title">Nova versão disponível</string>
+    <string name="update_dialog_message">Uma nova versão do SmokingYou (%1$s) está disponível.
+        Gostaria de baixá-la agora?</string>
+    <string name="update_dialog_download">Baixar</string>
+    <string name="update_dialog_later">Depois</string>
+    <string name="update_checking">Verificando atualizações...</string>
+    <string name="update_no_updates">Você está usando a versão mais recente</string>
+    <string name="update_error">Erro ao verificar atualizações: %1$s</string>
+
+    <string name="settings_app_icon">Ícone do app</string>
+    <string name="settings_app_icon_desc">Escolha seu ícone preferido para la tela inicial</string>
+    <string name="app_icon_classic">Clássico</string>
+    <string name="app_icon_dark">Escuro</string>
+    <string name="app_icon_sunset">Pôr do sol</string>
+    <string name="app_icon_cream">Creme</string>
+    <string name="app_icon_neon">Neon</string>
+    <string name="app_icon_organic">Orgânico</string>
+    <string name="app_icon_midnight">Meia-noite</string>
+    <string name="app_icon_monochrome">Monocromático</string>
+
+    <string name="support_development">Apoiar o desenvolvimento</string>
+    <string name="support_boosty">Apoiar no Boosty</string>
+    <string name="crypto_wallets">Carteiras cripto (USDT)</string>
+    <string name="address_copied">Endereço copiado para a área de transferência!</string>
+    <string name="copy_address">Copiar endereço</string>
+</resources>

@@ -9,6 +9,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -242,6 +244,17 @@ fun SettingsTab(
     }
 
     if (showLanguageDialog) {
+        val languages = listOf(
+            "en" to "English",
+            "ru" to "Русский",
+            "es" to "Español",
+            "de" to "Deutsch",
+            "fr" to "Français",
+            "tr" to "Türkçe",
+            "it" to "Italiano",
+            "pt" to "Português",
+            "uk" to "Українська"
+        )
         ModalBottomSheet(
             onDismissRequest = { showLanguageDialog = false },
             sheetState = rememberModalBottomSheetState(),
@@ -250,6 +263,7 @@ fun SettingsTab(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
                     .padding(start = 24.dp, end = 24.dp, bottom = 48.dp, top = 8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -259,53 +273,40 @@ fun SettingsTab(
                     modifier = Modifier.padding(bottom = 24.dp)
                 )
 
-                Surface(
-                    onClick = {
-                        changeLanguage(context, "en")
-                        showLanguageDialog = false
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 8.dp, bottomEnd = 8.dp),
-                    color = if (currentLocale == "en") MaterialTheme.colorScheme.primaryContainer
-                            else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-                ) {
-                    Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = "English",
-                            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
-                            modifier = Modifier.weight(1f),
-                            color = if (currentLocale == "en") MaterialTheme.colorScheme.onPrimaryContainer
-                                    else MaterialTheme.colorScheme.onSurface
-                        )
-                        if (currentLocale == "en") {
-                            Icon(Icons.Filled.CheckCircle, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                languages.forEachIndexed { index, (langCode, langName) ->
+                    val shape = when (index) {
+                        0 -> RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 8.dp, bottomEnd = 8.dp)
+                        languages.lastIndex -> RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp, bottomStart = 24.dp, bottomEnd = 24.dp)
+                        else -> RoundedCornerShape(8.dp)
+                    }
+                    val isSelected = currentLocale == langCode
+
+                    Surface(
+                        onClick = {
+                            changeLanguage(context, langCode)
+                            showLanguageDialog = false
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = shape,
+                        color = if (isSelected) MaterialTheme.colorScheme.primaryContainer
+                                else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                    ) {
+                        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = langName,
+                                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
+                                modifier = Modifier.weight(1f),
+                                color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
+                                        else MaterialTheme.colorScheme.onSurface
+                            )
+                            if (isSelected) {
+                                Icon(Icons.Filled.CheckCircle, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                            }
                         }
                     }
-                }
 
-                Spacer(modifier = Modifier.height(4.dp))
-
-                Surface(
-                    onClick = {
-                        changeLanguage(context, "ru")
-                        showLanguageDialog = false
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp, bottomStart = 24.dp, bottomEnd = 24.dp),
-                    color = if (currentLocale == "ru") MaterialTheme.colorScheme.primaryContainer
-                            else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-                ) {
-                    Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = "Русский",
-                            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
-                            modifier = Modifier.weight(1f),
-                            color = if (currentLocale == "ru") MaterialTheme.colorScheme.onPrimaryContainer
-                                    else MaterialTheme.colorScheme.onSurface
-                        )
-                        if (currentLocale == "ru") {
-                            Icon(Icons.Filled.CheckCircle, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-                        }
+                    if (index < languages.lastIndex) {
+                        Spacer(modifier = Modifier.height(4.dp))
                     }
                 }
             }
