@@ -25,6 +25,14 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.SmokingRooms
+import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.filled.HourglassEmpty
+import androidx.compose.material.icons.filled.People
+import androidx.compose.material.icons.filled.Repeat
+import androidx.compose.material.icons.filled.LocalCafe
+import androidx.compose.ui.graphics.vector.ImageVector
+import com.smokingtracker.data.TriggerType
 import androidx.compose.material3.*
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialShapes
@@ -70,6 +78,7 @@ internal fun HomeScreenContent(entries: List<Long>, dailyLimit: Int, viewModel: 
     val cookieShape = MaterialShapes.Cookie12Sided.toShape()
 
     var currentDate by remember { mutableStateOf(Calendar.getInstance()) }
+    val entryTriggers by viewModel?.entryTriggers?.collectAsState() ?: remember { mutableStateOf(emptyMap<Long, String>()) }
 
     var timePassedText by remember { mutableStateOf("") }
     val calculatingText = stringResource(R.string.time_calculating)
@@ -269,7 +278,26 @@ internal fun HomeScreenContent(entries: List<Long>, dailyLimit: Int, viewModel: 
                                     contentColor = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             ) {
-                                Text(stringResource(trigger.labelResId), fontWeight = FontWeight.Bold)
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                ) {
+                                    val cookieShape = MaterialShapes.Cookie9Sided.toShape()
+                                    Box(
+                                        modifier = Modifier
+                                            .size(32.dp)
+                                            .clip(cookieShape)
+                                            .background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.15f)),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Icon(
+                                            imageVector = getTriggerIcon(trigger.key),
+                                            contentDescription = null,
+                                            modifier = Modifier.size(16.dp)
+                                        )
+                                    }
+                                    Text(stringResource(trigger.labelResId), fontWeight = FontWeight.Bold)
+                                }
                             }
                         }
                     }
@@ -573,6 +601,7 @@ internal fun HomeScreenContent(entries: List<Long>, dailyLimit: Int, viewModel: 
                             entryTime = entryTime,
                             prevEntryTime = prevTime,
                             index = index,
+                            trigger = entryTriggers[entryTime],
                             onDelete = {
                                 scope.launch {
                                     val trigger = viewModel?.entryTriggers?.value?.get(entryTime)
@@ -589,6 +618,9 @@ internal fun HomeScreenContent(entries: List<Long>, dailyLimit: Int, viewModel: 
                             },
                             onEdit = { newTime ->
                                 viewModel?.editSmokingEntry(entryTime, newTime)
+                            },
+                            onUpdateTrigger = { newTrigger ->
+                                viewModel?.updateSmokingEntryTrigger(entryTime, newTrigger)
                             }
                         )
                     }
@@ -689,6 +721,18 @@ fun StatItem(label: String, value: String, modifier: Modifier = Modifier) {
     }
 }
 
+private fun getTriggerIcon(triggerKey: String?): ImageVector {
+    val trigger = triggerKey?.let { TriggerType.fromKey(it) }
+    return when (trigger) {
+        TriggerType.STRESS -> Icons.Filled.Bolt
+        TriggerType.BOREDOM -> Icons.Filled.HourglassEmpty
+        TriggerType.SOCIAL -> Icons.Filled.People
+        TriggerType.ROUTINE -> Icons.Filled.Repeat
+        TriggerType.FOOD_COFFEE -> Icons.Filled.LocalCafe
+        else -> Icons.Filled.SmokingRooms
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun EntryItemPreview() {
@@ -701,12 +745,15 @@ fun EntryItem(
     entryTime: Long = System.currentTimeMillis(),
     prevEntryTime: Long? = null,
     index: Int = 0,
+    trigger: String? = null,
     onDelete: () -> Unit = {},
-    onEdit: (Long) -> Unit = {}
+    onEdit: (Long) -> Unit = {},
+    onUpdateTrigger: (String?) -> Unit = {}
 ) {
     val cookieShape = MaterialShapes.Cookie9Sided.toShape()
     val timeStr = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(entryTime))
     var showTimePicker by remember { mutableStateOf(false) }
+    var showEditTriggerDialog by remember { mutableStateOf(false) }
     var editErrorToast by remember { mutableStateOf(false) }
     val context = androidx.compose.ui.platform.LocalContext.current
     val futureDateError = if (!LocalInspectionMode.current) stringResource(R.string.edit_future_time_error) else ""
@@ -748,6 +795,86 @@ fun EntryItem(
     }
 
     val colorScheme = MaterialTheme.colorScheme
+
+    if (showEditTriggerDialog) {
+        BasicAlertDialog(onDismissRequest = { showEditTriggerDialog = false }) {
+            Surface(shape = RoundedCornerShape(28.dp), color = colorScheme.surface) {
+                Column(
+                    modifier = Modifier.padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = stringResource(R.string.change_trigger_dialog_title),
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                        modifier = Modifier.padding(bottom = 16.dp),
+                        color = colorScheme.onSurface
+                    )
+                    
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        TriggerType.allEntries().forEach { type ->
+                            Button(
+                                onClick = {
+                                    onUpdateTrigger(type.key)
+                                    showEditTriggerDialog = false
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(16.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = colorScheme.surfaceVariant,
+                                    contentColor = colorScheme.onSurfaceVariant
+                                )
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                ) {
+                                    val cookieShape = MaterialShapes.Cookie9Sided.toShape()
+                                    Box(
+                                        modifier = Modifier
+                                            .size(32.dp)
+                                            .clip(cookieShape)
+                                            .background(colorScheme.onSurfaceVariant.copy(alpha = 0.15f)),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Icon(
+                                            imageVector = getTriggerIcon(type.key),
+                                            contentDescription = null,
+                                            modifier = Modifier.size(16.dp)
+                                        )
+                                    }
+                                    Text(stringResource(type.labelResId), fontWeight = FontWeight.Bold)
+                                }
+                            }
+                        }
+                    }
+                    
+                    Spacer(modifier = Modifier.height(16.dp))
+                    
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        TextButton(onClick = { showEditTriggerDialog = false }) {
+                            Text(stringResource(R.string.dialog_cancel), fontWeight = FontWeight.Bold)
+                        }
+                        Button(
+                            onClick = {
+                                onUpdateTrigger(null)
+                                showEditTriggerDialog = false
+                            },
+                            shape = RoundedCornerShape(16.dp)
+                        ) {
+                            Text(stringResource(R.string.trigger_skip), fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     val (accentColor, accentContainer, onAccentContainer) = when (index % 3) {
         0 -> Triple(colorScheme.tertiary, colorScheme.tertiaryContainer, colorScheme.onTertiaryContainer)
         1 -> Triple(colorScheme.secondary, colorScheme.secondaryContainer, colorScheme.onSecondaryContainer)
@@ -772,6 +899,7 @@ fun EntryItem(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Surface(
+                onClick = { showTimePicker = true },
                 shape = CircleShape,
                 color = accentContainer,
                 contentColor = onAccentContainer
@@ -790,7 +918,7 @@ fun EntryItem(
             }
 
             Surface(
-                onClick = { showTimePicker = true },
+                onClick = { showEditTriggerDialog = true },
                 shape = cookieShape,
                 color = accentContainer.copy(alpha = 0.25f),
                 contentColor = accentColor,
@@ -798,8 +926,8 @@ fun EntryItem(
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
-                        Icons.Filled.Edit,
-                        contentDescription = stringResource(R.string.edit_entry),
+                        imageVector = getTriggerIcon(trigger),
+                        contentDescription = stringResource(R.string.trigger_dialog_title),
                         modifier = Modifier.size(20.dp)
                     )
                 }
@@ -821,59 +949,62 @@ fun EntryItem(
                 }
             }
 
-            Spacer(modifier = Modifier.weight(1f))
-
-            if (prevEntryTime != null) {
-                val intervalStr = remember(entryTime, prevEntryTime) {
-                    val diffMs = entryTime - prevEntryTime
-                    val hours = java.util.concurrent.TimeUnit.MILLISECONDS.toHours(diffMs)
-                    val minutes = (java.util.concurrent.TimeUnit.MILLISECONDS.toMinutes(diffMs) % 60)
-                    if (hours > 0) {
-                        context.getString(R.string.time_over_limit_hm, hours, minutes)
-                    } else {
-                        context.getString(R.string.time_over_limit_m, minutes)
+            Box(
+                modifier = Modifier.weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                if (prevEntryTime != null) {
+                    val intervalStr = remember(entryTime, prevEntryTime) {
+                        val diffMs = entryTime - prevEntryTime
+                        val hours = java.util.concurrent.TimeUnit.MILLISECONDS.toHours(diffMs)
+                        val minutes = (java.util.concurrent.TimeUnit.MILLISECONDS.toMinutes(diffMs) % 60)
+                        if (hours > 0) {
+                            context.getString(R.string.time_over_limit_hm, hours, minutes)
+                        } else {
+                            context.getString(R.string.time_over_limit_m, minutes)
+                        }
                     }
-                }
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    Surface(
+                        shape = RoundedCornerShape(12.dp),
+                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                     ) {
-                        Icon(
-                            imageVector = Icons.Filled.History,
-                            contentDescription = null,
-                            modifier = Modifier.size(14.dp)
-                        )
-                        Text(
-                            text = intervalStr,
-                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
-                            maxLines = 1,
-                            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.History,
+                                contentDescription = null,
+                                modifier = Modifier.size(14.dp)
+                            )
+                            Text(
+                                text = intervalStr,
+                                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+                                maxLines = 1,
+                                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                            )
+                        }
                     }
-                }
-            } else {
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = accentContainer.copy(alpha = 0.15f),
-                    contentColor = accentColor.copy(alpha = 0.8f)
-                ) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                } else {
+                    Surface(
+                        shape = RoundedCornerShape(12.dp),
+                        color = accentContainer.copy(alpha = 0.15f),
+                        contentColor = accentColor.copy(alpha = 0.8f)
                     ) {
-                        Text(
-                            text = stringResource(R.string.first_of_the_day),
-                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
-                            textAlign = TextAlign.Center,
-                            maxLines = 1,
-                            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
-                        )
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                        ) {
+                            Text(
+                                text = stringResource(R.string.first_of_the_day),
+                                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+                                textAlign = TextAlign.Center,
+                                maxLines = 1,
+                                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                            )
+                        }
                     }
                 }
             }
