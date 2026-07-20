@@ -127,6 +127,7 @@
     <string name="settings_appearance_desc">Настройки темы, AMOLED режима и шрифтов</string>
 
     <string name="trigger_dialog_title">Что вызвало тягу?</string>
+    <string name="change_trigger_dialog_title">Изменить причину</string>
     <string name="trigger_skip">Пропустить</string>
     <string name="trigger_stress">Стресс</string>
     <string name="trigger_boredom">Скука</string>
