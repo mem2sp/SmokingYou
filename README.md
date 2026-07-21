@@ -84,7 +84,13 @@ SmokingYou is designed to help you track and manage your smoking habits. By offe
 Currently supported languages:
 - English
 - Russian
-
+- German
+- Spanish
+- French
+- Italian
+- Portuguese
+- Turkish
+- Ukrainian
 ## Installation
 
 1. Download the latest APK from the [Releases](https://github.com/mem2sp/SmokingYou/releases/latest) page.
