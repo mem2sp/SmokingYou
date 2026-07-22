@@ -33,6 +33,7 @@ import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -467,7 +468,6 @@ fun FontSegmentedButton(
         }
     }
 }
-
 @Composable
 fun ColorPresetSelector(
     currentPreset: String,
@@ -492,90 +492,114 @@ fun ColorPresetSelector(
         Triple("SYSTEM", stringResource(R.string.color_preset_system), systemColor),
         Triple("FOREST_SAGE", stringResource(R.string.color_preset_sage), if (useDarkTheme) Color(0xFFB1D18A) else Color(0xFF4C662B)),
         Triple("SUNSET_ROSE", stringResource(R.string.color_preset_rose), if (useDarkTheme) Color(0xFFF5B5A1) else Color(0xFF8F4C38)),
-        Triple("OCEAN_DEEP", stringResource(R.string.color_preset_ocean), if (useDarkTheme) Color(0xFF76D1FF) else Color(0xFF006689))
+        Triple("OCEAN_DEEP", stringResource(R.string.color_preset_ocean), if (useDarkTheme) Color(0xFF76D1FF) else Color(0xFF006689)),
+        Triple("PURPLE_NEBULA", stringResource(R.string.color_preset_purple), if (useDarkTheme) Color(0xFFD4BBFF) else Color(0xFF6B4EA2)),
+        Triple("AMBER_GOLD", stringResource(R.string.color_preset_amber), if (useDarkTheme) Color(0xFFFFB95B) else Color(0xFF825500)),
+        Triple("CRIMSON_BERRY", stringResource(R.string.color_preset_crimson), if (useDarkTheme) Color(0xFFFFB2BE) else Color(0xFF980038)),
+        Triple("SLATE_MONO", stringResource(R.string.color_preset_slate), if (useDarkTheme) Color(0xFFC6C6C6) else Color(0xFF474747))
     )
 
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
+            .padding(horizontal = 4.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        options.forEach { (preset, title, mainColor) ->
-            val isSelected = currentPreset == preset
-            
-            val scale by androidx.compose.animation.core.animateFloatAsState(
-                targetValue = if (isSelected) 1.15f else 1.0f,
-                animationSpec = spring(dampingRatio = Spring.DampingRatioLowBouncy, stiffness = Spring.StiffnessLow),
-                label = "color_scale_$preset"
-            )
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .weight(1f)
-                    .scale(scale)
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
-                        onClick = { onPresetChange(preset) }
-                    )
+        val chunkedOptions = options.chunked(4)
+        chunkedOptions.forEach { rowItems ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .size(56.dp)
-                        .then(
-                            if (isSelected) {
-                                Modifier.border(
-                                    border = BorderStroke(
-                                        width = 3.dp,
-                                        color = MaterialTheme.colorScheme.primary
-                                    ),
-                                    shape = CircleShape
-                                )
-                            } else {
-                                Modifier
-                            }
-                        )
-                        .padding(4.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                color = mainColor,
-                                shape = CircleShape
-                            )
+                rowItems.forEach { (preset, title, mainColor) ->
+                    val isSelected = currentPreset == preset
+
+                    val scale by androidx.compose.animation.core.animateFloatAsState(
+                        targetValue = if (isSelected) 1.12f else 1.0f,
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioLowBouncy,
+                            stiffness = Spring.StiffnessLow
+                        ),
+                        label = "color_scale_$preset"
                     )
 
-                    if (isSelected) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(
-                                    color = Color.Black.copy(alpha = 0.2f),
-                                    shape = CircleShape
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Check,
-                                contentDescription = null,
-                                tint = Color.White,
-                                modifier = Modifier.size(24.dp)
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .weight(1f)
+                            .scale(scale)
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                                onClick = { onPresetChange(preset) }
                             )
+                    ) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .size(52.dp)
+                                .then(
+                                    if (isSelected) {
+                                        Modifier.border(
+                                            border = BorderStroke(
+                                                width = 3.dp,
+                                                color = MaterialTheme.colorScheme.primary
+                                            ),
+                                            shape = CircleShape
+                                        )
+                                    } else {
+                                        Modifier
+                                    }
+                                )
+                                .padding(4.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(
+                                        color = mainColor,
+                                        shape = CircleShape
+                                    )
+                            )
+
+                            if (isSelected) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(
+                                            color = Color.Black.copy(alpha = 0.2f),
+                                            shape = CircleShape
+                                        ),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Check,
+                                        contentDescription = null,
+                                        tint = Color.White,
+                                        modifier = Modifier.size(22.dp)
+                                    )
+                                }
+                            }
                         }
+
+                        Spacer(modifier = Modifier.height(6.dp))
+
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                fontWeight = if (isSelected) FontWeight.ExtraBold else FontWeight.Medium
+                            ),
+                            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                            textAlign = TextAlign.Center,
+                            maxLines = 2,
+                            minLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 2.dp)
+                        )
                     }
                 }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = if (isSelected) FontWeight.ExtraBold else FontWeight.Medium),
-                    color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
-                )
             }
         }
     }
