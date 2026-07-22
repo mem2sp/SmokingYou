@@ -181,6 +181,7 @@
     <string name="trigger_social">Компания</string>
     <string name="trigger_routine">Привычка</string>
     <string name="trigger_food_coffee">Еда / Кофе</string>
+    <string name="trigger_alcohol">Алкоголь</string>
 
     <string name="tab_graphs">Графики</string>
     <string name="tab_triggers">Причины</string>
@@ -262,8 +263,68 @@
     <string name="app_icon_monochrome">Монохром</string>
 
     <string name="support_development">Поддержка разработки</string>
+
+    <string name="mindful_pause_button">Преодолеть тягу</string>
+    <string name="mindful_pause_header">Преодоление тяги</string>
+    <string name="mindful_pause_or_resist">Или если пытаетесь сдержаться:</string>
+    <string name="mindful_pause_resisted">Преодолено</string>
+    <string name="mindful_pause_add_15s">+15 сек</string>
+    <string name="mindful_pause_already_held">Уже выдержал</string>
+    <string name="mindful_pause_smoked_after_all">Все-таки выкурил сигарету</string>
+    <string name="mindful_pause_well_done">Вы отлично справились!</string>
+    <string name="mindful_pause_breathe_in">Глубокий вдох...</string>
+    <string name="mindful_pause_hold_breath">Задержка дыхания...</string>
+    <string name="mindful_pause_breathe_out">Медленный выдох...</string>
+    <string name="mindful_pause_sec">сек</string>
+    <string name="mindful_pause_tip_1">Пиковый порыв курения длится всего 15–30 секунд. Вы справляетесь!</string>
+    <string name="mindful_pause_tip_2">Сделайте глубокий вдох через нос и медленный выдох через рот.</string>
+    <string name="mindful_pause_tip_3">Сделайте глоток холодной воды — это мгновенно переключает мозг.</string>
+    <string name="mindful_pause_tip_4">Каждый непреодоленный порыв делает вашу волю сильнее.</string>
+    <string name="mindful_pause_tip_5">Ваши легкие начинают очищаться уже через 20 минут без курения.</string>
+
+    <string name="tapering_plan_title">План снижения лимита</string>
+    <string name="tapering_plan_dialog_title">План постепенного снижения</string>
+    <string name="tapering_plan_switch_label">Еженедельное снижение</string>
+    <string name="tapering_plan_slider_label">Предлагать снизить лимит каждые %1$d дн.</string>
+    <string name="tapering_plan_subtitle_active">Снижение на 1 сиг. каждые %1$d дн.</string>
+    <string name="tapering_plan_subtitle_off">Выключен</string>
+
+    <string name="tapering_checkin_title">План постепенного снижения</string>
+    <string name="tapering_checkin_desc">Прошла ровно неделя с вашего прошлого шага! Вы отлично справлялись с лимитом в %1$d сигарет.</string>
+    <string name="tapering_checkin_was">Было</string>
+    <string name="tapering_checkin_will_be">Станет</string>
+    <string name="tapering_checkin_reduce_to">Снизить лимит до %1$d сиг/день</string>
+    <string name="tapering_checkin_keep_limit">Оставить лимит %1$d сигарет</string>
+    <string name="tapering_checkin_snooze">Напомнить через 3 дня</string>
+
+    <string name="stats_resisted_cravings">Преодоленные порывы</string>
+    <string name="stats_resisted_cravings_desc">Вы устояли %1$d раз и сэкономили %2$s</string>
+
     <string name="support_boosty">Поддержать на Boosty</string>
     <string name="crypto_wallets">Криптокошельки (USDT)</string>
     <string name="address_copied">Адрес скопирован в буфер обмена!</string>
     <string name="copy_address">Скопировать адрес</string>
+
+    <string name="history_generator_title">Прошлый стаж курения</string>
+    <string name="history_generator_description">Оцените ваш опыт курения до начала использования приложения, чтобы сразу заполнить аналитику стартовыми данными.</string>
+    <string name="history_start_date_label">Дата начала курения</string>
+    <string name="history_daily_avg_label">Среднее количество сигарет в день</string>
+    <string name="history_daily_avg_unit">%1$d шт./день</string>
+    <string name="history_pack_details_title">Цена и объем пачки</string>
+    <string name="history_pack_price_label">Цена пачки (₽)</string>
+    <string name="history_pack_size_label">Сигарет в пачке</string>
+    <string name="history_trigger_ranking_title">Причины тяги (Приоритет)</string>
+    <string name="history_trigger_ranking_hint">Расставьте от самой частой причины (#1) к самой редкой</string>
+    <string name="history_preview_title">Расчетная оценка прошлых лет</string>
+    <string name="history_preview_total_cigs">Выкурено до приложения</string>
+    <string name="history_preview_total_cost">Потрачено за стаж</string>
+    <string name="history_save_button">Сохранить прошлый опыт</string>
+    <string name="history_reset_button">Сбросить прошлый опыт</string>
+    <string name="history_reset_dialog_title">Сбросить прошлый опыт?</string>
+    <string name="history_reset_dialog_desc">Это удалит расчетную оценку прошлых лет из аналитики.</string>
+    <string name="history_banner_title">У вас уже есть стаж курения?</string>
+    <string name="history_banner_desc">Заполните прошлый опыт, чтобы увидеть общие расходы и выкуренные сигареты.</string>
+    <string name="registration_history_note">Вы также сможете заполнить прошлый опыт курения в любой момент в Настройках!</string>
+    <string name="history_cigs_count_format">%1$s шт.</string>
+    <string name="history_duration_days_y_m">%1$d дн. (%2$dг %3$dм)</string>
 </resources>
