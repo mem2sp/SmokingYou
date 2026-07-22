@@ -104,6 +104,7 @@ fun AchievementsTab(
                     ) {
                         achievements.forEach { achievement ->
                             val isUnlocked = unlockedAchievements.contains(achievement.id)
+                            val isSecretHidden = achievement.isSecret && !isUnlocked
 
                             Surface(
                                 shape = RoundedCornerShape(20.dp),
@@ -159,7 +160,11 @@ fun AchievementsTab(
                                         )
                                         Spacer(modifier = Modifier.height(2.dp))
                                         Text(
-                                            text = stringResource(achievement.descResId),
+                                            text = if (isSecretHidden) {
+                                                stringResource(R.string.ach_secret_hidden_desc)
+                                            } else {
+                                                stringResource(achievement.descResId)
+                                            },
                                             style = MaterialTheme.typography.bodyMedium,
                                             color = if (isUnlocked) {
                                                 MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
@@ -167,7 +172,7 @@ fun AchievementsTab(
                                                 MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
                                             }
                                         )
-                                        if (!isUnlocked) {
+                                        if (!isUnlocked && !achievement.isSecret) {
                                             val progress = remember(entries, launches) {
                                                 AchievementsManager.progressFraction(achievement.id, entries, launches)
                                             }
