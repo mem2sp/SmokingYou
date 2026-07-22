@@ -27,6 +27,8 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -43,6 +45,7 @@ import com.smokingtracker.MainViewModel
 import com.smokingtracker.MainViewModel.UpdateCheckState
 import com.smokingtracker.R
 import com.smokingtracker.data.ThemePreference
+import androidx.compose.material.icons.filled.TrendingDown
 import androidx.compose.material.icons.filled.SystemUpdate
 import java.util.Locale
 
@@ -53,7 +56,8 @@ fun PersonalScreen(
     onNavigateToAbout: () -> Unit,
     onNavigateToAchievements: () -> Unit,
     onNavigateToStatistics: () -> Unit,
-    onNavigateToAppearance: () -> Unit
+    onNavigateToAppearance: () -> Unit,
+    onNavigateToHistoryGenerator: () -> Unit = {}
 ) {
     val themePreference by viewModel.themePreference.collectAsState()
     val dailyLimit by viewModel.dailyLimit.collectAsState()
@@ -63,6 +67,9 @@ fun PersonalScreen(
     val currency by viewModel.currency.collectAsState()
     val checkUpdatesOnStart by viewModel.checkUpdatesOnStart.collectAsState()
     val updateCheckState by viewModel.updateCheckState.collectAsState()
+    val taperingPlanEnabled by viewModel.taperingPlanEnabled.collectAsState()
+    val taperingIntervalDays by viewModel.taperingIntervalDays.collectAsState()
+    val hasHistoricalBaseline by viewModel.hasHistoricalBaseline.collectAsState()
 
     PersonalScreenContent(
         themePreference = themePreference,
@@ -73,6 +80,9 @@ fun PersonalScreen(
         currency = currency,
         checkUpdatesOnStart = checkUpdatesOnStart,
         updateCheckState = updateCheckState,
+        taperingPlanEnabled = taperingPlanEnabled,
+        taperingIntervalDays = taperingIntervalDays,
+        onSetTaperingPlanSettings = viewModel::setTaperingPlanSettings,
         onThemeChange = viewModel::updateThemePreference,
         onSetDailyLimit = viewModel::setDailyLimit,
         onFontPresetChange = viewModel::updateFontPreset,
@@ -86,7 +96,10 @@ fun PersonalScreen(
         onNavigateToAbout = onNavigateToAbout,
         onNavigateToAchievements = onNavigateToAchievements,
         onNavigateToStatistics = onNavigateToStatistics,
-        onNavigateToAppearance = onNavigateToAppearance
+        onNavigateToAppearance = onNavigateToAppearance,
+        hasHistoricalBaseline = hasHistoricalBaseline,
+        onNavigateToHistoryGenerator = onNavigateToHistoryGenerator,
+        onClearHistoricalBaseline = viewModel::clearHistoricalBaseline
     )
 }
 
@@ -101,6 +114,10 @@ fun PersonalScreenContent(
     currency: String,
     checkUpdatesOnStart: Boolean,
     updateCheckState: UpdateCheckState,
+    taperingPlanEnabled: Boolean = false,
+    taperingIntervalDays: Int = 7,
+    hasHistoricalBaseline: Boolean = false,
+    onSetTaperingPlanSettings: (Boolean, Int) -> Unit = { _, _ -> },
     onThemeChange: (ThemePreference) -> Unit,
     onSetDailyLimit: (Int) -> Unit,
     onFontPresetChange: (String) -> Unit,
@@ -114,7 +131,9 @@ fun PersonalScreenContent(
     onNavigateToAbout: () -> Unit = {},
     onNavigateToAchievements: () -> Unit = {},
     onNavigateToStatistics: () -> Unit = {},
-    onNavigateToAppearance: () -> Unit = {}
+    onNavigateToAppearance: () -> Unit = {},
+    onNavigateToHistoryGenerator: () -> Unit = {},
+    onClearHistoricalBaseline: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -142,6 +161,9 @@ fun PersonalScreenContent(
             currency = currency,
             checkUpdatesOnStart = checkUpdatesOnStart,
             updateCheckState = updateCheckState,
+            taperingPlanEnabled = taperingPlanEnabled,
+            taperingIntervalDays = taperingIntervalDays,
+            onSetTaperingPlanSettings = onSetTaperingPlanSettings,
             onThemeChange = onThemeChange,
             onSetDailyLimit = onSetDailyLimit,
             onFontPresetChange = onFontPresetChange,
@@ -155,7 +177,10 @@ fun PersonalScreenContent(
             onNavigateToAbout = onNavigateToAbout,
             onNavigateToAchievements = onNavigateToAchievements,
             onNavigateToStatistics = onNavigateToStatistics,
-            onNavigateToAppearance = onNavigateToAppearance
+            onNavigateToAppearance = onNavigateToAppearance,
+            hasHistoricalBaseline = hasHistoricalBaseline,
+            onNavigateToHistoryGenerator = onNavigateToHistoryGenerator,
+            onClearHistoricalBaseline = onClearHistoricalBaseline
         )
     }
 }
@@ -173,6 +198,10 @@ fun SettingsTab(
     currency: String,
     checkUpdatesOnStart: Boolean,
     updateCheckState: UpdateCheckState,
+    taperingPlanEnabled: Boolean = false,
+    taperingIntervalDays: Int = 7,
+    hasHistoricalBaseline: Boolean = false,
+    onSetTaperingPlanSettings: (Boolean, Int) -> Unit = { _, _ -> },
     onThemeChange: (ThemePreference) -> Unit,
     onSetDailyLimit: (Int) -> Unit,
     onFontPresetChange: (String) -> Unit,
@@ -186,7 +215,9 @@ fun SettingsTab(
     onNavigateToAbout: () -> Unit,
     onNavigateToAchievements: () -> Unit,
     onNavigateToStatistics: () -> Unit,
-    onNavigateToAppearance: () -> Unit
+    onNavigateToAppearance: () -> Unit,
+    onNavigateToHistoryGenerator: () -> Unit = {},
+    onClearHistoricalBaseline: () -> Unit = {}
 ) {
     var showLanguageDialog by remember { mutableStateOf(false) }
     var showLimitDialog by remember { mutableStateOf(false) }
@@ -375,9 +406,25 @@ fun SettingsTab(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                         modifier = Modifier.fillMaxWidth(),
                         label = { Text(stringResource(R.string.settings_pack_price)) },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.AttachMoney,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        },
                         shape = RoundedCornerShape(16.dp),
                         singleLine = true,
                         isError = !priceValid,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.6f),
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                            focusedLabelColor = MaterialTheme.colorScheme.primary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        ),
                         supportingText = if (!priceValid) {
                             { Text(stringResource(R.string.error_invalid_price)) }
                         } else null
@@ -389,8 +436,24 @@ fun SettingsTab(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.fillMaxWidth(),
                         label = { Text(stringResource(R.string.settings_pack_size)) },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Info,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(20.dp)
+                                )
+                        },
                         shape = RoundedCornerShape(16.dp),
-                        singleLine = true
+                        singleLine = true,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.6f),
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                            focusedLabelColor = MaterialTheme.colorScheme.primary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(stringResource(R.string.settings_currency), style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold))
@@ -468,8 +531,84 @@ fun SettingsTab(
                 icon = Icons.Filled.Warning,
                 title = stringResource(R.string.settings_daily_limit),
                 subtitle = if (dailyLimit > 0) dailyLimit.toString() else stringResource(R.string.no_limit),
-                shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp, bottomStart = 24.dp, bottomEnd = 24.dp),
+                shape = RoundedCornerShape(8.dp),
                 onClick = { showLimitDialog = true }
+            )
+        }
+        item {
+            var showTaperingDialog by remember { mutableStateOf(false) }
+
+            if (showTaperingDialog) {
+                var enabled by remember(taperingPlanEnabled) { mutableStateOf(taperingPlanEnabled) }
+                var interval by remember(taperingIntervalDays) { mutableIntStateOf(taperingIntervalDays) }
+
+                BasicAlertDialog(onDismissRequest = { showTaperingDialog = false }) {
+                    Surface(shape = RoundedCornerShape(28.dp), color = MaterialTheme.colorScheme.surface) {
+                        Column(modifier = Modifier.padding(24.dp)) {
+                            Text(
+                                stringResource(R.string.tapering_plan_dialog_title),
+                                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    stringResource(R.string.tapering_plan_switch_label),
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    modifier = Modifier.weight(1f).padding(end = 12.dp)
+                                )
+                                Switch(
+                                    checked = enabled,
+                                    onCheckedChange = { enabled = it }
+                                )
+                            }
+
+                            if (enabled) {
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Text(
+                                    stringResource(R.string.tapering_plan_slider_label, interval),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Slider(
+                                    value = interval.toFloat(),
+                                    onValueChange = { interval = it.toInt() },
+                                    valueRange = 3f..14f,
+                                    steps = 10
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(24.dp))
+
+                            Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
+                                TextButton(onClick = { showTaperingDialog = false }) {
+                                    Text(stringResource(R.string.dialog_cancel), fontWeight = FontWeight.Bold)
+                                }
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Button(
+                                    onClick = {
+                                        onSetTaperingPlanSettings(enabled, interval)
+                                        showTaperingDialog = false
+                                    }
+                                ) {
+                                    Text(stringResource(R.string.dialog_ok), fontWeight = FontWeight.Bold)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            SettingItem(
+                icon = Icons.Filled.TrendingDown,
+                title = stringResource(R.string.tapering_plan_title),
+                subtitle = if (taperingPlanEnabled) stringResource(R.string.tapering_plan_subtitle_active, taperingIntervalDays) else stringResource(R.string.tapering_plan_subtitle_off),
+                shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp, bottomStart = 24.dp, bottomEnd = 24.dp),
+                onClick = { showTaperingDialog = true }
             )
         }
 
@@ -517,9 +656,55 @@ fun SettingsTab(
                 icon = Icons.Filled.Restore,
                 title = stringResource(R.string.settings_restore),
                 subtitle = stringResource(R.string.restore_desc),
-                shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp, bottomStart = 24.dp, bottomEnd = 24.dp),
+                shape = RoundedCornerShape(8.dp),
                 onClick = { restoreLauncher.launch(arrayOf("application/json")) }
             )
+        }
+        item {
+            SettingItem(
+                icon = Icons.Filled.AutoAwesome,
+                title = stringResource(R.string.history_generator_title),
+                subtitle = if (hasHistoricalBaseline) stringResource(R.string.history_preview_title) else stringResource(R.string.history_banner_desc),
+                shape = if (hasHistoricalBaseline) RoundedCornerShape(8.dp) else RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp, bottomStart = 24.dp, bottomEnd = 24.dp),
+                onClick = onNavigateToHistoryGenerator
+            )
+        }
+        if (hasHistoricalBaseline) {
+            item {
+                var showResetDialog by remember { mutableStateOf(false) }
+
+                if (showResetDialog) {
+                    AlertDialog(
+                        onDismissRequest = { showResetDialog = false },
+                        title = { Text(stringResource(R.string.history_reset_dialog_title)) },
+                        text = { Text(stringResource(R.string.history_reset_dialog_desc)) },
+                        confirmButton = {
+                            Button(
+                                onClick = {
+                                    onClearHistoricalBaseline()
+                                    showResetDialog = false
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                            ) {
+                                Text(stringResource(R.string.history_reset_button))
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { showResetDialog = false }) {
+                                Text(stringResource(R.string.dialog_cancel))
+                            }
+                        }
+                    )
+                }
+
+                SettingItem(
+                    icon = Icons.Filled.Delete,
+                    title = stringResource(R.string.history_reset_button),
+                    subtitle = stringResource(R.string.history_reset_dialog_desc),
+                    shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp, bottomStart = 24.dp, bottomEnd = 24.dp),
+                    onClick = { showResetDialog = true }
+                )
+            }
         }
 
         item {
