@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.HourglassEmpty
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.filled.LocalCafe
+import androidx.compose.material.icons.filled.LocalBar
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.smokingtracker.data.TriggerType
 import androidx.compose.material3.MaterialShapes
@@ -894,6 +895,7 @@ private fun getTriggerIcon(triggerKey: String?): ImageVector {
         TriggerType.SOCIAL -> Icons.Filled.People
         TriggerType.ROUTINE -> Icons.Filled.Repeat
         TriggerType.FOOD_COFFEE -> Icons.Filled.LocalCafe
+        TriggerType.ALCOHOL -> Icons.Filled.LocalBar
         else -> Icons.Filled.SmokingRooms
     }
 }
