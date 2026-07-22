@@ -15,28 +15,20 @@
     <a href="https://github.com/mem2sp/SmokingYou/stargazers">
       <img src="https://img.shields.io/github/stars/mem2sp/SmokingYou?logo=github&labelColor=1a1a1a&color=E0B6FF&style=flat-square" alt="Stars">
     </a>
-    <a href="https://github.com/mem2sp/SmokingYou/network/members">
-      <img src="https://img.shields.io/github/forks/mem2sp/SmokingYou?logo=github&labelColor=1a1a1a&color=4F378B&style=flat-square" alt="Forks">
-    </a>
-    <a href="https://github.com/mem2sp/SmokingYou/issues">
-      <img src="https://img.shields.io/github/issues/mem2sp/SmokingYou?logo=github&labelColor=1a1a1a&color=B3261E&style=flat-square" alt="Issues">
-    </a>
     <a href="LICENSE">
       <img src="https://img.shields.io/github/license/mem2sp/SmokingYou?logo=gnu&labelColor=1a1a1a&color=blue&style=flat-square" alt="License">
     </a>
-  </p>
-
-  <p align="center">
-    <img src="https://img.shields.io/badge/Kotlin-100%25-7F52FF?logo=kotlin&logoColor=white&labelColor=1a1a1a&style=flat-square" alt="Kotlin">
-    <img src="https://img.shields.io/badge/Jetpack_Compose-Modern_UI-4285F4?logo=jetpackcompose&logoColor=white&labelColor=1a1a1a&style=flat-square" alt="Jetpack Compose">
-    <img src="https://img.shields.io/badge/Material_Design-3_Expressive-7B1FA2?logo=materialdesign&logoColor=white&labelColor=1a1a1a&style=flat-square" alt="Material 3">
-    <img src="https://img.shields.io/badge/Android-8.0%2B_(API_26%2B)-3DDC84?logo=android&logoColor=white&labelColor=1a1a1a&style=flat-square" alt="Android">
-    <img src="https://img.shields.io/badge/Android_Studio-Ladybug%2B-3DDC84?logo=androidstudio&logoColor=white&labelColor=1a1a1a&style=flat-square" alt="Android Studio">
+    <img src="https://img.shields.io/badge/Android-8.0%2B_(API_26%2B)-3DDC84?logo=android&logoColor=white&labelColor=1a1a1a&style=flat-square" alt="Android 8.0+">
   </p>
 
   <p align="center">
     <a href="https://github.com/mem2sp/SmokingYou/releases/latest">
       <img src="https://img.shields.io/github/v/release/mem2sp/SmokingYou?label=Download%20SmokingYou&style=for-the-badge&color=6750A4&logo=android&logoColor=white" alt="Download SmokingYou">
+    </a>
+  </p>
+  <p align="center">
+    <a href="https://boosty.to/bodyaant">
+      <img src="https://img.shields.io/badge/Boosty-Support_the_author-ff6f61?logo=boosty&logoColor=white" width="200">
     </a>
   </p>
 </div>
