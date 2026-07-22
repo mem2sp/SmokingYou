@@ -39,7 +39,6 @@ data class Achievement(
 object AchievementsManager {
 
     val achievementsList = listOf(
-        // Использование приложения (App Usage Streak)
         Achievement("login_1", R.string.ach_curiosity_title, R.string.ach_curiosity_desc, AchievementCategory.LOGIN) { ctx ->
             ctx.launches.isNotEmpty()
         },
@@ -62,7 +61,6 @@ object AchievementsManager {
             hasConsecutiveDays(ctx.launches, 365)
         },
 
-        // Дни без сигарет (Days without cigarettes)
         Achievement("nosmoke_1d", R.string.ach_nosmoke_1d_title, R.string.ach_nosmoke_1d_desc, AchievementCategory.NO_SMOKE) { ctx ->
             ctx.timeWithoutSmoking >= TimeUnit.DAYS.toMillis(1)
         },
@@ -85,7 +83,6 @@ object AchievementsManager {
             ctx.timeWithoutSmoking >= TimeUnit.DAYS.toMillis(365)
         },
 
-        // Секретные достижения (Secret Achievements)
         Achievement("secret_night_owl", R.string.ach_night_owl_title, R.string.ach_night_owl_desc, AchievementCategory.SECRET, isSecret = true) { ctx ->
             ctx.entries.any { timestamp ->
                 val hour = Calendar.getInstance().apply { timeInMillis = timestamp }.get(Calendar.HOUR_OF_DAY)
