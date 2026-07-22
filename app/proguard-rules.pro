@@ -12,7 +12,11 @@
 -keepclassmembers class com.smokingtracker.MainViewModel$BackupData { *; }
 -keep class com.smokingtracker.MainViewModel$BackupData { *; }
 
-# Keep Gson SerializedName fields
+# Keep Glance SerializedName fields
 -keepclassmembers class * {
     @com.google.gson.annotations.SerializedName <fields>;
 }
+
+# Keep AppWidgetProviders
+-keep class com.smokingtracker.widget.** { *; }
+-keepclassmembers class com.smokingtracker.widget.** { *; }
