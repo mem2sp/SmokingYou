@@ -82,6 +82,7 @@ fun PersonalScreen(
         onResetUpdateCheckState = viewModel::resetUpdateCheckState,
         onBackupData = { uri, onSuccess, onError -> viewModel.backupData(uri, onSuccess, onError) },
         onRestoreData = { uri, onSuccess, onError -> viewModel.restoreData(uri, onSuccess, onError) },
+        onRecordLanguageChange = { viewModel.recordLanguageChange() },
         onNavigateToAbout = onNavigateToAbout,
         onNavigateToAchievements = onNavigateToAchievements,
         onNavigateToStatistics = onNavigateToStatistics,
@@ -109,6 +110,7 @@ fun PersonalScreenContent(
     onResetUpdateCheckState: () -> Unit,
     onBackupData: (android.net.Uri, () -> Unit, () -> Unit) -> Unit,
     onRestoreData: (android.net.Uri, () -> Unit, () -> Unit) -> Unit,
+    onRecordLanguageChange: () -> Unit = {},
     onNavigateToAbout: () -> Unit = {},
     onNavigateToAchievements: () -> Unit = {},
     onNavigateToStatistics: () -> Unit = {},
@@ -149,6 +151,7 @@ fun PersonalScreenContent(
             onResetUpdateCheckState = onResetUpdateCheckState,
             onBackupData = onBackupData,
             onRestoreData = onRestoreData,
+            onRecordLanguageChange = onRecordLanguageChange,
             onNavigateToAbout = onNavigateToAbout,
             onNavigateToAchievements = onNavigateToAchievements,
             onNavigateToStatistics = onNavigateToStatistics,
@@ -179,6 +182,7 @@ fun SettingsTab(
     onResetUpdateCheckState: () -> Unit,
     onBackupData: (android.net.Uri, () -> Unit, () -> Unit) -> Unit,
     onRestoreData: (android.net.Uri, () -> Unit, () -> Unit) -> Unit,
+    onRecordLanguageChange: () -> Unit = {},
     onNavigateToAbout: () -> Unit,
     onNavigateToAchievements: () -> Unit,
     onNavigateToStatistics: () -> Unit,
@@ -284,6 +288,7 @@ fun SettingsTab(
                     Surface(
                         onClick = {
                             changeLanguage(context, langCode)
+                            onRecordLanguageChange()
                             showLanguageDialog = false
                         },
                         modifier = Modifier.fillMaxWidth(),
@@ -456,15 +461,6 @@ fun SettingsTab(
                 subtitle = langDisplay,
                 shape = RoundedCornerShape(8.dp),
                 onClick = { showLanguageDialog = true }
-            )
-        }
-        item {
-            SettingItem(
-                icon = Icons.Filled.EmojiEvents,
-                title = stringResource(R.string.settings_achievements),
-                subtitle = stringResource(R.string.achievements_desc),
-                shape = RoundedCornerShape(8.dp),
-                onClick = onNavigateToAchievements
             )
         }
         item {
