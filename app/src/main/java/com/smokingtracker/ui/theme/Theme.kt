@@ -208,6 +208,182 @@ private val OceanDarkColors = darkColorScheme(
     outline = Color(0xFF8A9297)
 )
 
+private val PurpleLightColors = lightColorScheme(
+    primary = Color(0xFF6B4EA2),
+    onPrimary = Color(0xFFFFFFFF),
+    primaryContainer = Color(0xFFEBDCFF),
+    onPrimaryContainer = Color(0xFF250059),
+    secondary = Color(0xFF625B71),
+    onSecondary = Color(0xFFFFFFFF),
+    secondaryContainer = Color(0xFFE8DEF8),
+    onSecondaryContainer = Color(0xFF1D192B),
+    tertiary = Color(0xFF7E5260),
+    onTertiary = Color(0xFFFFFFFF),
+    tertiaryContainer = Color(0xFFFFD9E3),
+    onTertiaryContainer = Color(0xFF31101D),
+    background = Color(0xFFFAF7FF),
+    onBackground = Color(0xFF1D1B20),
+    surface = Color(0xFFFAF7FF),
+    onSurface = Color(0xFF1D1B20),
+    surfaceVariant = Color(0xFFE7E0EC),
+    onSurfaceVariant = Color(0xFF49454F),
+    outline = Color(0xFF79747E)
+)
+
+private val PurpleDarkColors = darkColorScheme(
+    primary = Color(0xFFD4BBFF),
+    onPrimary = Color(0xFF3B1D71),
+    primaryContainer = Color(0xFF533588),
+    onPrimaryContainer = Color(0xFFEBDCFF),
+    secondary = Color(0xFFCCC2DC),
+    onSecondary = Color(0xFF332D41),
+    secondaryContainer = Color(0xFF4A4458),
+    onSecondaryContainer = Color(0xFFE8DEF8),
+    tertiary = Color(0xFFEFB8C8),
+    onTertiary = Color(0xFF4A2532),
+    tertiaryContainer = Color(0xFF633B48),
+    onTertiaryContainer = Color(0xFFFFD9E3),
+    background = Color(0xFF141218),
+    onBackground = Color(0xFFE6E0E9),
+    surface = Color(0xFF141218),
+    onSurface = Color(0xFFE6E0E9),
+    surfaceVariant = Color(0xFF49454F),
+    onSurfaceVariant = Color(0xFFCAC4D0),
+    outline = Color(0xFF938F99)
+)
+
+private val AmberLightColors = lightColorScheme(
+    primary = Color(0xFF825500),
+    onPrimary = Color(0xFFFFFFFF),
+    primaryContainer = Color(0xFFFFDDB3),
+    onPrimaryContainer = Color(0xFF291800),
+    secondary = Color(0xFF705B40),
+    onSecondary = Color(0xFFFFFFFF),
+    secondaryContainer = Color(0xFFFCE0BE),
+    onSecondaryContainer = Color(0xFF281805),
+    tertiary = Color(0xFF53643E),
+    onTertiary = Color(0xFFFFFFFF),
+    tertiaryContainer = Color(0xFFD6E9B9),
+    onTertiaryContainer = Color(0xFF121F03),
+    background = Color(0xFFFFF8F3),
+    onBackground = Color(0xFF201B12),
+    surface = Color(0xFFFFF8F3),
+    onSurface = Color(0xFF201B12),
+    surfaceVariant = Color(0xFFF0E0CF),
+    onSurfaceVariant = Color(0xFF4F4539),
+    outline = Color(0xFF817567)
+)
+
+private val AmberDarkColors = darkColorScheme(
+    primary = Color(0xFFFFB95B),
+    onPrimary = Color(0xFF452B00),
+    primaryContainer = Color(0xFF633F00),
+    onPrimaryContainer = Color(0xFFFFDDB3),
+    secondary = Color(0xFFDFC4A4),
+    onSecondary = Color(0xFF3E2D16),
+    secondaryContainer = Color(0xFF57432B),
+    onSecondaryContainer = Color(0xFFFCE0BE),
+    tertiary = Color(0xFFBACD9F),
+    onTertiary = Color(0xFF263514),
+    tertiaryContainer = Color(0xFF3C4C28),
+    onTertiaryContainer = Color(0xFFD6E9B9),
+    background = Color(0xFF17130B),
+    onBackground = Color(0xFFECE1D4),
+    surface = Color(0xFF17130B),
+    onSurface = Color(0xFFECE1D4),
+    surfaceVariant = Color(0xFF4F4539),
+    onSurfaceVariant = Color(0xFFD3C4B4),
+    outline = Color(0xFF9C8E80)
+)
+
+private val CrimsonLightColors = lightColorScheme(
+    primary = Color(0xFF980038),
+    onPrimary = Color(0xFFFFFFFF),
+    primaryContainer = Color(0xFFFFD9DD),
+    onPrimaryContainer = Color(0xFF3A0010),
+    secondary = Color(0xFF775659),
+    onSecondary = Color(0xFFFFFFFF),
+    secondaryContainer = Color(0xFFFFD9DD),
+    onSecondaryContainer = Color(0xFF2C1518),
+    tertiary = Color(0xFF7A5930),
+    onTertiary = Color(0xFFFFFFFF),
+    tertiaryContainer = Color(0xFFFFDCC1),
+    onTertiaryContainer = Color(0xFF2C1700),
+    background = Color(0xFFFFF8F7),
+    onBackground = Color(0xFF22191A),
+    surface = Color(0xFFFFF8F7),
+    onSurface = Color(0xFF22191A),
+    surfaceVariant = Color(0xFFF4DDDE),
+    onSurfaceVariant = Color(0xFF524344),
+    outline = Color(0xFF857374)
+)
+
+private val CrimsonDarkColors = darkColorScheme(
+    primary = Color(0xFFFFB2BE),
+    onPrimary = Color(0xFF5F0021),
+    primaryContainer = Color(0xFF7C002C),
+    onPrimaryContainer = Color(0xFFFFD9DD),
+    secondary = Color(0xFFE6BDC1),
+    onSecondary = Color(0xFF44292C),
+    secondaryContainer = Color(0xFF5D3F42),
+    onSecondaryContainer = Color(0xFFFFD9DD),
+    tertiary = Color(0xFFECBF8F),
+    onTertiary = Color(0xFF462B07),
+    tertiaryContainer = Color(0xFF60411B),
+    onTertiaryContainer = Color(0xFFFFDCC1),
+    background = Color(0xFF1F1012),
+    onBackground = Color(0xFFF0DFE0),
+    surface = Color(0xFF1F1012),
+    onSurface = Color(0xFFF0DFE0),
+    surfaceVariant = Color(0xFF524344),
+    onSurfaceVariant = Color(0xFFD7C1C2),
+    outline = Color(0xFF9E8C8D)
+)
+
+private val SlateLightColors = lightColorScheme(
+    primary = Color(0xFF474747),
+    onPrimary = Color(0xFFFFFFFF),
+    primaryContainer = Color(0xFFE2E2E2),
+    onPrimaryContainer = Color(0xFF1A1A1A),
+    secondary = Color(0xFF5E5E5E),
+    onSecondary = Color(0xFFFFFFFF),
+    secondaryContainer = Color(0xFFE2E2E2),
+    onSecondaryContainer = Color(0xFF1B1B1B),
+    tertiary = Color(0xFF616161),
+    onTertiary = Color(0xFFFFFFFF),
+    tertiaryContainer = Color(0xFFE5E5E5),
+    onTertiaryContainer = Color(0xFF1D1D1D),
+    background = Color(0xFFFAFAFA),
+    onBackground = Color(0xFF1C1C1C),
+    surface = Color(0xFFFAFAFA),
+    onSurface = Color(0xFF1C1C1C),
+    surfaceVariant = Color(0xFFE0E0E0),
+    onSurfaceVariant = Color(0xFF444444),
+    outline = Color(0xFF777777)
+)
+
+private val SlateDarkColors = darkColorScheme(
+    primary = Color(0xFFC6C6C6),
+    onPrimary = Color(0xFF303030),
+    primaryContainer = Color(0xFF474747),
+    onPrimaryContainer = Color(0xFFE2E2E2),
+    secondary = Color(0xFFC6C6C6),
+    onSecondary = Color(0xFF303030),
+    secondaryContainer = Color(0xFF474747),
+    onSecondaryContainer = Color(0xFFE2E2E2),
+    tertiary = Color(0xFFC9C9C9),
+    onTertiary = Color(0xFF323232),
+    tertiaryContainer = Color(0xFF4A4A4A),
+    onTertiaryContainer = Color(0xFFE5E5E5),
+    background = Color(0xFF121212),
+    onBackground = Color(0xFFE2E2E2),
+    surface = Color(0xFF121212),
+    onSurface = Color(0xFFE2E2E2),
+    surfaceVariant = Color(0xFF444444),
+    onSurfaceVariant = Color(0xFFC6C6C6),
+    outline = Color(0xFF8E8E8E)
+)
+
 @Preview
 @Composable
 fun AppTheme(
@@ -222,6 +398,10 @@ fun AppTheme(
         "FOREST_SAGE" -> if (useDarkTheme) SageDarkColors else SageLightColors
         "SUNSET_ROSE" -> if (useDarkTheme) RoseDarkColors else RoseLightColors
         "OCEAN_DEEP" -> if (useDarkTheme) OceanDarkColors else OceanLightColors
+        "PURPLE_NEBULA" -> if (useDarkTheme) PurpleDarkColors else PurpleLightColors
+        "AMBER_GOLD" -> if (useDarkTheme) AmberDarkColors else AmberLightColors
+        "CRIMSON_BERRY" -> if (useDarkTheme) CrimsonDarkColors else CrimsonLightColors
+        "SLATE_MONO" -> if (useDarkTheme) SlateDarkColors else SlateLightColors
         else -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 if (useDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
