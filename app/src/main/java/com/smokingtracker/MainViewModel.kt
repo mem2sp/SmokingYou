@@ -21,6 +21,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.smokingtracker.data.manager.GitHubUpdateManager
 import com.smokingtracker.data.manager.GitHubRelease
+import androidx.annotation.Keep
+import com.google.gson.annotations.SerializedName
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.util.Calendar
@@ -41,7 +43,22 @@ class MainViewModel(
     )
 
     val smokingEntries: StateFlow<List<Long>> = repository.smokingEntries
-        .map { entities -> entities.map { it.timestamp } }
+        .map { entities -> entities.filter { !it.isResisted }.map { it.timestamp } }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+
+    val allSmokingEntities: StateFlow<List<SmokingEntryEntity>> = repository.smokingEntries
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+
+    val resistedEntries: StateFlow<List<SmokingEntryEntity>> = repository.smokingEntries
+        .map { entities -> entities.filter { it.isResisted } }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
@@ -120,6 +137,42 @@ class MainViewModel(
         initialValue = "DEFAULT"
     )
 
+    val hasHistoricalBaseline: StateFlow<Boolean> = dataStoreManager.hasHistoricalBaseline.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = false
+    )
+
+    val historicalStartDate: StateFlow<Long> = dataStoreManager.historicalStartDate.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = 0L
+    )
+
+    val historicalDailyAvg: StateFlow<Int> = dataStoreManager.historicalDailyAvg.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = 0
+    )
+
+    val historicalPackPrice: StateFlow<Float> = dataStoreManager.historicalPackPrice.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = 0f
+    )
+
+    val historicalPackSize: StateFlow<Int> = dataStoreManager.historicalPackSize.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = 20
+    )
+
+    val historicalTriggerPriorities: StateFlow<List<String>> = dataStoreManager.historicalTriggerPriorities.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
+    )
+
     private val _updateCheckState = MutableStateFlow<UpdateCheckState>(UpdateCheckState.Idle)
     val updateCheckState: StateFlow<UpdateCheckState> = _updateCheckState.asStateFlow()
 
@@ -132,6 +185,21 @@ class MainViewModel(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyMap()
         )
+
+    val taperingPlanEnabled: StateFlow<Boolean> = dataStoreManager.taperingPlanEnabled.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = false
+    )
+
+    val taperingIntervalDays: StateFlow<Int> = dataStoreManager.taperingIntervalDays.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = 7
+    )
+
+    private val _showTaperingCheckIn = MutableStateFlow(false)
+    val showTaperingCheckIn: StateFlow<Boolean> = _showTaperingCheckIn.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -151,6 +219,7 @@ class MainViewModel(
                 dataStoreManager.recordAppLaunch(now)
             }
             checkAchievements()
+            checkTaperingPlanEligibility()
         }
     }
 
@@ -264,6 +333,75 @@ class MainViewModel(
                 sort()
             }
             checkAchievements(updated)
+        }
+    }
+
+    fun addResistedEntry(trigger: String?, timestamp: Long = System.currentTimeMillis()) {
+        viewModelScope.launch {
+            repository.addResistedEntry(timestamp, trigger)
+        }
+    }
+
+    fun checkTaperingPlanEligibility() {
+        viewModelScope.launch {
+            val enabled = dataStoreManager.taperingPlanEnabled.first()
+            if (!enabled) return@launch
+            val intervalDays = dataStoreManager.taperingIntervalDays.first()
+            val lastCheckin = dataStoreManager.lastTaperingCheckinDate.first()
+            val now = System.currentTimeMillis()
+            val limit = dataStoreManager.dailyLimit.first()
+            if (limit <= 0) return@launch
+
+            val daysPassed = if (lastCheckin > 0) {
+                ((now - lastCheckin) / (1000 * 60 * 60 * 24)).toInt()
+            } else {
+                intervalDays
+            }
+
+            if (daysPassed >= intervalDays) {
+                _showTaperingCheckIn.value = true
+            }
+        }
+    }
+
+    fun dismissTaperingCheckIn() {
+        _showTaperingCheckIn.value = false
+    }
+
+    fun acceptTaperingReduction() {
+        viewModelScope.launch {
+            val currentLimit = dataStoreManager.dailyLimit.first()
+            val newLimit = (currentLimit - 1).coerceAtLeast(0)
+            dataStoreManager.setDailyLimit(newLimit)
+            dataStoreManager.updateLastTaperingCheckinDate(System.currentTimeMillis())
+            _showTaperingCheckIn.value = false
+        }
+    }
+
+    fun keepTaperingLimit() {
+        viewModelScope.launch {
+            dataStoreManager.updateLastTaperingCheckinDate(System.currentTimeMillis())
+            _showTaperingCheckIn.value = false
+        }
+    }
+
+    fun snoozeTaperingCheckIn() {
+        viewModelScope.launch {
+            val now = System.currentTimeMillis()
+            val intervalMs = dataStoreManager.taperingIntervalDays.first() * 24L * 60L * 60L * 1000L
+            val snoozeMs = 3L * 24L * 60L * 60L * 1000L
+            dataStoreManager.updateLastTaperingCheckinDate(now - intervalMs + snoozeMs)
+            _showTaperingCheckIn.value = false
+        }
+    }
+
+    fun setTaperingPlanSettings(enabled: Boolean, intervalDays: Int) {
+        viewModelScope.launch {
+            dataStoreManager.setTaperingPlanEnabled(enabled)
+            dataStoreManager.setTaperingIntervalDays(intervalDays)
+            if (enabled && dataStoreManager.lastTaperingCheckinDate.first() == 0L) {
+                dataStoreManager.updateLastTaperingCheckinDate(System.currentTimeMillis())
+            }
         }
     }
 
@@ -403,20 +541,21 @@ class MainViewModel(
         }
     }
     
+    @Keep
     data class BackupData(
-        val version: Int = 2,
-        val isRegistered: Boolean,
-        val smokingEntries: List<Long>,
-        val appTheme: String,
-        val unlockedAchievements: Set<String>,
-        val dailyLimit: Int? = 0,
-        val packPrice: Float? = 0.0f,
-        val packSize: Int? = 20,
-        val currency: String? = "USD",
-        val colorPreset: String? = "SYSTEM",
-        val entryTriggers: Map<Long, String>? = emptyMap(),
-        val fontPreset: String? = "WIDE",
-        val amoledTheme: Boolean? = false
+        @SerializedName("version") val version: Int = 2,
+        @SerializedName("isRegistered") val isRegistered: Boolean,
+        @SerializedName("smokingEntries") val smokingEntries: List<Long>,
+        @SerializedName("appTheme") val appTheme: String,
+        @SerializedName("unlockedAchievements") val unlockedAchievements: Set<String>,
+        @SerializedName("dailyLimit") val dailyLimit: Int? = 0,
+        @SerializedName("packPrice") val packPrice: Float? = 0.0f,
+        @SerializedName("packSize") val packSize: Int? = 20,
+        @SerializedName("currency") val currency: String? = "USD",
+        @SerializedName("colorPreset") val colorPreset: String? = "SYSTEM",
+        @SerializedName("entryTriggers") val entryTriggers: Map<Long, String>? = emptyMap(),
+        @SerializedName("fontPreset") val fontPreset: String? = "WIDE",
+        @SerializedName("amoledTheme") val amoledTheme: Boolean? = false
     )
 
     fun backupData(uri: Uri, onSuccess: () -> Unit, onError: () -> Unit) {
@@ -487,6 +626,30 @@ class MainViewModel(
             } catch (e: Exception) {
                 onError()
             }
+        }
+    }
+
+    fun saveHistoricalBaseline(
+        startDate: Long,
+        dailyAvg: Int,
+        packPrice: Float,
+        packSize: Int,
+        triggerPriorities: List<String>
+    ) {
+        viewModelScope.launch {
+            dataStoreManager.saveHistoricalBaseline(
+                startDate = startDate,
+                dailyAvg = dailyAvg,
+                packPrice = packPrice,
+                packSize = packSize,
+                triggerPriorities = triggerPriorities
+            )
+        }
+    }
+
+    fun clearHistoricalBaseline() {
+        viewModelScope.launch {
+            dataStoreManager.clearHistoricalBaseline()
         }
     }
 }
