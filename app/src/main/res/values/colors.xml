@@ -2,4 +2,10 @@
 <resources>
     <color name="ic_launcher_background">#6750A4</color>
     <color name="splash_background">#FFFFFBFE</color>
+
+    <color name="widget_bg_color">#F2F3F8</color>
+    <color name="widget_pill_bg_color">#E1E3EC</color>
+    <color name="widget_primary_text_color">#191A23</color>
+    <color name="widget_secondary_text_color">#616474</color>
+    <color name="widget_accent_color">#E65100</color>
 </resources>

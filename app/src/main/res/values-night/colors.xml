@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="splash_background">#1C1B1F</color>
+    <color name="widget_bg_color">#191A23</color>
+    <color name="widget_pill_bg_color">#2A2B38</color>
+    <color name="widget_primary_text_color">#FFFFFF</color>
+    <color name="widget_secondary_text_color">#8E92A2</color>
+    <color name="widget_accent_color">#FFFF9800</color>
 </resources>
