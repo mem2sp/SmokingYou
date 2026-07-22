@@ -31,7 +31,10 @@ import androidx.compose.material.icons.filled.HourglassEmpty
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.filled.LocalCafe
+import androidx.compose.material.icons.filled.LocalBar
 import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.TrendingDown
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.smokingtracker.data.TriggerType
 import androidx.compose.material3.*
@@ -107,6 +110,10 @@ internal fun HomeScreenContent(
     var isProcessingAdd by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
     var showTriggerDialog by remember { mutableStateOf(false) }
+    var showMindfulPauseDialog by remember { mutableStateOf(false) }
+    var mindfulPauseTrigger by remember { mutableStateOf<String?>(null) }
+    val allEntities by viewModel?.allSmokingEntities?.collectAsState() ?: remember { mutableStateOf(emptyList()) }
+    val showTaperingCheckIn by viewModel?.showTaperingCheckIn?.collectAsState() ?: remember { mutableStateOf(false) }
     var pendingLogTime by remember { mutableLongStateOf(0L) }
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -271,7 +278,7 @@ internal fun HomeScreenContent(
                         modifier = Modifier.padding(bottom = 16.dp),
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    
+
                     val triggers = com.smokingtracker.data.TriggerType.allEntries()
                     val chunkedTriggers = triggers.chunked(2)
 
@@ -337,6 +344,46 @@ internal fun HomeScreenContent(
                     }
                     
                     Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = stringResource(R.string.mindful_pause_or_resist),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
+                        textAlign = TextAlign.Start
+                    )
+
+                    Button(
+                        onClick = {
+                            showTriggerDialog = false
+                            isProcessingAdd = false
+                            mindfulPauseTrigger = null
+                            showMindfulPauseDialog = true
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp),
+                        shape = RoundedCornerShape(16.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Shield,
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = stringResource(R.string.mindful_pause_button),
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                        )
+                    }
+                    
+                    Spacer(modifier = Modifier.height(16.dp))
                     
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -371,6 +418,32 @@ internal fun HomeScreenContent(
                 }
             }
         }
+    }
+
+    if (showMindfulPauseDialog) {
+        MindfulPauseDialog(
+            selectedTrigger = mindfulPauseTrigger,
+            onDismiss = { showMindfulPauseDialog = false },
+            onSuccess = { trigger ->
+                viewModel?.addResistedEntry(trigger)
+                showMindfulPauseDialog = false
+            },
+            onFailure = { trigger ->
+                val logTime = if (pendingLogTime > 0L) pendingLogTime else System.currentTimeMillis()
+                viewModel?.addSmokingEntryWithTrigger(logTime, trigger)
+                showMindfulPauseDialog = false
+            }
+        )
+    }
+
+    if (showTaperingCheckIn) {
+        TaperingCheckInBottomSheet(
+            currentLimit = dailyLimit,
+            onReduceLimit = { viewModel?.acceptTaperingReduction() },
+            onKeepLimit = { viewModel?.keepTaperingLimit() },
+            onSnooze = { viewModel?.snoozeTaperingCheckIn() },
+            onDismiss = { viewModel?.dismissTaperingCheckIn() }
+        )
     }
 
     val infiniteTransition = rememberInfiniteTransition(label = "pulse")
@@ -566,9 +639,8 @@ internal fun HomeScreenContent(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                val today = remember { Calendar.getInstance() }
-                val weeklyCount = remember(entries) { StatisticsManager.getWeeklyCount(entries, today) }
-                val monthlyCount = remember(entries) { StatisticsManager.getMonthlyCount(entries, today) }
+                val weeklyCount = remember(entries, currentDate) { StatisticsManager.getWeeklyCount(entries, currentDate) }
+                val monthlyCount = remember(entries, currentDate) { StatisticsManager.getMonthlyCount(entries, currentDate) }
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -647,39 +719,53 @@ internal fun HomeScreenContent(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                val selectedDateAllEntities = remember(allEntities, currentDate) {
+                    val currentYear = currentDate.get(Calendar.YEAR)
+                    val currentDay = currentDate.get(Calendar.DAY_OF_YEAR)
+                    val checkCal = Calendar.getInstance()
+                    allEntities.filter { entity ->
+                        checkCal.timeInMillis = entity.timestamp
+                        checkCal.get(Calendar.YEAR) == currentYear && checkCal.get(Calendar.DAY_OF_YEAR) == currentDay
+                    }.sortedByDescending { it.timestamp }
+                }
+
                 LazyColumn(
                     modifier = Modifier.weight(1f),
                     contentPadding = PaddingValues(bottom = 190.dp)
                 ) {
                     itemsIndexed(
-                        items = selectedDateEntries,
-                        key = { _, entryTime -> entryTime }
-                    ) { index, entryTime ->
-                        val prevTime = if (index < selectedDateEntries.size - 1) selectedDateEntries[index + 1] else null
+                        items = selectedDateAllEntities,
+                        key = { _, entity -> entity.id }
+                    ) { index, entity ->
+                        val prevTime = if (index < selectedDateAllEntities.size - 1) selectedDateAllEntities[index + 1].timestamp else null
                         EntryItem(
-                            entryTime = entryTime,
+                            entryTime = entity.timestamp,
                             prevEntryTime = prevTime,
+                            isResisted = entity.isResisted,
                             index = index,
-                            trigger = entryTriggers[entryTime],
+                            trigger = entity.trigger,
                             onDelete = {
                                 scope.launch {
-                                    val trigger = viewModel?.entryTriggers?.value?.get(entryTime)
-                                    viewModel?.removeSmokingEntry(entryTime)
+                                    viewModel?.removeSmokingEntry(entity.timestamp)
                                     val result = snackbarHostState.showSnackbar(
                                         message = undoDeleteStr,
                                         actionLabel = undoStr,
                                         duration = SnackbarDuration.Short
                                     )
                                     if (result == SnackbarResult.ActionPerformed) {
-                                        viewModel?.addSmokingEntryWithTrigger(entryTime, trigger)
+                                        if (entity.isResisted) {
+                                            viewModel?.addResistedEntry(entity.trigger, entity.timestamp)
+                                        } else {
+                                            viewModel?.addSmokingEntryWithTrigger(entity.timestamp, entity.trigger)
+                                        }
                                     }
                                 }
                             },
                             onEdit = { newTime ->
-                                viewModel?.editSmokingEntry(entryTime, newTime)
+                                viewModel?.editSmokingEntry(entity.timestamp, newTime)
                             },
                             onUpdateTrigger = { newTrigger ->
-                                viewModel?.updateSmokingEntryTrigger(entryTime, newTrigger)
+                                viewModel?.updateSmokingEntryTrigger(entity.timestamp, newTrigger)
                             }
                         )
                     }
@@ -788,6 +874,7 @@ private fun getTriggerIcon(triggerKey: String?): ImageVector {
         TriggerType.SOCIAL -> Icons.Filled.People
         TriggerType.ROUTINE -> Icons.Filled.Repeat
         TriggerType.FOOD_COFFEE -> Icons.Filled.LocalCafe
+        TriggerType.ALCOHOL -> Icons.Filled.LocalBar
         else -> Icons.Filled.SmokingRooms
     }
 }
@@ -803,6 +890,7 @@ fun EntryItemPreview() {
 fun EntryItem(
     entryTime: Long = System.currentTimeMillis(),
     prevEntryTime: Long? = null,
+    isResisted: Boolean = false,
     index: Int = 0,
     trigger: String? = null,
     onDelete: () -> Unit = {},
@@ -975,10 +1063,13 @@ fun EntryItem(
             .fillMaxWidth()
             .padding(vertical = 6.dp),
         colors = CardDefaults.cardColors(
-            containerColor = colorScheme.surfaceContainer,
+            containerColor = colorScheme.surfaceContainer
         ),
         shape = RoundedCornerShape(24.dp),
-        border = BorderStroke(1.dp, colorScheme.outlineVariant.copy(alpha = 0.25f))
+        border = BorderStroke(
+            if (isResisted) 1.5.dp else 1.dp,
+            if (isResisted) colorScheme.primary else colorScheme.outlineVariant.copy(alpha = 0.25f)
+        )
     ) {
         Row(
             modifier = Modifier
@@ -988,10 +1079,10 @@ fun EntryItem(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Surface(
-                onClick = { showTimePicker = true },
+                onClick = { if (!isResisted) showTimePicker = true },
                 shape = CircleShape,
-                color = accentContainer,
-                contentColor = onAccentContainer
+                color = if (isResisted) colorScheme.primaryContainer else accentContainer,
+                contentColor = if (isResisted) colorScheme.onPrimaryContainer else onAccentContainer
             ) {
                 Box(
                     contentAlignment = Alignment.Center,
@@ -1007,15 +1098,15 @@ fun EntryItem(
             }
 
             Surface(
-                onClick = { showEditTriggerDialog = true },
+                onClick = { if (!isResisted) showEditTriggerDialog = true },
                 shape = cookieShape,
-                color = accentContainer.copy(alpha = 0.25f),
-                contentColor = accentColor,
+                color = if (isResisted) colorScheme.primaryContainer else accentContainer.copy(alpha = 0.25f),
+                contentColor = if (isResisted) colorScheme.onPrimaryContainer else accentColor,
                 modifier = Modifier.size(44.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
-                        imageVector = getTriggerIcon(trigger),
+                        imageVector = if (isResisted) Icons.Default.Shield else getTriggerIcon(trigger),
                         contentDescription = stringResource(R.string.trigger_dialog_title),
                         modifier = Modifier.size(20.dp)
                     )
@@ -1042,7 +1133,32 @@ fun EntryItem(
                 modifier = Modifier.weight(1f),
                 contentAlignment = Alignment.Center
             ) {
-                if (prevEntryTime != null) {
+                if (isResisted) {
+                    Surface(
+                        shape = RoundedCornerShape(12.dp),
+                        color = colorScheme.primaryContainer,
+                        contentColor = colorScheme.onPrimaryContainer,
+                        border = BorderStroke(1.dp, colorScheme.primary.copy(alpha = 0.5f))
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Shield,
+                                contentDescription = null,
+                                modifier = Modifier.size(14.dp)
+                            )
+                            Text(
+                                text = stringResource(R.string.mindful_pause_resisted),
+                                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+                                maxLines = 1,
+                                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                            )
+                        }
+                    }
+                } else if (prevEntryTime != null) {
                     val intervalStr = remember(entryTime, prevEntryTime) {
                         val diffMs = entryTime - prevEntryTime
                         val hours = java.util.concurrent.TimeUnit.MILLISECONDS.toHours(diffMs)
