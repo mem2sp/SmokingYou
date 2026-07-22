@@ -504,9 +504,11 @@ fun HealthProgressBar(label: String, timeLabel: String, progress: Float) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            LinearProgressIndicator(
-                progress = { progress },
-                modifier = Modifier.weight(1f).height(8.dp).clip(CircleShape),
+            AnimatedTriggerProgressBar(
+                targetProgress = progress,
+                modifier = Modifier
+                    .weight(1f)
+                    .height(10.dp),
                 color = if (progress >= 1f) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,
                 trackColor = MaterialTheme.colorScheme.surfaceVariant
             )
