@@ -30,7 +30,11 @@ class SmokingRepository(
     }
 
     suspend fun addEntry(timestamp: Long, trigger: String?) {
-        smokingDao.insertEntry(SmokingEntryEntity(timestamp = timestamp, trigger = trigger))
+        smokingDao.insertEntry(SmokingEntryEntity(timestamp = timestamp, trigger = trigger, isResisted = false))
+    }
+
+    suspend fun addResistedEntry(timestamp: Long, trigger: String?) {
+        smokingDao.insertEntry(SmokingEntryEntity(timestamp = timestamp, trigger = trigger, isResisted = true))
     }
 
     suspend fun removeEntry(timestamp: Long) {
