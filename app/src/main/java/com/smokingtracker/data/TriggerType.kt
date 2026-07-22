@@ -7,7 +7,8 @@ enum class TriggerType(val key: String, val labelResId: Int) {
     BOREDOM("Boredom", R.string.trigger_boredom),
     SOCIAL("Social", R.string.trigger_social),
     ROUTINE("Routine", R.string.trigger_routine),
-    FOOD_COFFEE("Food/Coffee", R.string.trigger_food_coffee);
+    FOOD_COFFEE("Food/Coffee", R.string.trigger_food_coffee),
+    ALCOHOL("Alcohol", R.string.trigger_alcohol);
 
     companion object {
         fun fromKey(key: String): TriggerType? = entries.find { it.key == key }
