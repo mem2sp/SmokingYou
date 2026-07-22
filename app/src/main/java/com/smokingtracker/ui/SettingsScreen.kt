@@ -29,6 +29,11 @@ import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Widgets
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
+import com.smokingtracker.widget.QuickAddWidgetProvider
+import com.smokingtracker.widget.TimerWidgetProvider
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -222,6 +227,7 @@ fun SettingsTab(
     var showLanguageDialog by remember { mutableStateOf(false) }
     var showLimitDialog by remember { mutableStateOf(false) }
     var showPackDialog by remember { mutableStateOf(false) }
+    var showWidgetDialog by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
 
@@ -493,6 +499,10 @@ fun SettingsTab(
         }
     }
 
+    if (showWidgetDialog) {
+        WidgetPinDialog(onDismiss = { showWidgetDialog = false })
+    }
+
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 120.dp),
@@ -513,6 +523,15 @@ fun SettingsTab(
                 subtitle = stringResource(R.string.settings_appearance_desc),
                 shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 8.dp, bottomEnd = 8.dp),
                 onClick = onNavigateToAppearance
+            )
+        }
+        item {
+            SettingItem(
+                icon = Icons.Filled.Widgets,
+                title = stringResource(R.string.settings_widgets_title),
+                subtitle = stringResource(R.string.settings_widgets_desc),
+                shape = RoundedCornerShape(8.dp),
+                onClick = { showWidgetDialog = true }
             )
         }
         item {
@@ -874,5 +893,155 @@ fun changeLanguage(context: android.content.Context, languageTag: String) {
         context.resources.updateConfiguration(config, context.resources.displayMetrics)
         val activity = context as? android.app.Activity
         activity?.recreate()
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun WidgetPinDialog(
+    onDismiss: () -> Unit
+) {
+    val context = LocalContext.current
+
+    fun requestPin(providerClass: Class<*>) {
+        val appWidgetManager = AppWidgetManager.getInstance(context)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && appWidgetManager.isRequestPinAppWidgetSupported) {
+            val myProvider = ComponentName(context, providerClass)
+            appWidgetManager.requestPinAppWidget(myProvider, null, null)
+        } else {
+            Toast.makeText(
+                context,
+                context.getString(R.string.widget_pin_unsupported_toast),
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    BasicAlertDialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = RoundedCornerShape(28.dp),
+            color = MaterialTheme.colorScheme.surface
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(24.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = stringResource(R.string.settings_widgets_title),
+                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Text(
+                    text = stringResource(R.string.settings_widgets_desc),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = stringResource(R.string.widget_quick_add_title),
+                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                modifier = Modifier.weight(1f, fill = false)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Button(
+                                onClick = {
+                                    requestPin(QuickAddWidgetProvider::class.java)
+                                },
+                                shape = RoundedCornerShape(12.dp),
+                                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.widget_pin_button_1x1),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = stringResource(R.string.widget_quick_add_description),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = stringResource(R.string.widget_timer_title),
+                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                modifier = Modifier.weight(1f, fill = false)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Button(
+                                onClick = {
+                                    requestPin(TimerWidgetProvider::class.java)
+                                },
+                                shape = RoundedCornerShape(12.dp),
+                                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.widget_pin_button_3x1),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = stringResource(R.string.widget_timer_description),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = onDismiss) {
+                        Text(stringResource(R.string.dialog_cancel), fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+        }
     }
 }
