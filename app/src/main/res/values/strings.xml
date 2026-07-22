@@ -333,4 +333,24 @@
         in Settings!</string>
     <string name="history_cigs_count_format">%1$s pcs.</string>
     <string name="history_duration_days_y_m">%1$d days (%2$dy %3$dm)</string>
+
+    <string name="widget_quick_add_title">Quick Add</string>
+    <string name="widget_quick_add_description">1x1 widget to log a cigarette instantly</string>
+    <string name="widget_timer_title">Timer &amp; Quick Add</string>
+    <string name="widget_timer_description">Time since last cigarette and quick log button</string>
+    <string name="widget_last_smoke">Since last:</string>
+    <string name="widget_just_now">Just now</string>
+    <string name="widget_no_entries">No entries yet</string>
+    <string name="widget_today_count">Today: %1$d</string>
+    <string name="widget_today_limit_format">Today: %1$d / %2$d</string>
+    <string name="widget_logged_toast">+1 cigarette</string>
+    <string name="widget_unit_d">d</string>
+    <string name="widget_unit_h">h</string>
+    <string name="widget_unit_m">m</string>
+
+    <string name="settings_widgets_title">Home Screen Widgets</string>
+    <string name="settings_widgets_desc">Quick timer &amp; shortcut button on home screen</string>
+    <string name="widget_pin_button_1x1">Add 1x1</string>
+    <string name="widget_pin_button_3x1">Add 3x1</string>
+    <string name="widget_pin_unsupported_toast">Press and hold home screen to add widget</string>
 </resources>

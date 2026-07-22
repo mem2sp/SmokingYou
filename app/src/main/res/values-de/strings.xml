@@ -338,4 +338,24 @@
         den Einstellungen eintragen!</string>
     <string name="history_cigs_count_format">%1$s Stk.</string>
     <string name="history_duration_days_y_m">%1$d Tage (%2$dJ %3$dM)</string>
+
+    <string name="widget_quick_add_title">Schnell hinzufügen</string>
+    <string name="widget_quick_add_description">1x1 Widget zum sofortigen Erfassen einer Zigarette</string>
+    <string name="widget_timer_title">Timer &amp; Schnell hinzufügen</string>
+    <string name="widget_timer_description">Zeit seit der letzten Zigarette und Schnell-Erfassungstaste</string>
+    <string name="widget_last_smoke">Seit der letzten:</string>
+    <string name="widget_just_now">Gerade eben</string>
+    <string name="widget_no_entries">Noch keine Einträge</string>
+    <string name="widget_today_count">Heute: %1$d</string>
+    <string name="widget_today_limit_format">Heute: %1$d / %2$d</string>
+    <string name="widget_logged_toast">+1 Zigarette</string>
+    <string name="widget_unit_d">T</string>
+    <string name="widget_unit_h">Std</string>
+    <string name="widget_unit_m">Min</string>
+
+    <string name="settings_widgets_title">Startbildschirm-Widgets</string>
+    <string name="settings_widgets_desc">Schneller Timer &amp; Schnell-Taste auf dem Startbildschirm</string>
+    <string name="widget_pin_button_1x1">1x1 hinzufügen</string>
+    <string name="widget_pin_button_3x1">3x1 hinzufügen</string>
+    <string name="widget_pin_unsupported_toast">Startbildschirm gedrückt halten, um Widget hinzuzufügen</string>
 </resources>

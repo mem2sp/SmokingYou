@@ -341,4 +341,24 @@
         fumeur à tout moment dans les Paramètres !</string>
     <string name="history_cigs_count_format">%1$s cig.</string>
     <string name="history_duration_days_y_m">%1$d jours (%2$da %3$dm)</string>
+
+    <string name="widget_quick_add_title">Ajout rapide</string>
+    <string name="widget_quick_add_description">Widget 1x1 pour enregistrer une cigarette instantanément</string>
+    <string name="widget_timer_title">Minuteur et Ajout</string>
+    <string name="widget_timer_description">Temps depuis la dernière cigarette et bouton d\'ajout rapide</string>
+    <string name="widget_last_smoke">Depuis la dernière :</string>
+    <string name="widget_just_now">À l\'instant</string>
+    <string name="widget_no_entries">Aucune entrée</string>
+    <string name="widget_today_count">Aujourd\'hui : %1$d</string>
+    <string name="widget_today_limit_format">Aujourd\'hui : %1$d / %2$d</string>
+    <string name="widget_logged_toast">+1 cigarette</string>
+    <string name="widget_unit_d">j</string>
+    <string name="widget_unit_h">h</string>
+    <string name="widget_unit_m">min</string>
+
+    <string name="settings_widgets_title">Widgets de l\'écran d\'accueil</string>
+    <string name="settings_widgets_desc">Minuteur et bouton rapide sur l\'écran d\'accueil</string>
+    <string name="widget_pin_button_1x1">Ajouter 1x1</string>
+    <string name="widget_pin_button_3x1">Ajouter 3x1</string>
+    <string name="widget_pin_unsupported_toast">Appuyez longuement sur l\'écran d\'accueil pour ajouter le widget</string>
 </resources>

@@ -334,4 +334,24 @@
         Ayarlar\'dan ayarlayabilirsiniz!</string>
     <string name="history_cigs_count_format">%1$s adet</string>
     <string name="history_duration_days_y_m">%1$d gün (%2$dy %3$da)</string>
+
+    <string name="widget_quick_add_title">Hızlı Ekle</string>
+    <string name="widget_quick_add_description">Sigara kaydetmek için 1x1 araç takımı</string>
+    <string name="widget_timer_title">Zamanlayıcı ve Hızlı Ekle</string>
+    <string name="widget_timer_description">Son sigaradan geçen süre ve hızlı ekleme düğmesi</string>
+    <string name="widget_last_smoke">Son sigaradan beri:</string>
+    <string name="widget_just_now">Az önce</string>
+    <string name="widget_no_entries">Henüz kayıt yok</string>
+    <string name="widget_today_count">Bugün: %1$d</string>
+    <string name="widget_today_limit_format">Bugün: %1$d / %2$d</string>
+    <string name="widget_logged_toast">+1 sigara</string>
+    <string name="widget_unit_d">gün</string>
+    <string name="widget_unit_h">sa</string>
+    <string name="widget_unit_m">dk</string>
+
+    <string name="settings_widgets_title">Ana Ekran Araç Takımları</string>
+    <string name="settings_widgets_desc">Ana ekranda hızlı zamanlayıcı ve düğme</string>
+    <string name="widget_pin_button_1x1">1x1 Ekle</string>
+    <string name="widget_pin_button_3x1">3x1 Ekle</string>
+    <string name="widget_pin_unsupported_toast">Araç takımı eklemek için ana ekrana basılı tutun</string>
 </resources>

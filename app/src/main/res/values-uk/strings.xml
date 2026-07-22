@@ -334,4 +334,24 @@
         будь-який момент у Налаштуваннях!</string>
     <string name="history_cigs_count_format">%1$s шт.</string>
     <string name="history_duration_days_y_m">%1$d дн. (%2$dр %3$dм)</string>
+
+    <string name="widget_quick_add_title">Швидке додавання</string>
+    <string name="widget_quick_add_description">Віджет 1x1 для миттєвого запису сигарети</string>
+    <string name="widget_timer_title">Таймер і додавання</string>
+    <string name="widget_timer_description">Час з останньої сигарети та кнопка швидкого запису</string>
+    <string name="widget_last_smoke">З останньої:</string>
+    <string name="widget_just_now">Щойно</string>
+    <string name="widget_no_entries">Поки немає записів</string>
+    <string name="widget_today_count">Сьогодні: %1$d</string>
+    <string name="widget_today_limit_format">Сьогодні: %1$d / %2$d</string>
+    <string name="widget_logged_toast">+1 сигарета</string>
+    <string name="widget_unit_d">дн.</string>
+    <string name="widget_unit_h">г</string>
+    <string name="widget_unit_m">хв</string>
+
+    <string name="settings_widgets_title">Віджети робочого столу</string>
+    <string name="settings_widgets_desc">Швидкий вивід таймера та кнопки на екран</string>
+    <string name="widget_pin_button_1x1">Додати 1x1</string>
+    <string name="widget_pin_button_3x1">Додати 3x1</string>
+    <string name="widget_pin_unsupported_toast">Затисніть робочий стіл для додавання віджета</string>
 </resources>

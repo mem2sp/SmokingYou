@@ -340,4 +340,25 @@
         momento nelle Impostazioni!</string>
     <string name="history_cigs_count_format">%1$s sig.</string>
     <string name="history_duration_days_y_m">%1$d giorni (%2$da %3$dm)</string>
+
+    <string name="widget_quick_add_title">Aggiungi Rapido</string>
+    <string name="widget_quick_add_description">Widget 1x1 per registrare una sigaretta all\'istante</string>
+    <string name="widget_timer_title">Timer e Aggiungi</string>
+    <string name="widget_timer_description">Tempo dall\'ultima sigaretta e pulsante di registrazione
+        rapida</string>
+    <string name="widget_last_smoke">Dall\'ultima:</string>
+    <string name="widget_just_now">Proprio ora</string>
+    <string name="widget_no_entries">Nessuna registrazione</string>
+    <string name="widget_today_count">Oggi: %1$d</string>
+    <string name="widget_today_limit_format">Oggi: %1$d / %2$d</string>
+    <string name="widget_logged_toast">+1 sigaretta</string>
+    <string name="widget_unit_d">g</string>
+    <string name="widget_unit_h">o</string>
+    <string name="widget_unit_m">m</string>
+
+    <string name="settings_widgets_title">Widget Schermata Home</string>
+    <string name="settings_widgets_desc">Timer e pulsante rapido sulla schermata home</string>
+    <string name="widget_pin_button_1x1">Aggiungi 1x1</string>
+    <string name="widget_pin_button_3x1">Aggiungi 3x1</string>
+    <string name="widget_pin_unsupported_toast">Tieni premuta la schermata home per aggiungere il widget</string>
 </resources>

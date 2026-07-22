@@ -335,4 +335,25 @@
         qualquer momento nas Configurações!</string>
     <string name="history_cigs_count_format">%1$s un.</string>
     <string name="history_duration_days_y_m">%1$d dias (%2$da %3$dm)</string>
+
+    <string name="widget_quick_add_title">Adicionar Rápido</string>
+    <string name="widget_quick_add_description">Widget 1x1 para registrar um cigarro
+        instantaneamente</string>
+    <string name="widget_timer_title">Temporizador e Adição</string>
+    <string name="widget_timer_description">Tempo desde o último cigarro e botão de registro rápido</string>
+    <string name="widget_last_smoke">Desde o último:</string>
+    <string name="widget_just_now">Agora mesmo</string>
+    <string name="widget_no_entries">Sem registros ainda</string>
+    <string name="widget_today_count">Hoje: %1$d</string>
+    <string name="widget_today_limit_format">Hoje: %1$d / %2$d</string>
+    <string name="widget_logged_toast">+1 cigarro</string>
+    <string name="widget_unit_d">d</string>
+    <string name="widget_unit_h">h</string>
+    <string name="widget_unit_m">m</string>
+
+    <string name="settings_widgets_title">Widgets da Tela Inicial</string>
+    <string name="settings_widgets_desc">Temporizador e botão rápido na tela inicial</string>
+    <string name="widget_pin_button_1x1">Adicionar 1x1</string>
+    <string name="widget_pin_button_3x1">Adicionar 3x1</string>
+    <string name="widget_pin_unsupported_toast">Pressione e segure a tela inicial para adicionar o widget</string>
 </resources>

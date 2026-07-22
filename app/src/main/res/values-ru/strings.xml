@@ -276,11 +276,14 @@
     <string name="mindful_pause_hold_breath">Задержка дыхания...</string>
     <string name="mindful_pause_breathe_out">Медленный выдох...</string>
     <string name="mindful_pause_sec">сек</string>
-    <string name="mindful_pause_tip_1">Пиковый порыв курения длится всего 15–30 секунд. Вы справляетесь!</string>
+    <string name="mindful_pause_tip_1">Пиковый порыв курения длится всего 15–30 секунд. Вы
+        справляетесь!</string>
     <string name="mindful_pause_tip_2">Сделайте глубокий вдох через нос и медленный выдох через рот.</string>
-    <string name="mindful_pause_tip_3">Сделайте глоток холодной воды — это мгновенно переключает мозг.</string>
+    <string name="mindful_pause_tip_3">Сделайте глоток холодной воды — это мгновенно переключает
+        мозг.</string>
     <string name="mindful_pause_tip_4">Каждый непреодоленный порыв делает вашу волю сильнее.</string>
-    <string name="mindful_pause_tip_5">Ваши легкие начинают очищаться уже через 20 минут без курения.</string>
+    <string name="mindful_pause_tip_5">Ваши легкие начинают очищаться уже через 20 минут без
+        курения.</string>
 
     <string name="tapering_plan_title">План снижения лимита</string>
     <string name="tapering_plan_dialog_title">План постепенного снижения</string>
@@ -290,7 +293,8 @@
     <string name="tapering_plan_subtitle_off">Выключен</string>
 
     <string name="tapering_checkin_title">План постепенного снижения</string>
-    <string name="tapering_checkin_desc">Прошла ровно неделя с вашего прошлого шага! Вы отлично справлялись с лимитом в %1$d сигарет.</string>
+    <string name="tapering_checkin_desc">Прошла ровно неделя с вашего прошлого шага! Вы отлично
+        справлялись с лимитом в %1$d сигарет.</string>
     <string name="tapering_checkin_was">Было</string>
     <string name="tapering_checkin_will_be">Станет</string>
     <string name="tapering_checkin_reduce_to">Снизить лимит до %1$d сиг/день</string>
@@ -306,7 +310,8 @@
     <string name="copy_address">Скопировать адрес</string>
 
     <string name="history_generator_title">Прошлый стаж курения</string>
-    <string name="history_generator_description">Оцените ваш опыт курения до начала использования приложения, чтобы сразу заполнить аналитику стартовыми данными.</string>
+    <string name="history_generator_description">Оцените ваш опыт курения до начала использования
+        приложения, чтобы сразу заполнить аналитику стартовыми данными.</string>
     <string name="history_start_date_label">Дата начала курения</string>
     <string name="history_daily_avg_label">Среднее количество сигарет в день</string>
     <string name="history_daily_avg_unit">%1$d шт./день</string>
@@ -314,7 +319,8 @@
     <string name="history_pack_price_label">Цена пачки (₽)</string>
     <string name="history_pack_size_label">Сигарет в пачке</string>
     <string name="history_trigger_ranking_title">Причины тяги (Приоритет)</string>
-    <string name="history_trigger_ranking_hint">Расставьте от самой частой причины (#1) к самой редкой</string>
+    <string name="history_trigger_ranking_hint">Расставьте от самой частой причины (#1) к самой
+        редкой</string>
     <string name="history_preview_title">Расчетная оценка прошлых лет</string>
     <string name="history_preview_total_cigs">Выкурено до приложения</string>
     <string name="history_preview_total_cost">Потрачено за стаж</string>
@@ -323,8 +329,30 @@
     <string name="history_reset_dialog_title">Сбросить прошлый опыт?</string>
     <string name="history_reset_dialog_desc">Это удалит расчетную оценку прошлых лет из аналитики.</string>
     <string name="history_banner_title">У вас уже есть стаж курения?</string>
-    <string name="history_banner_desc">Заполните прошлый опыт, чтобы увидеть общие расходы и выкуренные сигареты.</string>
-    <string name="registration_history_note">Вы также сможете заполнить прошлый опыт курения в любой момент в Настройках!</string>
+    <string name="history_banner_desc">Заполните прошлый опыт, чтобы увидеть общие расходы и
+        выкуренные сигареты.</string>
+    <string name="registration_history_note">Вы также сможете заполнить прошлый опыт курения в любой
+        момент в Настройках!</string>
     <string name="history_cigs_count_format">%1$s шт.</string>
     <string name="history_duration_days_y_m">%1$d дн. (%2$dг %3$dм)</string>
+
+    <string name="widget_quick_add_title">Быстрое добавление</string>
+    <string name="widget_quick_add_description">Виджет 1x1 для мгновенной записи сигареты</string>
+    <string name="widget_timer_title">Таймер и добавление</string>
+    <string name="widget_timer_description">Время с последней сигареты и кнопка быстрой записи</string>
+    <string name="widget_last_smoke">С последней:</string>
+    <string name="widget_just_now">Только что</string>
+    <string name="widget_no_entries">Пока нет записей</string>
+    <string name="widget_today_count">Сегодня: %1$d</string>
+    <string name="widget_today_limit_format">Сегодня: %1$d / %2$d</string>
+    <string name="widget_logged_toast">+1 сигарета</string>
+    <string name="widget_unit_d">дн.</string>
+    <string name="widget_unit_h">ч</string>
+    <string name="widget_unit_m">м</string>
+
+    <string name="settings_widgets_title">Виджеты рабочего стола</string>
+    <string name="settings_widgets_desc">Быстрый вывод таймера и кнопки на экран</string>
+    <string name="widget_pin_button_1x1">Добавить 1x1</string>
+    <string name="widget_pin_button_3x1">Добавить 3x1</string>
+    <string name="widget_pin_unsupported_toast">Зажмите рабочий стол для добавления виджета</string>
 </resources>
