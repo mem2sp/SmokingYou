@@ -101,14 +101,16 @@
     <string name="ach_night_owl_title">Night Owl</string>
     <string name="ach_night_owl_desc">Smoke a cigarette between 03:00 and 05:00 AM</string>
     <string name="ach_morning_ritual_title">Morning Ritual</string>
-    <string name="ach_morning_ritual_desc">Log your first cigarette before 07:00 AM for 5 consecutive days</string>
+    <string name="ach_morning_ritual_desc">Log your first cigarette before 07:00 AM for 5
+        consecutive days</string>
     <string name="ach_synchronization_title">Synchronization</string>
     <string name="ach_synchronization_desc">Log a cigarette at exactly 00:00 or 12:00</string>
     <string name="ach_punctuality_title">Punctuality</string>
     <string name="ach_punctuality_desc">Smoke 3 cigarettes in a row with the exact same interval</string>
 
     <string name="ach_hesitant_title">Hesitant</string>
-    <string name="ach_hesitant_desc">Log a cigarette and immediately cancel or delete it within 10 seconds</string>
+    <string name="ach_hesitant_desc">Log a cigarette and immediately cancel or delete it within 10
+        seconds</string>
     <string name="ach_explorer_title">Explorer</string>
     <string name="ach_explorer_desc">Switch language or theme more than 3 times in a day</string>
     <string name="ach_archivist_title">Archivist</string>
@@ -123,7 +125,8 @@
     <string name="ach_crisis_title">Crisis</string>
     <string name="ach_crisis_desc">Smoke exactly as many cigarettes in a day as set in daily limit</string>
     <string name="ach_blind_eye_title">I See Nothing</string>
-    <string name="ach_blind_eye_desc">Exceed set daily limit by 5+ cigarettes in a day. Limit? What limit?</string>
+    <string name="ach_blind_eye_desc">Exceed set daily limit by 5+ cigarettes in a day. Limit? What
+        limit?</string>
 
     <string name="notification_title">Achievement Unlocked: %1$s</string>
     <string name="backup_success">Backup completed successfully!</string>
@@ -176,6 +179,7 @@
     <string name="trigger_social">Social</string>
     <string name="trigger_routine">Routine</string>
     <string name="trigger_food_coffee">Food / Coffee</string>
+    <string name="trigger_alcohol">Alcohol</string>
 
     <string name="tab_graphs">Charts</string>
     <string name="tab_triggers">Triggers</string>
@@ -261,4 +265,72 @@
     <string name="crypto_wallets">Crypto Wallets (USDT)</string>
     <string name="address_copied">Address copied to clipboard!</string>
     <string name="copy_address">Copy address</string>
+
+    <string name="mindful_pause_button">Overcome Craving</string>
+    <string name="mindful_pause_header">Mindful Pause</string>
+    <string name="mindful_pause_or_resist">Or if you try to hold back:</string>
+    <string name="mindful_pause_resisted">Resisted</string>
+    <string name="mindful_pause_add_15s">+15 sec</string>
+    <string name="mindful_pause_already_held">Already held back</string>
+    <string name="mindful_pause_smoked_after_all">Smoked a cigarette anyway</string>
+    <string name="mindful_pause_well_done">You did great!</string>
+    <string name="mindful_pause_breathe_in">Deep breath in...</string>
+    <string name="mindful_pause_hold_breath">Hold breath...</string>
+    <string name="mindful_pause_breathe_out">Slow breath out...</string>
+    <string name="mindful_pause_sec">sec</string>
+    <string name="mindful_pause_tip_1">Peak smoking craving lasts only 15–30 seconds. You can do
+        this!</string>
+    <string name="mindful_pause_tip_2">Take a deep breath in through your nose and out through your
+        mouth.</string>
+    <string name="mindful_pause_tip_3">Take a sip of cold water — it instantly switches your
+        brain\'s focus.</string>
+    <string name="mindful_pause_tip_4">Every craving you resist strengthens your willpower.</string>
+    <string name="mindful_pause_tip_5">Your lungs start cleaning themselves just 20 minutes after
+        your last cigarette.</string>
+
+    <string name="tapering_plan_title">Tapering Plan</string>
+    <string name="tapering_plan_dialog_title">Gradual Reduction Plan</string>
+    <string name="tapering_plan_switch_label">Weekly limit reduction</string>
+    <string name="tapering_plan_slider_label">Suggest limit reduction every %1$d days</string>
+    <string name="tapering_plan_subtitle_active">Reduce by 1 cig. every %1$d days</string>
+    <string name="tapering_plan_subtitle_off">Disabled</string>
+
+    <string name="tapering_checkin_title">Gradual Reduction Plan</string>
+    <string name="tapering_checkin_desc">A week has passed since your last step! You did great with
+        a limit of %1$d cigarettes.</string>
+    <string name="tapering_checkin_was">Was</string>
+    <string name="tapering_checkin_will_be">Will be</string>
+    <string name="tapering_checkin_reduce_to">Reduce limit to %1$d cig/day</string>
+    <string name="tapering_checkin_keep_limit">Keep limit of %1$d cigarettes</string>
+    <string name="tapering_checkin_snooze">Remind in 3 days</string>
+
+    <string name="stats_resisted_cravings">Resisted Cravings</string>
+    <string name="stats_resisted_cravings_desc">You resisted %1$d times and saved %2$s</string>
+
+    <string name="history_generator_title">Past Smoking Experience</string>
+    <string name="history_generator_description">Estimate your past smoking history prior to using
+        the app to fill your analytics with baseline data.</string>
+    <string name="history_start_date_label">Smoking Start Date</string>
+    <string name="history_daily_avg_label">Average Cigarettes per Day</string>
+    <string name="history_daily_avg_unit">%1$d pcs/day</string>
+    <string name="history_pack_details_title">Pack Price &amp; Size</string>
+    <string name="history_pack_price_label">Pack Price</string>
+    <string name="history_pack_size_label">Pcs in Pack</string>
+    <string name="history_trigger_ranking_title">Craving Triggers Priority</string>
+    <string name="history_trigger_ranking_hint">Arrange from most frequent (#1) to least frequent</string>
+    <string name="history_preview_title">Past Baseline Estimation</string>
+    <string name="history_preview_total_cigs">Total Smoked Past</string>
+    <string name="history_preview_total_cost">Total Spent Past</string>
+    <string name="history_save_button">Save Baseline</string>
+    <string name="history_reset_button">Reset Past Experience</string>
+    <string name="history_reset_dialog_title">Reset Past Experience?</string>
+    <string name="history_reset_dialog_desc">This will remove your estimated past baseline
+        statistics from analytics.</string>
+    <string name="history_banner_title">Have a history of smoking?</string>
+    <string name="history_banner_desc">Fill in your past experience to see your total lifetime cost
+        and stats.</string>
+    <string name="registration_history_note">You can also set up your past smoking history anytime
+        in Settings!</string>
+    <string name="history_cigs_count_format">%1$s pcs.</string>
+    <string name="history_duration_days_y_m">%1$d days (%2$dy %3$dm)</string>
 </resources>
