@@ -154,12 +154,34 @@ class MainViewModel(
         }
     }
 
-    private suspend fun checkAchievements(updatedEntries: List<Long>? = null, wasEntryRemoved: Boolean = false) = withContext(Dispatchers.Default) {
+    fun checkAchievements(updatedEntries: List<Long>? = null, wasEntryRemoved: Boolean = false) = viewModelScope.launch(Dispatchers.Default) {
         val entries = updatedEntries ?: repository.smokingEntries.first().map { it.timestamp }
         val launches = dataStoreManager.appLaunchDates.first()
-        val previouslyUnlocked = dataStoreManager.unlockedAchievements.first()
+        val dailyLimit = dataStoreManager.dailyLimit.first()
+        val hasBackup = dataStoreManager.hasMadeBackup.first()
+        val hasPriceChanged = dataStoreManager.hasChangedPackPrice.first()
+        val hasCancelled10s = dataStoreManager.hasCancelledWithin10s.first()
+        val themeLangCount = dataStoreManager.themeLangChangeCount.first()
+        val analyticsCount = dataStoreManager.analyticsVisitCount.first()
 
-        val newUnlockedSet = AchievementsManager.calculateUnlockedAchievements(entries, launches)
+        val lastEntry = entries.maxOrNull()
+        val now = System.currentTimeMillis()
+        val timeWithoutSmoking = if (lastEntry != null) (now - lastEntry).coerceAtLeast(0L) else 0L
+
+        val ctx = AchievementContext(
+            timeWithoutSmoking = timeWithoutSmoking,
+            entries = entries,
+            launches = launches,
+            dailyLimit = dailyLimit,
+            hasMadeBackup = hasBackup,
+            hasChangedPackPrice = hasPriceChanged,
+            hasCancelledWithin10s = hasCancelled10s,
+            themeLangChangesToday = themeLangCount,
+            analyticsVisitsToday = analyticsCount
+        )
+
+        val previouslyUnlocked = dataStoreManager.unlockedAchievements.first()
+        val newUnlockedSet = AchievementsManager.calculateUnlockedAchievements(ctx)
 
         val effectiveUnlockedSet = if (wasEntryRemoved) {
             val noSmokeIds = AchievementsManager.achievementsList
@@ -247,6 +269,10 @@ class MainViewModel(
 
     fun removeSmokingEntry(timestamp: Long) {
         viewModelScope.launch {
+            val now = System.currentTimeMillis()
+            if (now - timestamp <= 10_000L) {
+                dataStoreManager.setHasCancelledWithin10s(true)
+            }
             repository.removeEntry(timestamp)
             val updated = smokingEntries.value.toMutableList().apply {
                 remove(timestamp)
@@ -277,7 +303,12 @@ class MainViewModel(
 
     fun updatePackDetails(price: Float, size: Int, curr: String) {
         viewModelScope.launch {
+            val oldPrice = dataStoreManager.packPrice.first()
             dataStoreManager.savePackDetails(price, size, curr)
+            if (oldPrice > 0f && price != oldPrice) {
+                dataStoreManager.setHasChangedPackPrice(true)
+            }
+            checkAchievements()
         }
     }
 
@@ -290,6 +321,22 @@ class MainViewModel(
     fun updateThemePreference(theme: ThemePreference) {
         viewModelScope.launch {
             dataStoreManager.saveThemePreference(theme)
+            dataStoreManager.recordThemeOrLangChange()
+            checkAchievements()
+        }
+    }
+
+    fun recordLanguageChange() {
+        viewModelScope.launch {
+            dataStoreManager.recordThemeOrLangChange()
+            checkAchievements()
+        }
+    }
+
+    fun onAnalyticsTabVisited() {
+        viewModelScope.launch {
+            dataStoreManager.recordAnalyticsVisit()
+            checkAchievements()
         }
     }
 
@@ -396,6 +443,8 @@ class MainViewModel(
                         gson.toJson(data, writer)
                     }
                 }
+                dataStoreManager.setHasMadeBackup(true)
+                checkAchievements()
                 onSuccess()
             } catch (e: Exception) {
                 onError()
