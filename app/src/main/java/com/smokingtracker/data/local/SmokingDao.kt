@@ -11,6 +11,9 @@ interface SmokingDao {
     @Query("SELECT * FROM smoking_entries ORDER BY timestamp ASC")
     fun getAllEntriesFlow(): Flow<List<SmokingEntryEntity>>
 
+    @Query("SELECT * FROM smoking_entries ORDER BY timestamp ASC")
+    suspend fun getAllEntriesList(): List<SmokingEntryEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEntry(entry: SmokingEntryEntity): Long
 
