@@ -47,7 +47,7 @@ import com.smokingtracker.R
 sealed class Screen(val route: String, val titleResId: Int, val icon: ImageVector) {
     object Registration : Screen("registration", R.string.registration_title, Icons.Filled.Home)
     object Home : Screen("home", R.string.nav_home, Icons.Filled.Home)
-    object Graph : Screen("graph", R.string.nav_graph, Icons.Filled.BarChart)
+    object Graph : Screen("graph", R.string.analytics_title, Icons.Filled.BarChart)
     object Personal : Screen("personal", R.string.nav_personal, Icons.Filled.Settings)
     object About : Screen("about", R.string.about_app, Icons.Filled.Info)
     object Achievements : Screen("achievements", R.string.settings_achievements, Icons.Filled.EmojiEvents)
@@ -203,13 +203,13 @@ fun MainApp(viewModel: MainViewModel) {
                     RegistrationScreen(viewModel, navController)
                 }
                 composable(Screen.Home.route) {
-                    HomeScreen(viewModel)
+                    HomeScreen(
+                        viewModel = viewModel,
+                        onNavigateToAchievements = { navController.navigate(Screen.Achievements.route) }
+                    )
                 }
                 composable(Screen.Graph.route) {
-                    GraphScreen(
-                        viewModel = viewModel,
-                        onNavigateToStatistics = { navController.navigate(Screen.Statistics.route) }
-                    )
+                    GraphScreen(viewModel = viewModel)
                 }
                 composable(Screen.Personal.route) {
                     PersonalScreen(
