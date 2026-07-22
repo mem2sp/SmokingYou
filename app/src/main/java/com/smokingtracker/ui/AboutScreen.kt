@@ -197,7 +197,7 @@ fun AboutScreen(onBack: () -> Unit) {
                         Spacer(modifier = Modifier.height(24.dp))
 
                         LinkPill(text = stringResource(R.string.link_github)) {
-                            uriHandler.openUri("https://github.com/mem2sp/SmokingYou")
+                            uriHandler.openUri("https://github.com/bodyaant/SmokingYou")
                         }
                         Spacer(modifier = Modifier.height(12.dp))
                         LinkPill(text = stringResource(R.string.link_telegram)) {

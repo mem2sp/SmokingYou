@@ -15,7 +15,7 @@ class GitHubUpdateManager(private val context: Context) {
 
     suspend fun checkForUpdates(): UpdateResult = withContext(Dispatchers.IO) {
         try {
-            val url = URL("https://api.github.com/repos/mem2sp/SmokingYou/releases/latest")
+            val url = URL("https://api.github.com/repos/bodyaant/SmokingYou/releases/latest")
             val connection = url.openConnection() as HttpURLConnection
             connection.requestMethod = "GET"
             connection.setRequestProperty("Accept", "application/vnd.github.v3+json")

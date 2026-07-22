@@ -6,24 +6,24 @@
   Minimalist, data-oriented smoking tracker for Android based on Material 3 Expressive.
 
   <p align="center">
-    <a href="https://github.com/mem2sp/SmokingYou/releases/latest">
-      <img src="https://img.shields.io/github/v/release/mem2sp/SmokingYou?logo=github&labelColor=1a1a1a&color=6750A4&style=flat-square" alt="Latest Release">
+    <a href="https://github.com/bodyaant/SmokingYou/releases/latest">
+      <img src="https://img.shields.io/github/v/release/bodyaant/SmokingYou?logo=github&labelColor=1a1a1a&color=6750A4&style=flat-square" alt="Latest Release">
     </a>
-    <a href="https://github.com/mem2sp/SmokingYou/releases">
-      <img src="https://img.shields.io/github/downloads/mem2sp/SmokingYou/total?logo=github&labelColor=1a1a1a&color=625B71&style=flat-square" alt="Total Downloads">
+    <a href="https://github.com/bodyaant/SmokingYou/releases">
+      <img src="https://img.shields.io/github/downloads/bodyaant/SmokingYou/total?logo=github&labelColor=1a1a1a&color=625B71&style=flat-square" alt="Total Downloads">
     </a>
-    <a href="https://github.com/mem2sp/SmokingYou/stargazers">
-      <img src="https://img.shields.io/github/stars/mem2sp/SmokingYou?logo=github&labelColor=1a1a1a&color=E0B6FF&style=flat-square" alt="Stars">
+    <a href="https://github.com/bodyaant/SmokingYou/stargazers">
+      <img src="https://img.shields.io/github/stars/bodyaant/SmokingYou?logo=github&labelColor=1a1a1a&color=E0B6FF&style=flat-square" alt="Stars">
     </a>
     <a href="LICENSE">
-      <img src="https://img.shields.io/github/license/mem2sp/SmokingYou?logo=gnu&labelColor=1a1a1a&color=blue&style=flat-square" alt="License">
+      <img src="https://img.shields.io/github/license/bodyaant/SmokingYou?logo=gnu&labelColor=1a1a1a&color=blue&style=flat-square" alt="License">
     </a>
     <img src="https://img.shields.io/badge/Android-8.0%2B_(API_26%2B)-3DDC84?logo=android&logoColor=white&labelColor=1a1a1a&style=flat-square" alt="Android 8.0+">
   </p>
 
   <p align="center">
-    <a href="https://github.com/mem2sp/SmokingYou/releases/latest">
-      <img src="https://img.shields.io/github/v/release/mem2sp/SmokingYou?label=Download%20SmokingYou&style=for-the-badge&color=6750A4&logo=android&logoColor=white" alt="Download SmokingYou">
+    <a href="https://github.com/bodyaant/SmokingYou/releases/latest">
+      <img src="https://img.shields.io/github/v/release/bodyaant/SmokingYou?label=Download%20SmokingYou&style=for-the-badge&color=6750A4&logo=android&logoColor=white" alt="Download SmokingYou">
     </a>
   </p>
   <p align="center">
@@ -85,7 +85,7 @@ Currently supported languages:
 - Ukrainian
 ## Installation
 
-1. Download the latest APK from the [Releases](https://github.com/mem2sp/SmokingYou/releases/latest) page.
+1. Download the latest APK from the [Releases](https://github.com/bodyaant/SmokingYou/releases/latest) page.
 2. Ensure installation from unknown sources is allowed in your Android settings.
 3. Install the APK on your device.
 
