@@ -6,6 +6,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
+import com.smokingtracker.ui.theme.containerBorder
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.ui.graphics.Color
@@ -305,7 +306,7 @@ internal fun HomeScreenContent(
                                             .height(72.dp),
                                         shape = RoundedCornerShape(20.dp),
                                         color = MaterialTheme.colorScheme.surfaceVariant,
-                                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
+                                        border = containerBorder(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
                                     ) {
                                         Column(
                                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -480,8 +481,8 @@ internal fun HomeScreenContent(
                     elevation = CardDefaults.cardElevation(
                         defaultElevation = 6.dp
                     ),
-                    border = BorderStroke(
-                        width = 1.dp,
+                    border = containerBorder(
+                        strokeWidth = 1.dp,
                         color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
                     )
                 ) {
@@ -589,7 +590,7 @@ internal fun HomeScreenContent(
                         containerColor = MaterialTheme.colorScheme.surfaceContainer,
                     ),
                     shape = RoundedCornerShape(32.dp),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
+                    border = containerBorder()
                 ) {
                     Column(
                         modifier = Modifier.padding(32.dp).fillMaxWidth(),
@@ -680,7 +681,7 @@ internal fun HomeScreenContent(
                         shape = RoundedCornerShape(24.dp),
                         color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.25f),
                         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.25f))
+                        border = containerBorder(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.25f))
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -844,7 +845,7 @@ fun StatItem(label: String, value: String, modifier: Modifier = Modifier) {
             containerColor = MaterialTheme.colorScheme.surfaceContainer
         ),
         shape = RoundedCornerShape(24.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
+        border = containerBorder()
     ) {
         Column(
             modifier = Modifier.fillMaxSize().padding(8.dp),
@@ -981,7 +982,7 @@ fun EntryItem(
                                             .height(72.dp),
                                         shape = RoundedCornerShape(20.dp),
                                         color = if (isSelected) colorScheme.primaryContainer else colorScheme.surfaceVariant,
-                                        border = BorderStroke(
+                                        border = containerBorder(
                                             1.dp,
                                             if (isSelected) colorScheme.primary else colorScheme.outlineVariant.copy(alpha = 0.3f)
                                         )
@@ -1066,7 +1067,7 @@ fun EntryItem(
             containerColor = colorScheme.surfaceContainer
         ),
         shape = RoundedCornerShape(24.dp),
-        border = BorderStroke(
+        border = containerBorder(
             if (isResisted) 1.5.dp else 1.dp,
             if (isResisted) colorScheme.primary else colorScheme.outlineVariant.copy(alpha = 0.25f)
         )
@@ -1138,7 +1139,7 @@ fun EntryItem(
                         shape = RoundedCornerShape(12.dp),
                         color = colorScheme.primaryContainer,
                         contentColor = colorScheme.onPrimaryContainer,
-                        border = BorderStroke(1.dp, colorScheme.primary.copy(alpha = 0.5f))
+                        border = containerBorder(1.dp, colorScheme.primary.copy(alpha = 0.5f))
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,

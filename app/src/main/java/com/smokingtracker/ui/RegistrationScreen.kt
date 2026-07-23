@@ -2,6 +2,7 @@ package com.smokingtracker.ui
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
+import com.smokingtracker.ui.theme.containerBorder
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -83,7 +84,7 @@ fun RegistrationScreenContent(onRegister: () -> Unit) {
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.92f)
             ),
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
+            border = containerBorder(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
         ) {
             Column(
                 modifier = Modifier

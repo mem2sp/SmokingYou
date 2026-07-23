@@ -2,6 +2,7 @@ package com.smokingtracker.ui
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
+import com.smokingtracker.ui.theme.containerBorder
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -202,7 +203,7 @@ fun HistoryGeneratorScreen(viewModel: MainViewModel, navController: NavHostContr
                             onClick = { showDatePickerDialog = true },
                             shape = RoundedCornerShape(16.dp),
                             color = MaterialTheme.colorScheme.surfaceContainer,
-                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
+                            border = containerBorder(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
                         ) {
                             Row(
                                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
@@ -228,7 +229,7 @@ fun HistoryGeneratorScreen(viewModel: MainViewModel, navController: NavHostContr
                             shape = CircleShape,
                             color = MaterialTheme.colorScheme.secondaryContainer,
                             contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f))
+                            border = containerBorder(1.dp, MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f))
                         ) {
                             Row(
                                 modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
@@ -404,7 +405,7 @@ fun HistoryGeneratorScreen(viewModel: MainViewModel, navController: NavHostContr
                             Card(
                                 colors = CardDefaults.cardColors(containerColor = containerColor),
                                 shape = RoundedCornerShape(14.dp),
-                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)),
+                                border = containerBorder(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)),
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Row(

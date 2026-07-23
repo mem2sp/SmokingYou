@@ -1,6 +1,7 @@
 package com.smokingtracker.ui
 
 import androidx.compose.foundation.BorderStroke
+import com.smokingtracker.ui.theme.containerBorder
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -96,7 +97,7 @@ fun AchievementsTab(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(28.dp),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
+                    border = containerBorder()
                 ) {
                     Column(
                         modifier = Modifier.padding(16.dp),
@@ -113,7 +114,7 @@ fun AchievementsTab(
                                 } else {
                                     MaterialTheme.colorScheme.surfaceContainerLowest
                                 },
-                                border = if (isUnlocked) null else BorderStroke(
+                                border = if (isUnlocked) null else containerBorder(
                                     1.dp,
                                     MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.15f)
                                 ),

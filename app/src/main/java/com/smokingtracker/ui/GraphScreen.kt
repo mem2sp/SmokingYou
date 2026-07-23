@@ -43,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.foundation.BorderStroke
+import com.smokingtracker.ui.theme.containerBorder
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -349,7 +350,7 @@ fun GraphSection(
             containerColor = MaterialTheme.colorScheme.surfaceContainer
         ),
         shape = RoundedCornerShape(32.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
+        border = containerBorder()
     ) {
         Column(
             modifier = Modifier.padding(20.dp),
@@ -423,7 +424,7 @@ fun GraphSection(
                     shape = RoundedCornerShape(24.dp),
                     color = if (onDateClick != null) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.25f) else MaterialTheme.colorScheme.surfaceContainer,
                     contentColor = if (onDateClick != null) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
-                    border = BorderStroke(1.dp, if (onDateClick != null) MaterialTheme.colorScheme.primary.copy(alpha = 0.25f) else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
+                    border = containerBorder(1.dp, if (onDateClick != null) MaterialTheme.colorScheme.primary.copy(alpha = 0.25f) else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -635,7 +636,7 @@ fun TriggersTab(triggerCounts: Map<String, Int>, totalCount: Int) {
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(24.dp),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.tertiary.copy(alpha = 0.25f))
+                    border = containerBorder(1.dp, MaterialTheme.colorScheme.tertiary.copy(alpha = 0.25f))
                 ) {
                     Row(
                         modifier = Modifier.padding(20.dp),
@@ -683,7 +684,7 @@ fun TriggersTab(triggerCounts: Map<String, Int>, totalCount: Int) {
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(28.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
+                border = containerBorder()
             ) {
                 Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(20.dp)) {
                     sortedTriggers.forEach { (triggerKey, count) ->
@@ -767,7 +768,7 @@ fun ExpressiveTabSelector(
             .clip(CircleShape)
             .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f))
             .border(
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.12f)),
+                border = containerBorder(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.12f)) ?: BorderStroke(0.dp, Color.Transparent),
                 shape = CircleShape
             )
             .padding(4.dp)
