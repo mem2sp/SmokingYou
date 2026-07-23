@@ -29,6 +29,8 @@ import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Speed
+import com.smokingtracker.ui.theme.containerBorder
 import androidx.compose.material.icons.filled.Widgets
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
@@ -357,6 +359,8 @@ fun SettingsTab(
 
     if (showLimitDialog) {
         var newLimit by remember { mutableStateOf(dailyLimit.toString()) }
+        val limitValid = newLimit.isEmpty() || newLimit.toIntOrNull() != null
+
         BasicAlertDialog(onDismissRequest = { showLimitDialog = false }) {
             Surface(shape = RoundedCornerShape(28.dp), color = MaterialTheme.colorScheme.surface) {
                 Column(modifier = Modifier.padding(24.dp)) {
@@ -370,20 +374,71 @@ fun SettingsTab(
                         onValueChange = { newLimit = it },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.fillMaxWidth(),
-                        label = { Text(stringResource(R.string.no_limit)) },
-                        shape = RoundedCornerShape(16.dp)
+                        label = { Text(stringResource(R.string.set_limit_title)) },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Speed,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        },
+                        shape = RoundedCornerShape(16.dp),
+                        singleLine = true,
+                        isError = !limitValid,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.6f),
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                            focusedLabelColor = MaterialTheme.colorScheme.primary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        ),
+                        supportingText = {
+                            Text(stringResource(R.string.limit_dialog_helper))
+                        }
                     )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        listOf(0, 5, 10, 15, 20).forEach { preset ->
+                            val isSelected = newLimit.toIntOrNull() == preset
+                            Surface(
+                                onClick = { newLimit = preset.toString() },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(36.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                                contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant,
+                                border = containerBorder(1.dp, if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent)
+                            ) {
+                                Box(contentAlignment = Alignment.Center) {
+                                    Text(
+                                        text = preset.toString(),
+                                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium),
+                                        maxLines = 1
+                                    )
+                                }
+                            }
+                        }
+                    }
                     Spacer(modifier = Modifier.height(24.dp))
                     Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
                         TextButton(onClick = { showLimitDialog = false }) {
                             Text(stringResource(R.string.dialog_cancel), fontWeight = FontWeight.Bold)
                         }
                         Spacer(modifier = Modifier.width(8.dp))
-                        Button(onClick = {
-                            onSetDailyLimit(newLimit.toIntOrNull() ?: 0)
-                            Toast.makeText(context, savedStr, Toast.LENGTH_SHORT).show()
-                            showLimitDialog = false
-                        }) {
+                        Button(
+                            onClick = {
+                                onSetDailyLimit(newLimit.toIntOrNull() ?: 0)
+                                Toast.makeText(context, savedStr, Toast.LENGTH_SHORT).show()
+                                showLimitDialog = false
+                            },
+                            enabled = limitValid
+                        ) {
                             Text(stringResource(R.string.dialog_ok), fontWeight = FontWeight.Bold)
                         }
                     }
@@ -465,14 +520,32 @@ fun SettingsTab(
                     Text(stringResource(R.string.settings_currency), style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold))
                     Spacer(modifier = Modifier.height(8.dp))
                     LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         items(listOf("USD", "EUR", "RUB", "GBP", "TRY", "KZT", "UAH")) { curr ->
-                            FilterChip(
-                                selected = selectedCurrency == curr,
+                            val isSelected = selectedCurrency == curr
+                            Surface(
                                 onClick = { selectedCurrency = curr },
-                                label = { Text(curr) }
-                            )
+                                modifier = Modifier.height(36.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                                contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant,
+                                border = containerBorder(1.dp, if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent)
+                            ) {
+                                Box(
+                                    modifier = Modifier.padding(horizontal = 14.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = curr,
+                                        style = MaterialTheme.typography.labelLarge.copy(
+                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                                        ),
+                                        maxLines = 1
+                                    )
+                                }
+                            }
                         }
                     }
                     Spacer(modifier = Modifier.height(24.dp))
@@ -778,7 +851,7 @@ fun SettingItemWithSwitch(
         modifier = Modifier.fillMaxWidth(),
         shape = shape,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
+        border = containerBorder()
     ) {
         Row(
             modifier = Modifier
@@ -835,7 +908,7 @@ fun SettingItem(
         modifier = Modifier.fillMaxWidth(),
         shape = shape,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f))
+        border = containerBorder()
     ) {
         SettingItemContent(icon = icon, title = title, subtitle = subtitle, onClick = onClick)
     }
