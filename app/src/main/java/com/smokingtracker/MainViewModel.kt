@@ -138,6 +138,12 @@ class MainViewModel(
         initialValue = "DEFAULT"
     )
 
+    val containerBorderEnabled: StateFlow<Boolean> = dataStoreManager.containerBorderEnabled.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = true
+    )
+
     val hasHistoricalBaseline: StateFlow<Boolean> = dataStoreManager.hasHistoricalBaseline.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -280,6 +286,12 @@ class MainViewModel(
     fun updateCheckUpdatesOnStart(enabled: Boolean) {
         viewModelScope.launch {
             dataStoreManager.saveCheckUpdatesOnStart(enabled)
+        }
+    }
+
+    fun updateContainerBorderEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            dataStoreManager.saveContainerBorderEnabled(enabled)
         }
     }
 

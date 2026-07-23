@@ -50,6 +50,7 @@ class DataStoreManager(private val context: Context) {
         val HISTORICAL_PACK_PRICE = floatPreferencesKey("historical_pack_price")
         val HISTORICAL_PACK_SIZE = intPreferencesKey("historical_pack_size")
         val HISTORICAL_TRIGGER_PRIORITIES = stringPreferencesKey("historical_trigger_priorities")
+        val CONTAINER_BORDER_ENABLED = booleanPreferencesKey("container_border_enabled")
     }
 
     val isRegistered: Flow<Boolean> = context.dataStore.data.map { preferences ->
@@ -357,6 +358,16 @@ class DataStoreManager(private val context: Context) {
             prefs.remove(HISTORICAL_PACK_PRICE)
             prefs.remove(HISTORICAL_PACK_SIZE)
             prefs.remove(HISTORICAL_TRIGGER_PRIORITIES)
+        }
+    }
+
+    val containerBorderEnabled: Flow<Boolean> = context.dataStore.data.map { preferences ->
+        preferences[CONTAINER_BORDER_ENABLED] ?: true
+    }
+
+    suspend fun saveContainerBorderEnabled(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[CONTAINER_BORDER_ENABLED] = enabled
         }
     }
 

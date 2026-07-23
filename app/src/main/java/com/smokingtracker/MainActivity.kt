@@ -51,6 +51,7 @@ class MainActivity : ComponentActivity() {
             val fontPreset by viewModel.fontPreset.collectAsState()
             val amoledTheme by viewModel.amoledTheme.collectAsState()
             val colorPreset by viewModel.colorPreset.collectAsState()
+            val containerBorderEnabled by viewModel.containerBorderEnabled.collectAsState()
             val useDarkTheme = when (themePreference) {
                 ThemePreference.LIGHT -> false
                 ThemePreference.DARK -> true
@@ -61,7 +62,8 @@ class MainActivity : ComponentActivity() {
                 useDarkTheme = useDarkTheme,
                 fontPreset = fontPreset,
                 amoledThemeEnabled = amoledTheme,
-                colorPreset = colorPreset
+                colorPreset = colorPreset,
+                containerBorderEnabled = containerBorderEnabled
             ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),

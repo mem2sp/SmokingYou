@@ -8,6 +8,11 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
@@ -384,6 +389,16 @@ private val SlateDarkColors = darkColorScheme(
     outline = Color(0xFF8E8E8E)
 )
 
+val LocalContainerBorderEnabled = staticCompositionLocalOf { true }
+
+@Composable
+fun containerBorder(
+    strokeWidth: Dp = 1.dp,
+    color: Color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f)
+): BorderStroke? {
+    return if (LocalContainerBorderEnabled.current) BorderStroke(strokeWidth, color) else null
+}
+
 @Preview
 @Composable
 fun AppTheme(
@@ -391,6 +406,7 @@ fun AppTheme(
     fontPreset: String = "WIDE",
     amoledThemeEnabled: Boolean = false,
     colorPreset: String = "SYSTEM",
+    containerBorderEnabled: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
@@ -465,9 +481,11 @@ fun AppTheme(
         else -> VariableFontFactory.createTypography(fontPreset)
     }
 
-    MaterialTheme(
-        colorScheme = colors,
-        typography = typography,
-        content = content
-    )
+    CompositionLocalProvider(LocalContainerBorderEnabled provides containerBorderEnabled) {
+        MaterialTheme(
+            colorScheme = colors,
+            typography = typography,
+            content = content
+        )
+    }
 }
