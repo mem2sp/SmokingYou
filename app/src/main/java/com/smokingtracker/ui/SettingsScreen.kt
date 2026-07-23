@@ -581,9 +581,10 @@ fun SettingsTab(
         contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 120.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
+        // Section 1: Interface & Appearance
         item {
             Text(
-                text = stringResource(R.string.settings_general),
+                text = stringResource(R.string.settings_section_interface),
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(top = 12.dp, bottom = 8.dp, start = 8.dp)
@@ -599,15 +600,6 @@ fun SettingsTab(
             )
         }
         item {
-            SettingItem(
-                icon = Icons.Filled.Widgets,
-                title = stringResource(R.string.settings_widgets_title),
-                subtitle = stringResource(R.string.settings_widgets_desc),
-                shape = RoundedCornerShape(8.dp),
-                onClick = { showWidgetDialog = true }
-            )
-        }
-        item {
             val locale = LocalConfiguration.current.locales.get(0) ?: java.util.Locale.getDefault()
             val langDisplay = locale.getDisplayLanguage(locale).replaceFirstChar { it.uppercase() }
             SettingItem(
@@ -620,10 +612,29 @@ fun SettingsTab(
         }
         item {
             SettingItem(
+                icon = Icons.Filled.Widgets,
+                title = stringResource(R.string.settings_widgets_title),
+                subtitle = stringResource(R.string.settings_widgets_desc),
+                shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp, bottomStart = 24.dp, bottomEnd = 24.dp),
+                onClick = { showWidgetDialog = true }
+            )
+        }
+
+        // Section 2: Goals & Economy
+        item {
+            Text(
+                text = stringResource(R.string.settings_section_goals),
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp, start = 8.dp)
+            )
+        }
+        item {
+            SettingItem(
                 icon = Icons.Filled.Warning,
                 title = stringResource(R.string.settings_daily_limit),
                 subtitle = if (dailyLimit > 0) dailyLimit.toString() else stringResource(R.string.no_limit),
-                shape = RoundedCornerShape(8.dp),
+                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 8.dp, bottomEnd = 8.dp),
                 onClick = { showLimitDialog = true }
             )
         }
@@ -634,61 +645,68 @@ fun SettingsTab(
                 var enabled by remember(taperingPlanEnabled) { mutableStateOf(taperingPlanEnabled) }
                 var interval by remember(taperingIntervalDays) { mutableIntStateOf(taperingIntervalDays) }
 
-                BasicAlertDialog(onDismissRequest = { showTaperingDialog = false }) {
-                    Surface(shape = RoundedCornerShape(28.dp), color = MaterialTheme.colorScheme.surface) {
-                        Column(modifier = Modifier.padding(24.dp)) {
+                ModalBottomSheet(
+                    onDismissRequest = { showTaperingDialog = false },
+                    sheetState = rememberModalBottomSheetState(),
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .verticalScroll(rememberScrollState())
+                            .padding(start = 24.dp, end = 24.dp, bottom = 48.dp, top = 8.dp)
+                    ) {
+                        Text(
+                            stringResource(R.string.tapering_plan_dialog_title),
+                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        )
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             Text(
-                                stringResource(R.string.tapering_plan_dialog_title),
-                                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                                stringResource(R.string.tapering_plan_switch_label),
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier.weight(1f).padding(end = 12.dp)
                             )
+                            Switch(
+                                checked = enabled,
+                                onCheckedChange = { enabled = it }
+                            )
+                        }
+
+                        if (enabled) {
                             Spacer(modifier = Modifier.height(16.dp))
+                            Text(
+                                stringResource(R.string.tapering_plan_slider_label, interval),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Slider(
+                                value = interval.toFloat(),
+                                onValueChange = { interval = it.toInt() },
+                                valueRange = 3f..14f,
+                                steps = 10
+                            )
+                        }
 
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
+                            TextButton(onClick = { showTaperingDialog = false }) {
+                                Text(stringResource(R.string.dialog_cancel), fontWeight = FontWeight.Bold)
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Button(
+                                onClick = {
+                                    onSetTaperingPlanSettings(enabled, interval)
+                                    showTaperingDialog = false
+                                }
                             ) {
-                                Text(
-                                    stringResource(R.string.tapering_plan_switch_label),
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    modifier = Modifier.weight(1f).padding(end = 12.dp)
-                                )
-                                Switch(
-                                    checked = enabled,
-                                    onCheckedChange = { enabled = it }
-                                )
-                            }
-
-                            if (enabled) {
-                                Spacer(modifier = Modifier.height(16.dp))
-                                Text(
-                                    stringResource(R.string.tapering_plan_slider_label, interval),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                                Slider(
-                                    value = interval.toFloat(),
-                                    onValueChange = { interval = it.toInt() },
-                                    valueRange = 3f..14f,
-                                    steps = 10
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.height(24.dp))
-
-                            Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
-                                TextButton(onClick = { showTaperingDialog = false }) {
-                                    Text(stringResource(R.string.dialog_cancel), fontWeight = FontWeight.Bold)
-                                }
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Button(
-                                    onClick = {
-                                        onSetTaperingPlanSettings(enabled, interval)
-                                        showTaperingDialog = false
-                                    }
-                                ) {
-                                    Text(stringResource(R.string.dialog_ok), fontWeight = FontWeight.Bold)
-                                }
+                                Text(stringResource(R.string.dialog_ok), fontWeight = FontWeight.Bold)
                             }
                         }
                     }
@@ -699,17 +717,8 @@ fun SettingsTab(
                 icon = Icons.Filled.TrendingDown,
                 title = stringResource(R.string.tapering_plan_title),
                 subtitle = if (taperingPlanEnabled) stringResource(R.string.tapering_plan_subtitle_active, taperingIntervalDays) else stringResource(R.string.tapering_plan_subtitle_off),
-                shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp, bottomStart = 24.dp, bottomEnd = 24.dp),
+                shape = RoundedCornerShape(8.dp),
                 onClick = { showTaperingDialog = true }
-            )
-        }
-
-        item {
-            Text(
-                text = stringResource(R.string.settings_cigarette_params),
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp, start = 8.dp)
             )
         }
         item {
@@ -721,11 +730,12 @@ fun SettingsTab(
                 } else {
                     stringResource(R.string.settings_tap_configure)
                 },
-                shape = RoundedCornerShape(24.dp),
+                shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp, bottomStart = 24.dp, bottomEnd = 24.dp),
                 onClick = { showPackDialog = true }
             )
         }
 
+        // Section 3: Data & Backup
         item {
             Text(
                 text = stringResource(R.string.settings_data),
@@ -799,6 +809,7 @@ fun SettingsTab(
             }
         }
 
+        // Section 4: About & Updates
         item {
             Text(
                 text = stringResource(R.string.settings_info),
@@ -990,129 +1001,129 @@ fun WidgetPinDialog(
         }
     }
 
-    BasicAlertDialog(onDismissRequest = onDismiss) {
-        Surface(
-            shape = RoundedCornerShape(28.dp),
-            color = MaterialTheme.colorScheme.surface
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = rememberModalBottomSheetState(),
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .padding(start = 24.dp, end = 24.dp, bottom = 48.dp, top = 8.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(24.dp)
-                    .fillMaxWidth()
+            Text(
+                text = stringResource(R.string.settings_widgets_title),
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            Text(
+                text = stringResource(R.string.settings_widgets_desc),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
             ) {
-                Text(
-                    text = stringResource(R.string.settings_widgets_title),
-                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                Text(
-                    text = stringResource(R.string.settings_widgets_desc),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth()
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth()
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
+                        Text(
+                            text = stringResource(R.string.widget_quick_add_title),
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                            modifier = Modifier.weight(1f, fill = false)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Button(
+                            onClick = {
+                                requestPin(QuickAddWidgetProvider::class.java)
+                            },
+                            shape = RoundedCornerShape(12.dp),
+                            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
                         ) {
                             Text(
-                                text = stringResource(R.string.widget_quick_add_title),
-                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                                modifier = Modifier.weight(1f, fill = false)
+                                text = stringResource(R.string.widget_pin_button_1x1),
+                                fontWeight = FontWeight.Bold
                             )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Button(
-                                onClick = {
-                                    requestPin(QuickAddWidgetProvider::class.java)
-                                },
-                                shape = RoundedCornerShape(12.dp),
-                                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.widget_pin_button_1x1),
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
                         }
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = stringResource(R.string.widget_quick_add_description),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
                     }
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = stringResource(R.string.widget_quick_add_description),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
+            }
 
-                Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth()
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth()
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
+                        Text(
+                            text = stringResource(R.string.widget_timer_title),
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                            modifier = Modifier.weight(1f, fill = false)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Button(
+                            onClick = {
+                                requestPin(TimerWidgetProvider::class.java)
+                            },
+                            shape = RoundedCornerShape(12.dp),
+                            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
                         ) {
                             Text(
-                                text = stringResource(R.string.widget_timer_title),
-                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                                modifier = Modifier.weight(1f, fill = false)
+                                text = stringResource(R.string.widget_pin_button_3x1),
+                                fontWeight = FontWeight.Bold
                             )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Button(
-                                onClick = {
-                                    requestPin(TimerWidgetProvider::class.java)
-                                },
-                                shape = RoundedCornerShape(12.dp),
-                                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.widget_pin_button_3x1),
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
                         }
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = stringResource(R.string.widget_timer_description),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
                     }
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = stringResource(R.string.widget_timer_description),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
+            }
 
-                Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    TextButton(onClick = onDismiss) {
-                        Text(stringResource(R.string.dialog_cancel), fontWeight = FontWeight.Bold)
-                    }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                TextButton(onClick = onDismiss) {
+                    Text(stringResource(R.string.dialog_cancel), fontWeight = FontWeight.Bold)
                 }
             }
         }
