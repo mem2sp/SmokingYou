@@ -2,29 +2,21 @@ package com.smokingtracker.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.googlefonts.GoogleFont
-import androidx.compose.ui.text.googlefonts.Font as GoogleFontSource
 import com.smokingtracker.R
 
-val provider = GoogleFont.Provider(
-    providerAuthority = "com.google.android.gms.fonts",
-    providerPackage = "com.google.android.gms",
-    certificates = R.array.com_google_android_gms_fonts_certs
-)
-
-val outfitFontName = GoogleFont("Outfit")
-
 val OutfitFontFamily = FontFamily(
-    GoogleFontSource(googleFont = outfitFontName, fontProvider = provider, weight = FontWeight.Normal),
-    GoogleFontSource(googleFont = outfitFontName, fontProvider = provider, weight = FontWeight.Medium),
-    GoogleFontSource(googleFont = outfitFontName, fontProvider = provider, weight = FontWeight.SemiBold),
-    GoogleFontSource(googleFont = outfitFontName, fontProvider = provider, weight = FontWeight.Bold),
-    GoogleFontSource(googleFont = outfitFontName, fontProvider = provider, weight = FontWeight.ExtraBold),
-    GoogleFontSource(googleFont = outfitFontName, fontProvider = provider, weight = FontWeight.Black)
+    Font(R.font.google_sans_flex_variable, FontWeight.Normal),
+    Font(R.font.google_sans_flex_variable, FontWeight.Medium),
+    Font(R.font.google_sans_flex_variable, FontWeight.SemiBold),
+    Font(R.font.google_sans_flex_variable, FontWeight.Bold),
+    Font(R.font.google_sans_flex_variable, FontWeight.ExtraBold),
+    Font(R.font.google_sans_flex_variable, FontWeight.Black)
 )
+
 
 val AppTypography = Typography(
     displayLarge = TextStyle(

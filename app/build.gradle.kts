@@ -55,8 +55,6 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.compose.ui.text.google.fonts)
-    
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.kotlinx.coroutines.android)
@@ -82,8 +80,20 @@ dependencies {
 }
 
 fun getGitCommitCount(): Int {
-    val process = ProcessBuilder("git", "rev-list", "--count", "HEAD").start()
-    val count = process.inputStream.bufferedReader().readText().trim()
-    process.waitFor()
-    return if (count.isNotEmpty()) count.toInt() else 1
+    if (project.hasProperty("versionCode")) {
+        return project.property("versionCode").toString().toInt()
+    }
+    val envVersion = System.getenv("VERSION_CODE")
+    if (!envVersion.isNullOrEmpty()) {
+        return envVersion.toInt()
+    }
+    return try {
+        val process = ProcessBuilder("git", "rev-list", "--count", "HEAD").start()
+        val count = process.inputStream.bufferedReader().readText().trim()
+        process.waitFor()
+        if (count.isNotEmpty()) count.toInt() else 1
+    } catch (e: Exception) {
+        1
+    }
 }
+
