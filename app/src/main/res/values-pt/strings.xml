@@ -34,6 +34,9 @@
     <string name="tab_achievements">Conquistas</string>
     <string name="settings_appearance">Tema</string>
     <string name="settings_theme">Tema</string>
+    <string name="settings_container_border">Bordas dos recipientes</string>
+    <string name="settings_container_border_desc">Mostrar contorno sutil ao redor de cartões e recipientes</string>
+    <string name="limit_dialog_helper">Defina como 0 para cigarros diários ilimitados</string>
     <string name="theme_system">Sistema</string>
     <string name="theme_light">Claro</string>
     <string name="theme_dark">Escuro</string>

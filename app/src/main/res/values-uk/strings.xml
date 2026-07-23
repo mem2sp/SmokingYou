@@ -34,6 +34,9 @@
     <string name="tab_achievements">Досягнення</string>
     <string name="settings_appearance">Зовнішній вигляд</string>
     <string name="settings_theme">Тема</string>
+    <string name="settings_container_border">Обводка контейнерів</string>
+    <string name="settings_container_border_desc">Показувати тонку обводку у карток та контейнерів</string>
+    <string name="limit_dialog_helper">Вкажіть 0 для куріння без щоденного ліміту</string>
     <string name="theme_system">Системна</string>
     <string name="theme_light">Світла</string>
     <string name="theme_dark">Темна</string>

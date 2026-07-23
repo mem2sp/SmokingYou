@@ -34,6 +34,9 @@
     <string name="tab_achievements">Erfolge</string>
     <string name="settings_appearance">Design</string>
     <string name="settings_theme">Design</string>
+    <string name="settings_container_border">Container-Rahmen</string>
+    <string name="settings_container_border_desc">Feinen Rahmen um Karten und Container anzeigen</string>
+    <string name="limit_dialog_helper">Auf 0 setzen für unbegrenzte tägliche Zigaretten</string>
     <string name="theme_system">System</string>
     <string name="theme_light">Hell</string>
     <string name="theme_dark">Dunkel</string>

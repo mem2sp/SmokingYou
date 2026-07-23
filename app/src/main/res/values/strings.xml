@@ -34,6 +34,9 @@
     <string name="tab_achievements">Achievements</string>
     <string name="settings_appearance">Appearance</string>
     <string name="settings_theme">Theme</string>
+    <string name="settings_container_border">Container borders</string>
+    <string name="settings_container_border_desc">Show subtle outline around cards and containers</string>
+    <string name="limit_dialog_helper">Set to 0 for unlimited daily cigarettes</string>
     <string name="theme_system">System</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
